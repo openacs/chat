@@ -12,7 +12,7 @@ ad_proc -private chat_start_server {} { Start Java chat server. } {
     if [nsv_get chat server_started] {
 	return
     }
-    ns_log notice "Starting chat server"
+    ns_log notice "chat_start_server: Starting chat server"
     set port [ad_parameter ServerPort]
     set path "ns/server/[ns_info server]/module/nssock"
     set host_location "[ns_config $path Address]"
@@ -39,7 +39,7 @@ ad_proc -private chat_start_server {} { Start Java chat server. } {
     ns_thread begindetached "chat_broadcast_to_applets $host_location $port"
     ns_thread begindetached "chat_receive_from_server $host_location $port"
 
-    ns_log notice "Chat server started."
+    ns_log notice "chat_start_server: Chat server started."
     nsv_set chat server_started 1
 }
 
@@ -51,7 +51,7 @@ ad_proc -private chat_broadcast_to_applets {host port} { Broadcast chat message 
     set r [lindex $fds 0]
     set w [lindex $fds 1]
 
-    ns_log notice "Ready to broadcast message to applets."
+    ns_log debug "chat_broadcast_to_applets: Ready to broadcast message to applets."
 
     # Register to java chat server.
     puts $w "<login><user_id>-1</user_id><user_name>AOL_WRITER</user_name><pw>T</pw><room_id>-1</room_id></login>"
@@ -77,7 +77,7 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
     set w [lindex $fds 1]
     set r_fd [list $r]
 
-    ns_log notice "Listening for messages from applets."
+    ns_log debug "chat_receive_from_server: Listening for messages from applets."
 
     puts $w "<login><user_id>-1</user_id><user_name>AOL_READER</user_name><pw>T</pw><room_id>-1</room_id></login>"
     flush $w
@@ -99,7 +99,7 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
 		    nsv_set chat_room $room_id {}		    
 		} 
 		if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
-		    ns_log "Chat post msg error: $errmsg"
+		    ns_log error "chat_post_message_to_db: error: $errmsg"
 		}
 		nsv_lappend chat_room $room_id $line
 
@@ -420,7 +420,7 @@ ad_proc -public chat_message_retrieve {
     Retrieve all messages from the chat room starting from first_msg_id. Return messages are store in multirow format.
 } {
 
-    ns_log notice "In chat message retrieve"
+    ns_log debug "chat_message_retrieve: starting message retrieve"
 
     # The first time html client enter chat room, chat_room variable is not initialize correctly.
     # Therefore I just hard code the variable.
