@@ -6,7 +6,7 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar@</property>
+<property name="context">@context_bar;noquote@</property>
 <property name="title">Confirm room delete</property>
 
 <form method="post" action="room-delete-2">	

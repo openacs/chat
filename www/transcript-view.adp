@@ -6,7 +6,7 @@
      @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar@</property>
+<property name="context">@context_bar;noquote@</property>
 <property name="title">Transcript preview</property>
 
 [<a href="transcript-edit?transcript_id=@transcript_id@&room_id=@room_id@">Edit</a>]

@@ -6,8 +6,8 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar@</property>
-<property name="title">@title@</property>
+<property name="context">@context_bar;noquote@</property>
+<property name="title">@title;noquote@</property>
 
 <form action="@action@" method="post">
     <input type="hidden" name="transcript_id" value="@transcript_id@">

@@ -1,6 +1,6 @@
 <master>
-<property name="context">@context_bar@</property>
-<property name="title">@room_name@</property>
+<property name="context">@context_bar;noquote@</property>
+<property name="title">@room_name;noquote@</property>
 
 <center>
    <applet code=adChatApplet.class archive=chat.jar width=@width@ height=@height@>

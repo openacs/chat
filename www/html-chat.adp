@@ -1,6 +1,6 @@
 <master>
-<property name="context">@context_bar@</property>
-<property name="title">@room_name@</property>
+<property name="context">@context_bar;noquote@</property>
+<property name="title">@room_name;noquote@</property>
 
 [<a href="room-exit?room_id=@room_id@">Log off</a>]
 <form method=post action="chat">

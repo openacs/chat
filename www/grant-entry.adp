@@ -6,8 +6,8 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar@</property>
-<property name="title">@title@</property>
+<property name="context">@context_bar;noquote@</property>
+<property name="title">@title;noquote@</property>
 
 <form method=post action=@action@>
     <input type=hidden name=room_id value=@room_id@>
