@@ -1,4 +1,4 @@
-<master src="master">
+<master>
 <property name="context">@context_bar@</property>
 <property name="title">@room_name@</property>
 

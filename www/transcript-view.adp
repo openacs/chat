@@ -5,7 +5,7 @@
      @creation-date November 27, 2000
      @cvs-id $Id$
 -->
-<master src="master">
+<master>
 <property name="context">@context_bar@</property>
 <property name="title">Transcript preview</property>
 

@@ -5,7 +5,7 @@
     @creation-date January 18, 2001
     @cvs-id $Id$
 -->
-<master src="master">
+<master>
 <property name="context">@context_bar@</property>
 <property name="title">Confirm message delete</property>
 

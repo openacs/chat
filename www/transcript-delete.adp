@@ -5,7 +5,7 @@
     @creation-date November 28, 2000
     @cvs-id $Id$
 -->
-<master src="master">
+<master>
 <property name="context">@context_bar@</property>
 <property name="title">Confirm chat transcript delete</property>
 
