@@ -49,6 +49,7 @@ if { $moderate_room_p == "t" } {
 if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
     #Display unauthorize privilege page.
     ad_returnredirect unauthorized
+    ad_script_abort
 }
 
 # Get chat screen name.

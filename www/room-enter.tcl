@@ -20,6 +20,7 @@ set ban_p [ad_permission_p $room_id "chat_ban"]
 if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
     #Display unauthorize privilege page.
     ad_returnredirect unauthorized
+    ad_script_abort
 }
 if {$client == "html"} {
     chat_message_post $room_id $user_id "has entered the room." "1"
