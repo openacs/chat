@@ -244,7 +244,7 @@ as
         object_type    in acs_objects.object_type%TYPE   default 'chat_room'
     ) return acs_objects.object_id%TYPE;
 
-    procedure delete (
+    procedure del (
         room_id        in chat_rooms.room_id%TYPE
     );    
 
@@ -298,7 +298,7 @@ as
         object_type    in acs_objects.object_type%TYPE           default 'chat_transcript'
     ) return acs_objects.object_id%TYPE;        
 
-    procedure delete (
+    procedure del (
         transcript_id  in chat_transcripts.transcript_id%TYPE
     );
 
@@ -364,22 +364,22 @@ as
         return v_room_id;
     end new;
 
-    procedure delete (
+    procedure del (
         room_id        in chat_rooms.room_id%TYPE
     )
     is
     begin
         -- First erase all the messages relate to this chat room.
-        delete from chat_msgs where room_id = chat_room.delete.room_id;
+        delete from chat_msgs where room_id = chat_room.del.room_id;
 
         -- Delete all privileges associate with this room
-        delete from acs_permissions where object_id = chat_room.delete.room_id;
+        delete from acs_permissions where object_id = chat_room.del.room_id;
 
         -- Now delete the chat room itself.
-        delete from chat_rooms where room_id = chat_room.delete.room_id;
+        delete from chat_rooms where room_id = chat_room.del.room_id;
 
-        acs_object.delete(room_id);
-    end delete;
+        acs_object.del(room_id);
+    end del;
 
     procedure edit (
         room_id        in chat_rooms.room_id%TYPE,
@@ -522,20 +522,20 @@ as
         return v_transcript_id;
     end new;
 
-    procedure delete (
+    procedure del (
         transcript_id     in chat_transcripts.transcript_id%TYPE
     )
     is
     begin
 
         -- Delete all privileges associate with this transcript
-        delete from acs_permissions where object_id = chat_transcript.delete.transcript_id;
+        delete from acs_permissions where object_id = chat_transcript.del.transcript_id;
 
         delete from chat_transcripts 
-        where transcript_id = chat_transcript.delete.transcript_id;
+        where transcript_id = chat_transcript.del.transcript_id;
         
-        acs_object.delete(transcript_id);
-    end delete;
+        acs_object.del(transcript_id);
+    end del;
 
     procedure edit (
         transcript_id     in chat_transcripts.transcript_id%TYPE,

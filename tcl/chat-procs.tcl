@@ -202,7 +202,7 @@ ad_proc -public chat_room_delete {
 } {
     db_exec_plsql delete_room {
 	begin
-	    chat_room.delete(:room_id);
+	    chat_room.del(:room_id);
 	end;
     }
 }
@@ -520,7 +520,7 @@ ad_proc -public chat_transcript_delete {
 } {
     db_exec_plsql delete_transcript {
 	begin
-	chat_transcript.delete(:transcript_id);
+	chat_transcript.del(:transcript_id);
 	end;
     }
 }
