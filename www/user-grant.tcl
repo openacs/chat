@@ -20,7 +20,7 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_user_grant
 
-set context_bar [ad_context_bar "Grant user"]
+set context_bar [list "Grant user"]
 set submit_label "Grant"
 set title "Grant user"
 set action "user-grant-2"

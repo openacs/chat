@@ -33,7 +33,7 @@ ad_page_contract {
     chat_transcripts:multirow
 }
 
-set context_bar [ad_context_bar "Room information"]
+set context_bar [list "Room information"]
 
 
 ###

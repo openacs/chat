@@ -6,7 +6,7 @@
     @cvs-id $Id$
 -->
 <master src="master">
-<property name="context_bar">@context_bar@</property>
+<property name="context">@context_bar@</property>
 <property name="title">Confirm revoke user</property>
 
 <form method=post action=user-revoke-2>

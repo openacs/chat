@@ -30,7 +30,7 @@ if {[catch {db_1row room_info {
     ad_return_complaint "Room not found" "Room not found."
 }
 
-set context_bar [ad_context_bar "Edit room '$pretty_name'"]
+set context_bar [list "Edit room '$pretty_name'"]
 set title "Edit room '$pretty_name'"
 set action "room-edit-2"
 set submit_label "Update room"

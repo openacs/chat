@@ -21,7 +21,7 @@ ad_page_contract {
 }
 
 ad_require_permission $transcript_id chat_transcript_edit
-set context_bar [ad_context_bar "Edit transcript"]
+set context_bar [list "Edit transcript"]
 
 set title "Edit transcript"
 set action "transcript-edit-2"

@@ -6,7 +6,7 @@
      @cvs-id $Id$
 -->
 <master src="master">
-<property name="context_bar">@context_bar@</property>
+<property name="context">@context_bar@</property>
 <property name="title">Chat main page</property>
 
 <if @room_create_p@ ne 0>

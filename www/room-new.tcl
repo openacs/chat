@@ -18,7 +18,7 @@ ad_page_contract {
 
 ad_require_permission [ad_conn package_id] chat_room_create
 
-set context_bar [ad_context_bar "Create a room"]
+set context_bar [list "Create a room"]
 set title "Create a room"
 set action "room-new-2"
 set submit_label "Create room"

@@ -16,7 +16,7 @@ doc_body_append "[ad_header "Grant permission on $pretty_name"]
 
 <h2>Grant permission on $pretty_name</h2>
 
-[ad_context_bar "Grant permission on $pretty_name"]
+[list "Grant permission on $pretty_name"]
 
 <hr>
 

@@ -20,7 +20,7 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_user_ban
 
-set context_bar [ad_context_bar "Ban user"]
+set context_bar [list "Ban user"]
 set submit_label "Ban"
 set title "Ban user"
 set action "user-ban-2"

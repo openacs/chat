@@ -29,7 +29,7 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint "Room not found" "Invalid room id"
 }
 
-set context_bar [ad_context_bar $room_name]
+set context_bar [list $room_name]
 
 set user_id [ad_conn user_id]
 

@@ -16,7 +16,7 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_room_delete
 
-set context_bar [ad_context_bar [list "room?room_id=$room_id" "Room information"] "Delete messages"]
+set context_bar [list [list "room?room_id=$room_id" "Room information"] "Delete messages"]
 
 set pretty_name [chat_room_name $room_id]
 

@@ -16,7 +16,7 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_transcript_create
 
-set context_bar [ad_context_bar [list "room?room_id=$room_id" "Room Information"] "Create transcript"]
+set context_bar [list [list "room?room_id=$room_id" "Room Information"] "Create transcript"]
 
 set transcript_id ""
 set transcript_name "Untitled"

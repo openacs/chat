@@ -9,6 +9,6 @@ ad_page_contract {
     context_bar:onevalue
 }
 
-set context_bar [ad_context_bar "Unauthorized privilege"]
+set context_bar [list "Unauthorized privilege"]
 
 ad_return_template

@@ -13,7 +13,7 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_user_unban
 
-set context_bar [ad_context_bar [list "room?room_id=$room_id" "Room information"] "Unban user"]
+set context_bar [list [list "room?room_id=$room_id" "Room information"] "Unban user"]
 
 set party_pretty_name [db_string get_party_name "select acs_object.name(:party_id) from dual"]
 

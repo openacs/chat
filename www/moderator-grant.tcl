@@ -19,7 +19,7 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_moderator_grant
 
-set context_bar [ad_context_bar "Grant moderator"]
+set context_bar [list "Grant moderator"]
 set submit_label "Grant"
 set title "Grant moderator"
 set action "moderator-grant-2"
