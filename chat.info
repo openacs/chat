@@ -9,7 +9,6 @@
     <version name="4.0.0b" url="http://www.arsdigita.com/acs-repository/download/apm/chat-4.0.0b.apm">
     <database-support>
         <database>oracle</database>
-        <database>postgresql</database>
     </database-support>
         <owner url="mailto:ddao@arsdigita.com">David Dao</owner>
         <summary>This is a chat application	</summary>
