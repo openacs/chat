@@ -12,7 +12,7 @@ ad_page_contract {
 ad_require_permission $room_id chat_room_delete
 
 if { [catch {chat_room_message_delete $room_id} errmsg] } {
-    ad_return_complaint "Delete messages failed." $errmsg
+    ad_return_complaint 1 "Delete messages failed: $errmsg"
 }
 
 ad_returnredirect .

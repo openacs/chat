@@ -26,7 +26,7 @@ if {[catch {set room_id [chat_room_new -moderated_p $moderated_p \
                           -context_id $package_id \
                           -creation_user $user_id \
 		          -creation_ip $creation_ip $pretty_name]} errmsg]} {
-    ad_return_complaint "Create new room failed." $errmsg
+    ad_return_complaint 1 "Create new room failed: $errmsg"
 }
 
 ad_returnredirect "room?room_id=$room_id"

@@ -10,7 +10,7 @@ ad_page_contract {
 ad_require_permission $transcript_id chat_transcript_delete
 
 if { [catch {chat_transcript_delete $transcript_id} errmsg] } {
-    ad_return_complaint "Delete transcript failed." $errmsg
+    ad_return_complaint 1 "Delete transcript failed: $errmsg"
 }
 
 ad_returnredirect "room?room_id=$room_id"

@@ -26,7 +26,7 @@ ad_page_contract {
 }
 
 if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
-    ad_return_complaint "Room not found" "Invalid room id"
+    ad_return_complaint 1 "Room not found, Invalid room id"
 }
 
 set context_bar [list $room_name]
