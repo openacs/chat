@@ -11,10 +11,11 @@
         <database>oracle</database>
     </database-support>
         <owner url="mailto:ddao@arsdigita.com">David Dao</owner>
-        <summary>This is a chat application	</summary>
+        <summary>Server based chat with an html and java client.</summary>
         <release-date>2001-01-18</release-date>
+
         <vendor url="http://www.arsdigita.com/">ArsDigita Corporation</vendor>
-        <description format="text/html">ACS Chat is now support both HTML client and Java applet client. </description>
+        <description format="text/html">This package has not really been used.  Probably better to look at the jabber package in contrib.</description>
 
         <requires url="acs-kernel" version="5.0d13"/>
 
