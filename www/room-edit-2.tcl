@@ -18,7 +18,7 @@ ad_require_permission $room_id chat_room_edit
 
 if {[catch {chat_room_edit $room_id $pretty_name $description $moderated_p $active_p $archive_p} errmsg]} {
 
-    ad_return_complaint "Could not update room" $errmsg
+    ad_return_complaint 1 "Could not update room: $errmsg"
 }
 
 

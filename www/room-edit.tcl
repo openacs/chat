@@ -27,7 +27,7 @@ if {[catch {db_1row room_info {
     from chat_rooms
     where room_id = :room_id}} errmsg]} {
 
-    ad_return_complaint "Room not found" "Room not found."
+    ad_return_complaint 1 "Room not found."
 }
 
 set context_bar [list "Edit room '$pretty_name'"]

@@ -506,7 +506,7 @@ ad_proc -public chat_transcript_new {
             returning contents into :1
 	} -clobs [list $contents]
     } on_error {
-	ad_return_complaint "Insert fail" $errmsg
+	ad_return_complaint 1 "Insert fail: $errmsg"
     }
 
     return $transcript_id
