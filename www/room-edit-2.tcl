@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 15, 2000
-    @cvs-id $id$
+    @cvs-id $Id$
 } {
     room_id:notnull,integer
     pretty_name:notnull,trim
