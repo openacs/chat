@@ -9,6 +9,6 @@ ad_page_contract {
     context_bar:onevalue
 }
 
-set context_bar [list "Unauthorized privilege"]
+set context_bar [list "[_ chat.Unauthorized_privilege]"]
 
 ad_return_template

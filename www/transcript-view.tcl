@@ -18,7 +18,7 @@ ad_page_contract {
 
 ad_require_permission $transcript_id chat_transcript_view
 
-set context_bar [list "View transcript"]
+set context_bar [list "[_ chat.View_transcript]"]
 db_1row get_transcript {
     select pretty_name as transcript_name,
            description,

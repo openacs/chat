@@ -7,6 +7,6 @@
 -->
 <master>
 <property name="context">@context_bar;noquote@</property>
-<property name="title">Unauthorized</property>
+<property name="title">#chat.Unauthorized#</property>
 
-You don't have permission to enter this chat room. 
+#chat.You_dont_have_permission_room#. 

@@ -13,9 +13,9 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_moderator_revoke
 
-set context_bar [list [list "room?room_id=$room_id" "Room information"] "Revoke moderator"]
+set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Revoke_moderator]"]
 
-set party_pretty_name [db_string get_party_name "select acs_object.name(:party_id) from dual"]
+set party_pretty_name [db_string get_party_name {}]
 
 set pretty_name [chat_room_name $room_id]
 

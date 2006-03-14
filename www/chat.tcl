@@ -9,7 +9,7 @@ ad_page_contract {
 } {
     room_id
     client
-    {message ""}
+    {message:html ""}
 } -properties {
     context_bar:onevalue
     user_id:onevalue
@@ -26,7 +26,7 @@ ad_page_contract {
 }
 
 if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
-    ad_return_complaint 1 "Room not found, Invalid room id"
+    ad_return_complaint 1 "[_ chat.Room_not_found]"
 }
 
 set context_bar [list $room_name]
@@ -54,23 +54,23 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 
 # Get chat screen name.
 set user_name [chat_user_name $user_id]
-
 # Determine which template to use for html or java client
 if {$client == "java"} {
     set template_use "java-chat"
 
     # Get config paramater for applet.
-    set width [ad_parameter AppletWidth "" 800]
-    set height [ad_parameter AppletHeight "" 600]
-    set host [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]
-    set port [ad_parameter ServerPort]
+    set width [ad_parameter AppletWidth "" 500]
+    set height [ad_parameter AppletHeight "" 400]   
+    
+    set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
+    set port [ad_parameter ServerPort "" 8200]
 } else {
     set template_use "html-chat"
 
     chat_message_retrieve msgs $room_id $user_id
 
     if { ![empty_string_p $message] } {
-	chat_message_post $room_id $user_id $message $moderator_p
+        chat_message_post $room_id $user_id $message $moderator_p
     }
 
 

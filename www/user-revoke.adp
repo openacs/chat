@@ -7,12 +7,12 @@
 -->
 <master>
 <property name="context">@context_bar;noquote@</property>
-<property name="title">Confirm revoke user</property>
+<property name="title">#chat.Confirm_revoke_user#</property>
 
 <form method=post action=user-revoke-2>
 <input type=hidden name=room_id value="@room_id@">
 <input type=hidden name=party_id value="@party_id@">
-Are you sure you want to revoke chat user privilege of <b>@party_pretty_name@</b> from @pretty_name@?
-<p><input type=submit value="Revoke">
+#chat.Are_you_sure_you_want_to_revoke# <b>@party_pretty_name@</b> #chat.from# @pretty_name@?
+<p><input type=submit value="#chat.Revoke#">
 </form>
 

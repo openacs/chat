@@ -21,11 +21,11 @@ ad_page_contract {
 }
 
 ad_require_permission $transcript_id chat_transcript_edit
-set context_bar [list "Edit transcript"]
+set context_bar [list "[_ chat.Edit_transcript]"]
 
-set title "Edit transcript"
+set title "[_ chat.Edit_transcript]"
 set action "transcript-edit-2"
-set submit_label "Edit"
+set submit_label "[_ chat.Edit]"
 
 db_1row get_transcript_info {
     select pretty_name as transcript_name,

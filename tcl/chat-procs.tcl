@@ -10,7 +10,7 @@ ad_library {
 ad_proc -private chat_start_server {} { Start Java chat server. } {
 
     if [nsv_get chat server_started] {
-	return
+        return
     }
     ns_log notice "chat_start_server: Starting chat server"
     set port [ad_parameter ServerPort]
@@ -23,11 +23,11 @@ ad_proc -private chat_start_server {} { Start Java chat server. } {
 
     # Wait until chat server started before spawning new threads connecting to the server.
     while { $done == 0} {
-	if [catch {set fds [ns_sockopen -nonblock $host_location $port]} errmsg] {
-	    set done 0
-	} else {
-	    set done 1
-	}
+        if [catch {set fds [ns_sockopen -nonblock $host_location $port]} errmsg] {
+            set done 0
+        } else {
+            set done 1
+        }
     }
 
     # Free up resources.
@@ -43,7 +43,7 @@ ad_proc -private chat_start_server {} { Start Java chat server. } {
     nsv_set chat server_started 1
 }
 
-ad_proc -private chat_broadcast_to_applets {host port} { Broadcast chat message from HTML client to Java server. } { 
+ad_proc -private chat_broadcast_to_applets {host port} { Broadcast chat message from HTML client to Java server. } {
 
     # Chat server must already started otherwise error will occur.
     set fds [ns_sockopen -nonblock $host $port]
@@ -51,20 +51,22 @@ ad_proc -private chat_broadcast_to_applets {host port} { Broadcast chat message 
     set r [lindex $fds 0]
     set w [lindex $fds 1]
 
-    ns_log debug "chat_broadcast_to_applets: Ready to broadcast message to applets."
+    ns_log Notice "chat_broadcast_to_applets: Ready to broadcast message to applets."
+    ns_log Notice $host
+    ns_log Notice $port
 
     # Register to java chat server.
     puts $w "<login><user_id>-1</user_id><user_name>AOL_WRITER</user_name><pw>T</pw><room_id>-1</room_id></login>"
     flush $w
 
     while { 1 } {
-	# Wait until there is new message in queue.
-	ns_mutex lock [nsv_get chat new_message]
-	if [nsv_exists chat html_message] {
-	    # Get message from queue.
-	    puts $w [nsv_get chat html_message]
-	    flush $w
-	}
+        # Wait until there is new message in queue.
+        ns_mutex lock [nsv_get chat new_message]
+        if [nsv_exists chat html_message] {
+            # Get message from queue.
+            puts $w [nsv_get chat html_message]
+            flush $w
+        }
     }
 }
 
@@ -77,7 +79,7 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
     set w [lindex $fds 1]
     set r_fd [list $r]
 
-    ns_log debug "chat_receive_from_server: Listening for messages from applets."
+    ns_log Notice "chat_receive_from_server: Listening for messages from applets."
 
     puts $w "<login><user_id>-1</user_id><user_name>AOL_READER</user_name><pw>T</pw><room_id>-1</room_id></login>"
     flush $w
@@ -85,28 +87,32 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
     set running 1
 
     while { $running } {
-	set sel [ns_sockselect $r_fd {} {}]
-	set rfds [lindex $sel 0]
+        set sel [ns_sockselect $r_fd {} {}]
+        set rfds [lindex $sel 0]
 
-	foreach r $rfds {
+        foreach r $rfds {
 
-	    if {[ns_sockcheck $r] && [set line [string trim [gets $r]]] != ""} {
-		regexp "<room_id>(.*)</room_id>" $line match room_id
-		regexp "<from>(.*)</from>" $line match screen_name
-		regexp "<body>(.*)</body>" $line match msg
-		regexp "<from_user_id>(.*)</from_user_id>" $line match user_id
-		if ![nsv_exists chat_room $room_id] {
-		    nsv_set chat_room $room_id {}		    
-		} 
-		if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
-		    ns_log error "chat_post_message_to_db: error: $errmsg"
-		}
-		nsv_lappend chat_room $room_id $line
+            if {[ns_sockcheck $r] && [set line [string trim [gets $r]]] != ""} {
+                
+                regexp "<room_id>(.*)</room_id>" $line match room_id
+                regexp "<from>(.*)</from>" $line match screen_name
+                regexp "<body>(.*)</body>" $line match msg
+                regexp "<from_user_id>(.*)</from_user_id>" $line match user_id
+                if ![nsv_exists chat_room $room_id] {
+                    nsv_set chat_room $room_id {}                   
+                }
 
-	    } else {
-		set running 0
-	    }
-	}
+
+                if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
+                    ns_log error "chat_post_message_to_db: error: $errmsg"
+                }
+
+                nsv_lappend chat_room $room_id $line
+
+            } else {
+                set running 0
+            }
+        }
     }
 }
 
@@ -118,16 +124,8 @@ ad_proc -private chat_post_message_to_db {
 } {
     Log chat message to the database.
 } {
-    db_dml post_message {
-	begin
-	    chat_room.message_post (
-	        room_id       => :room_id,
-                msg           => :msg,
-                creation_user => :creation_user,
-                creation_ip   => :creation_ip
-	    );
-	end;
-    }
+    ns_log Notice $msg
+    db_exec_plsql post_message {}
 
 }
 ad_proc -public chat_room_new {
@@ -143,30 +141,12 @@ ad_proc -public chat_room_new {
 } {
     Create new chat room. Return room_id if successful else raise error.
 } {
+
     db_transaction {
-	set room_id [db_exec_plsql create_room {
-	    begin
-	        :1 := chat_room.new (
-	            pretty_name   => :pretty_name,
-	            moderated_p   => :moderated_p,
-                    description   => :description,
-	            active_p      => :active_p,
-                    archive_p     => :archive_p,
-	            context_id    => :context_id,
-	            creation_user => :creation_user,
-	            creation_ip   => :creation_ip
-	        );
-	        -- Automatic grant room privilege to creator of the room (must not be null).
-                if :creation_user <> ''
-                then
-	            acs_permission.grant_permission(:1, :creation_user, 'chat_room_edit');
-	            acs_permission.grant_permission(:1, :creation_user, 'chat_room_view');
-	            acs_permission.grant_permission(:1, :creation_user, 'chat_room_delete');
-	            acs_permission.grant_permission(:1, :creation_user, 'chat_transcript_create');
-                end if;
-	    end;
-        }]
+        set room_id [db_exec_plsql create_room {}]
     }
+
+    db_exec_plsql grant_permission {}
 
     return $room_id
 }
@@ -181,18 +161,7 @@ ad_proc -public chat_room_edit {
 } {
     Edit information on chat room. All information require.
 } {
-   return [db_exec_plsql edit_room {
-	begin
-	    chat_room.edit (
-	        room_id       => :room_id,
-	        pretty_name   => :pretty_name,
-                description   => :description,
-	        moderated_p   => :moderated_p,
-	        active_p      => :active_p,
-                archive_p     => :archive_p
-	    );
-	end;
-    }]
+   db_exec_plsql edit_room {}
 }
 
 ad_proc -public chat_room_delete {
@@ -200,11 +169,7 @@ ad_proc -public chat_room_delete {
 } {
     Delete chat room.
 } {
-    db_exec_plsql delete_room {
-	begin
-	    chat_room.del(:room_id);
-	end;
-    }
+    db_exec_plsql delete_room {}
 }
 
 ad_proc -public chat_room_message_delete {
@@ -212,11 +177,7 @@ ad_proc -public chat_room_message_delete {
 } {
     Delete all message in the room.
 } {
-    db_exec_plsql delete_message {
-	begin
-	    chat_room.delete_all_msgs(:room_id);
-	end;
-    }
+    db_exec_plsql delete_message {}
 }
 
 ad_proc -public chat_message_count {
@@ -224,11 +185,20 @@ ad_proc -public chat_message_count {
 } {
     Get message count in the room.
 } {
-    return [db_exec_plsql message_count {
-	begin
-	    :1 := chat_room.message_count(:room_id);
-        end;
-    }]
+
+    return [db_exec_plsql message_count {}]
+}
+
+
+
+ad_proc -public room_active_status {
+    room_id
+} {
+    Get room active status.
+} {
+
+    return [db_string get_active { select active_p from chat_rooms where room_id =  :room_id}]
+
 }
 
 ad_proc -public chat_room_name {
@@ -236,11 +206,7 @@ ad_proc -public chat_room_name {
 } {
     Get chat room name.
 } {
-    return [db_exec_plsql get_room_name {
-	begin
-	    :1 := chat_room.name(:room_id);
-	end;
-    }]
+    return [db_string get_room_name {} -default "" ]
 
 }
 
@@ -250,11 +216,7 @@ ad_proc -public chat_moderator_grant {
 } {
     Grant party a chat moderate privilege to this chat room.
 } {
-    db_dml grant_moderator {
-	begin
-	    acs_permission.grant_permission(:room_id, :party_id, 'chat_room_moderate');
-	end;
-    }
+    db_exec_plsql grant_moderator {}
 }
 
 ad_proc -public chat_moderator_revoke {
@@ -264,11 +226,7 @@ ad_proc -public chat_moderator_revoke {
     Revoke party a chat moderate privilege to this chat room.
 } {
 
-    db_dml revoke_moderator {
-	begin
-	    acs_permission.revoke_permission(:room_id, :party_id, 'chat_room_moderate');
-	end;
-    }
+    db_exec_plsql revoke_moderator {}
 
 }
 
@@ -279,12 +237,7 @@ ad_proc -public chat_user_grant {
     Grant party a chat privilege to this chat room.
 } {
     db_transaction {
-	db_dml grant_user {
-	    begin
-	    acs_permission.grant_permission(:room_id, :party_id, 'chat_write');
-	    acs_permission.grant_permission(:room_id, :party_id, 'chat_read');
-	    end;
-	}
+        db_exec_plsql grant_user {}
     }
 }
 
@@ -296,12 +249,7 @@ ad_proc -public chat_user_revoke {
     Revoke party a chat privilege to this chat room.
 } {
     db_transaction {
-	db_dml revoke_user {
-	    begin
-	    acs_permission.revoke_permission(:room_id, :party_id, 'chat_write');
-	    acs_permission.revoke_permission(:room_id, :party_id, 'chat_read');
-	    end;
-	}
+        db_exec_plsql revoke_user {}
     }
 }
 
@@ -311,11 +259,7 @@ ad_proc -public chat_user_ban {
 } {
     Explicit ban user from this chat room.
 } {
-    db_dml ban_user {
-	begin
-	acs_permission.grant_permission(:room_id, :party_id, 'chat_ban');
-	end;
-    }
+    db_exec_plsql ban_user {}
 }
 
 
@@ -325,11 +269,7 @@ ad_proc -public chat_user_unban {
 } {
     unban user from this chat room.
 } {
-    db_dml ban_user {
-	begin
-	acs_permission.revoke_permission(:room_id, :party_id, 'chat_ban');
-	end;
-    }
+    db_exec_plsql ban_user {}
 }
 
 ad_proc -public chat_revoke_moderators {
@@ -339,11 +279,11 @@ ad_proc -public chat_revoke_moderators {
     Revoke a list of parties of a moderate privilege from this room.
 } {
     foreach party_id $revoke_list {
-	db_dml revoke_moderate {
-	    begin
-	        acs_persmission.revoke_permission(:room_id, :party_id, 'chat_moderate_room');
-	    end
-	}
+        db_dml revoke_moderate {
+            begin
+                acs_persmission.revoke_permission(:room_id, :party_id, 'chat_moderate_room');
+            end
+        }
     }
 
 }
@@ -354,9 +294,9 @@ ad_proc -public chat_room_moderate_p {
     Return the moderate status of this chat room.
 } {
     set moderate_p [db_string get_chat_room_moderate {
-	select moderated_p 
-	from chat_rooms 
-	where room_id = :room_id
+        select moderated_p
+        from chat_rooms
+        where room_id = :room_id
     }]
 
     return $moderate_p
@@ -368,11 +308,8 @@ ad_proc -public chat_user_name {
 } {
     Return display name of this user to use in chat.
 } {
-    return [db_exec_plsql get_chat_user_name {
-	begin
-	    :1 := person.name(:user_id);
-	end;
-    }]
+
+    return [db_exec_plsql get_chat_user_name {}]
 
 }
 
@@ -385,16 +322,17 @@ ad_proc -public chat_message_post {
     Post message to the chat room and broadcast to all applet clients. Only use by HTML client.
 } {
     if {$moderator_p == "1" } {
-	set status "approved"
+        set status "approved"
     } else {
-	set status "pending"
+        set status "pending"
     }
 
     set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
-
     # Add message to queue. Notify thread responsible for broadcast message to applets.
+
     nsv_set chat html_message $chat_msg
     ns_mutex unlock [nsv_get chat new_message]
+
 }
 
 
@@ -425,8 +363,8 @@ ad_proc -public chat_message_retrieve {
     # The first time html client enter chat room, chat_room variable is not initialize correctly.
     # Therefore I just hard code the variable.
     if ![nsv_exists chat_room $room_id] {
-	nsv_set chat_room $room_id [list "<message><from>[chat_user_name $user_id]</from><room_id>$room_id</room_id><body>has entered the room</body><status>approved</status></message>"]
-    }        
+        nsv_set chat_room $room_id [list "<message><from>[chat_user_name $user_id]</from><room_id>$room_id</room_id><body>[_ chat.has_entered_the_room]</body><status>approved</status></message>"]
+    }
 
     set user_name [chat_user_name $user_id]
 
@@ -441,26 +379,26 @@ ad_proc -public chat_message_retrieve {
 
     #foreach msg $chat_messages 
     for { set i [expr $cnt - 1] } { $i >= 0 } { set i [expr $i - 1] } {
-	set msg [lindex $chat_messages $i]
-	regexp "<from>(.*)</from>" $msg match screen_name
-	regexp "<body>(.*)</body>" $msg match chat_msg
-	regexp "<status>(.*)</status>" $msg match status
+        set msg [lindex $chat_messages $i]
+        regexp "<from>(.*)</from>" $msg match screen_name
+        regexp "<body>(.*)</body>" $msg match chat_msg
+        regexp "<status>(.*)</status>" $msg match status
 
 
-	if {$status == "pending" || $status == "rejected"} {
-	    continue;
-	}
+        if {$status == "pending" || $status == "rejected"} {
+            continue;
+        }
 
-	upvar "$msgs:[expr {$counter + 1}]" array_val
+        upvar "$msgs:[expr {$counter + 1}]" array_val
 
-	set array_val(screen_name) $screen_name
-	set array_val(chat_msg) $chat_msg
-	incr counter
-	set array_val(rownum) $counter
+        set array_val(screen_name) $screen_name
+        set array_val(chat_msg) $chat_msg
+        incr counter
+        set array_val(rownum) $counter
 
-	if {$screen_name == $user_name && $chat_msg == "has entered the room."} {
-	    return
-	}
+        if {$screen_name == $user_name && $chat_msg == "has entered the room."} {
+            return
+        }
     }
 
 }
@@ -479,34 +417,17 @@ ad_proc -public chat_transcript_new {
 } {
 
     db_transaction {
-	set transcript_id [db_exec_plsql create_transcript {
-	    begin
-	        :1 := chat_transcript.new (
-	            pretty_name   => :pretty_name,
-	            contents      => empty_clob(),
-                    description   => :description,
-	            room_id       => :room_id,
-	            context_id    => :context_id,
-	            creation_user => :creation_user,
-	            creation_ip   => :creation_ip
-	        );
-	        -- Automatic grant transcript privilege to creator of the transcript (must not be null).
-                if :creation_user is not null
-                then
-	           acs_permission.grant_permission(:1, :creation_user, 'chat_transcript_edit');
-	           acs_permission.grant_permission(:1, :creation_user, 'chat_transcript_view');
-	           acs_permission.grant_permission(:1, :creation_user, 'chat_transcript_delete');
-                end if;
-	    end;
-        }]
-	db_dml transcript_content {
-	    update chat_transcripts
-            set contents = empty_clob()
-           where transcript_id = :transcript_id
-            returning contents into :1
-	} -clobs [list $contents]
-    } on_error {
-	ad_return_complaint 1 "Insert fail: $errmsg"
+        set transcript_id [db_exec_plsql create_transcript {}]
+        db_exec_plsql grant_permission {}
+#
+#       db_dml transcript_content {
+#           update chat_transcripts
+#            set contents = empty_clob()
+#           where transcript_id = :transcript_id
+#            returning contents into :1
+#       } -clobs [list $contents]
+#    } on_error {
+#       ad_return_complaint 1 "Insert fail: $errmsg"
     }
 
     return $transcript_id
@@ -518,11 +439,7 @@ ad_proc -public chat_transcript_delete {
 } {
     Delete chat transcript.
 } {
-    db_exec_plsql delete_transcript {
-	begin
-	chat_transcript.del(:transcript_id);
-	end;
-    }
+    db_exec_plsql delete_transcript {}
 }
 
 ad_proc -public chat_transcript_edit {
@@ -534,23 +451,17 @@ ad_proc -public chat_transcript_edit {
     Edit chat transcript.
 } {
     db_transaction {
-	db_exec_plsql edit_transcript {
-	    begin
-	    chat_transcript.edit(
-	        transcript_id => :transcript_id,
-	        pretty_name   => :pretty_name,
-                contents      => :empty_clob(),
-                description   => :description);
-	    end;
-	}
-	db_dml transcript_content {
-	    update chat_transcripts
-            set contents = empty_clob()
-           where transcript_id = :transcript_id
-            returning contents into :1
-	} -clobs [list $contents]
+        db_exec_plsql edit_transcript {
+
+        }
+        #db_dml transcript_content {
+        #    update chat_transcripts
+        #    set contents = empty_clob()
+        #   where transcript_id = :transcript_id
+        #    returning contents into :1
+        #} -clobs [list $contents]
     }
-	
+        
 }
 
 

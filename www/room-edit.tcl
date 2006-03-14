@@ -16,6 +16,7 @@ ad_page_contract {
     pretty_name:onevalue
     description:onevalue
     moderated_p:onevalue
+    active_p:onevalue
     room:onerow
 }
 
@@ -23,17 +24,19 @@ ad_require_permission $room_id chat_room_edit
 
 
 if {[catch {db_1row room_info {
-    select pretty_name, description, moderated_p, archive_p, active_p 
+    select pretty_name, description, moderated_p, archive_p, active_p
     from chat_rooms
     where room_id = :room_id}} errmsg]} {
 
-    ad_return_complaint 1 "Room not found."
+    ad_return_complaint 1 "[_ chat.Room_not_found]."
 }
+
+ns_log notice "send: moderated_p:$moderated_p archive_p:$archive_p  active_p:$active_p"
 
 set context_bar [list "Edit room '$pretty_name'"]
 set title "Edit room '$pretty_name'"
 set action "room-edit-2"
-set submit_label "Update room"
+set submit_label "[_ chat.Update_room]"
 
 ad_return_template "room-entry"
 

@@ -19,15 +19,12 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_moderator_grant
 
-set context_bar [list "Grant moderator"]
-set submit_label "Grant"
-set title "Grant moderator"
+set context_bar [list "[_ chat.Grant_moderator]"]
+set submit_label "[_ chat.Grant]"
+set title "[_ chat.Grant_moderator]"
 set action "moderator-grant-2"
-set description "Grant moderator for <b>[chat_room_name $room_id]</b> to"
-db_multirow parties list_parties {
-  select party_id, acs_object.name(party_id) as name
-  from parties
-} 
+set description "[_ chat.Grant_moderator_for] <b>[chat_room_name $room_id]</b> [_ chat.to]"
+db_multirow parties list_parties {}
 
 ad_return_template grant-entry
 

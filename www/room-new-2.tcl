@@ -25,8 +25,20 @@ if {[catch {set room_id [chat_room_new -moderated_p $moderated_p \
                           -archive_p $archive_p \
                           -context_id $package_id \
                           -creation_user $user_id \
-		          -creation_ip $creation_ip $pretty_name]} errmsg]} {
-    ad_return_complaint 1 "Create new room failed: $errmsg"
+                          -creation_ip $creation_ip $pretty_name]} errmsg]} {
+    ad_return_complaint 1 "[_ chat.Create_new_room_failed]: $errmsg"
+}
+
+set comm_id [dotlrn_community::get_community_id] 
+if {$comm_id ne ""} {
+  chat_user_grant $room_id [dotlrn_community::get_community_id]
+} else {
+  #-2 Registered Users
+  #chat_user_grant $room_id -2 
+  #0 Unregistered Visitor
+  #chat_user_grant $room_id 0
+  #-1 The Public
+  chat_user_grant $room_id -1
 }
 
 ad_returnredirect "room?room_id=$room_id"

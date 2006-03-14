@@ -16,5 +16,5 @@ ad_page_contract {
 
 ad_require_permission $transcript_id chat_transcript_delete
 
-set context_bar [list "Delete transcript"]
+set context_bar [list "[_ chat.Delete_transcript]"]
 ad_return_template

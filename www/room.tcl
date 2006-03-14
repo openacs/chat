@@ -33,7 +33,7 @@ ad_page_contract {
     chat_transcripts:multirow
 }
 
-set context_bar [list "Room information"]
+set context_bar [list "[_ chat.Room_Information]"]
 
 
 ###
@@ -60,44 +60,34 @@ set transcript_view_p [ad_permission_p $room_id chat_transcript_view]
 ###
 # Get room basic information.
 ###
+
+
+#db_1row room_info {
+#    select pretty_name, description, decode(moderated_p, 't', 'Yes', 'No') as moderated_p,
+#           decode(archive_p, 't', 'Yes', 'No') as archive_p,
+#           decode(active_p, 't', 'Yes', 'No') as active_p
+#    from chat_rooms
+#    where room_id = :room_id
+#}
+
 db_1row room_info {
-    select pretty_name, description, decode(moderated_p, 't', 'Yes', 'No') as moderated_p,
-           decode(archive_p, 't', 'Yes', 'No') as archive_p, 
-           decode(active_p, 't', 'Yes', 'No') as active_p
+    select pretty_name, description, moderated_p, active_p, archive_p
     from chat_rooms
     where room_id = :room_id
 }
 
-
 # List available room moderators.
-db_multirow moderators list_moderators {
-    select party_id, acs_object.name(party_id) as name
-    from acs_object_party_privilege_map
-    where object_id = :room_id
-    and privilege = 'chat_room_moderate'
-}
+db_multirow moderators list_moderators {}
 
 # List authorized chat users.
-db_multirow users_allow list_user_allow {
-    select distinct party_id, acs_object.name(party_id) as name
-    from acs_object_party_privilege_map
-    where object_id = :room_id
-    and (privilege = 'chat_read' or privilege = 'chat_write')
-}
+db_multirow users_allow list_user_allow {}
+
 # List user ban from chat
-db_multirow users_ban list_user_allow {
-    select party_id, acs_object.name(party_id) as name
-    from acs_object_party_privilege_map
-    where object_id = :room_id
-    and privilege = 'chat_ban'
-}
+db_multirow users_ban list_user_ban {}
+
 
 # List available chat transcript
-db_multirow chat_transcripts list_transcripts {
-    select transcript_id, pretty_name 
-    from chat_transcripts
-    where room_id = :room_id
-}
+db_multirow chat_transcripts list_transcripts {}
 
 ad_return_template
 

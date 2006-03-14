@@ -22,14 +22,8 @@ set user_id [ad_conn user_id]
 
 set room_create_p [ad_permission_p $package_id chat_room_create]
 
-db_multirow rooms rooms_list {
-    select rm.room_id, rm.pretty_name, rm.description, rm.moderated_p, rm.active_p, rm.archive_p, 
-           acs_permission.permission_p(room_id, :user_id, 'chat_room_admin') as admin_p
-    from chat_rooms rm, acs_objects obj
-    where obj.context_id = :package_id
-      and rm.room_id = obj.object_id
-    order by rm.pretty_name
-}
+
+db_multirow rooms rooms_list {}
 
 
 ad_return_template

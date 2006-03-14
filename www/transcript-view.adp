@@ -7,17 +7,13 @@
 -->
 <master>
 <property name="context">@context_bar;noquote@</property>
-<property name="title">Transcript preview</property>
+<property name="title">#chat.Transcript_preview#</property>
 
-[<a href="transcript-edit?transcript_id=@transcript_id@&room_id=@room_id@">Edit</a>]
+[<a href="transcript-edit?transcript_id=@transcript_id@&room_id=@room_id@">#chat.Edit#</a>]
 <ul>
-<li>Name: <b>@transcript_name@</b>
-<li>Description: <b><i>@description@</i></b>
-<li>Contents:
-
-<ul>
-<p>@contents@
-</ul>
+<li>#chat.Name#: <b>@transcript_name@</b></li>
+<li>#chat.Description#: <b><i>@description@</i></b></li>
+<li>#chat.Contents#:  <p> <pre>@contents@</pre></p></li>
 </ul>
 
 

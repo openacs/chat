@@ -14,15 +14,15 @@
     <input type="hidden" name="room_id" value="@room_id@">
     <table>
        <tr>
-          <th align="right">Transcript name:</th>
+          <th align="right">#chat.Transcript_name#:</th>
           <td><input size=50 name="transcript_name" value="@transcript_name@">
        </tr>
        <tr>
-          <th align="right">Description:</th>
+          <th align="right">#chat.Description# :</th>
           <td><textarea name="description" rows=6 cols=65>@description@</textarea>
        </tr>
        <tr>
-          <th align="right">Contents:</th>
+          <th align="right">#chat.Contents#:</th>
     	  <td><textarea name="contents" rows=20 cols=70>@contents@</textarea>
        </tr>
        <tr>

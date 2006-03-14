@@ -20,15 +20,12 @@ ad_page_contract {
 
 ad_require_permission $room_id chat_user_grant
 
-set context_bar [list "Grant user"]
-set submit_label "Grant"
-set title "Grant user"
+set context_bar [list "[_ chat.Grant_user]"]
+set submit_label "[_ chat.Grant]"
+set title "[_ chat.Grant_user]"
 set action "user-grant-2"
-set description "Grant chat read/write privilege for <b>[chat_room_name $room_id]</b> to"
-db_multirow parties list_parties {
-  select party_id, acs_object.name(party_id) as name
-  from parties
-} 
+set description "[_ chat.Grant_chat_read_rite_privilege_for] <b>[chat_room_name $room_id]</b> [_ chat.to]"
+db_multirow parties list_parties { }
 
 ad_return_template grant-entry
 

@@ -7,12 +7,12 @@
 -->
 <master>
 <property name="context">@context_bar;noquote@</property>
-<property name="title">Confirm room delete</property>
+<property name="title">#chat.Confirm_room_delete#</property>
 
 <form method="post" action="room-delete-2">	
 <input type=hidden name=room_id value=@room_id@>
-Are you sure you want to delete @pretty_name@?
-<p><input type=submit value=Yes>
+#chat.Are_you_sure_you_want_to_delete# @pretty_name@?
+<p><input type=submit value=#chat.Yes#>
 </form>
 
 

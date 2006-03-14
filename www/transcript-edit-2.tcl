@@ -15,8 +15,9 @@ ad_page_contract {
 
 ad_require_permission $transcript_id chat_transcript_edit
 
+
 if { [catch {chat_transcript_edit $transcript_id $transcript_name $description $contents} errmsg] } {
-    ad_return_complaint 1 "Could not update transcript: $errmsg"
+    ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
 }
 
 ad_returnredirect "transcript-view?transcript_id=$transcript_id&room_id=$room_id"
