@@ -124,7 +124,7 @@ ad_proc -private chat_post_message_to_db {
 } {
     Log chat message to the database.
 } {
-    ns_log Notice $msg
+    # ns_log Notice $msg
     db_exec_plsql post_message {}
 
 }
@@ -308,8 +308,9 @@ ad_proc -public chat_user_name {
 } {
     Return display name of this user to use in chat.
 } {
-
-    return [db_exec_plsql get_chat_user_name {}]
+	acs_user::get -user_id $user_id -array user
+	set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]
+    return $name
 
 }
 
@@ -327,12 +328,10 @@ ad_proc -public chat_message_post {
         set status "pending"
     }
 
-    set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
-    # Add message to queue. Notify thread responsible for broadcast message to applets.
-
-    nsv_set chat html_message $chat_msg
-    ns_mutex unlock [nsv_get chat new_message]
-
+    if [catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg] {
+        ns_log error "chat_post_message_to_db: error: $errmsg"
+    }
+    
 }
 
 
@@ -368,7 +367,7 @@ ad_proc -public chat_message_retrieve {
 
     set user_name [chat_user_name $user_id]
 
-    upvar "$msgs:rowcount" counter
+     upvar "$msgs:rowcount" counter
 
     set chat_messages [nsv_get chat_room $room_id]
 
@@ -419,15 +418,6 @@ ad_proc -public chat_transcript_new {
     db_transaction {
         set transcript_id [db_exec_plsql create_transcript {}]
         db_exec_plsql grant_permission {}
-#
-#       db_dml transcript_content {
-#           update chat_transcripts
-#            set contents = empty_clob()
-#           where transcript_id = :transcript_id
-#            returning contents into :1
-#       } -clobs [list $contents]
-#    } on_error {
-#       ad_return_complaint 1 "Insert fail: $errmsg"
     }
 
     return $transcript_id
@@ -450,26 +440,7 @@ ad_proc -public chat_transcript_edit {
 } {
     Edit chat transcript.
 } {
-    db_transaction {
-        db_exec_plsql edit_transcript {
-
-        }
-        #db_dml transcript_content {
-        #    update chat_transcripts
-        #    set contents = empty_clob()
-        #   where transcript_id = :transcript_id
-        #    returning contents into :1
-        #} -clobs [list $contents]
-    }
-        
+    db_exec_plsql edit_transcript {}
 }
-
-
-
-
-
-
-
-
 
 

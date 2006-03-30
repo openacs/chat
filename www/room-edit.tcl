@@ -2,46 +2,77 @@
 ad_page_contract {
     Display a form to edit room information.
 
-    @author David Dao (ddao@arsdigita.com)
-    @creation-date November 13, 2000
-    @cvs-id $Id$
+    @author Peter Alberer (peter@alberer.com)
+    @creation-date March 26, 2006
 } {
-    room_id:integer,notnull
-} -properties {
-    context_bar:onevalue
-    room_id:onevalue
-    title:onevalue
-    action:onevalue
-    submit_label:onevalue
-    pretty_name:onevalue
-    description:onevalue
-    moderated_p:onevalue
-    active_p:onevalue
-    room:onerow
+    room_id:integer,optional
+} 
+
+permission::require_permission -object_id [ad_conn package_id] -privilege chat_room_edit
+
+if { ![info exists room_id] } {
+    set title "[_ chat.Create_a_new_room]"
+} else {
+    set title "[_ chat.Edit_room] \"[chat_room_name $room_id]\""
 }
 
-ad_require_permission $room_id chat_room_edit
-
-
-if {[catch {db_1row room_info {
-    select pretty_name, description, moderated_p, archive_p, active_p
-    from chat_rooms
-    where room_id = :room_id}} errmsg]} {
-
-    ad_return_complaint 1 "[_ chat.Room_not_found]."
+ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] -has_edit 1 -form {
+    {room_id:key}    
+    {moderated_p:boolean(hidden)
+        {value "f"}
+    }    
+    {archive_p:boolean(hidden)
+        {value "t"}
+    }
+    {pretty_name:text(text)
+        {label "#chat.Room_name#" }
+    }
+    {description:text(textarea),optional
+        {label "#chat.Description#" }
+        {html {rows 6 cols 65}}
+    }
+    {active_p:boolean(radio)
+        {label "#chat.Active#" }
+        {options {{Ja t} {Nein f}}}
+        {value "t"}
+    }
+} -new_data {
+    if {[catch {set room_id [chat_room_new -moderated_p $moderated_p \
+                              -description $description \
+                              -active_p $active_p \
+                              -archive_p $archive_p \
+                              -context_id [ad_conn package_id] \
+                              -creation_user [ad_conn user_id] \
+                              -creation_ip [ad_conn peeraddr] $pretty_name]} errmsg]} {
+        ad_return_complaint 1 "[_ chat.Create_new_room_failed]: $errmsg"
+        break
+    }
+    set comm_id [dotlrn_community::get_community_id] 
+    if {$comm_id ne ""} {
+      chat_user_grant $room_id [dotlrn_community::get_community_id]
+    } else {
+      #-2 Registered Users
+      #chat_user_grant $room_id -2 
+      #0 Unregistered Visitor
+      #chat_user_grant $room_id 0
+      #-1 The Public
+      chat_user_grant $room_id -2
+    }
+} -edit_request {
+    if {[catch {db_1row room_info {
+        select pretty_name, description, moderated_p, archive_p, active_p
+        from chat_rooms
+        where room_id = :room_id}} errmsg]} {
+        ad_return_complaint 1 "[_ chat.Room_not_found]."
+        break
+    }
+} -edit_data {
+    if {[catch {chat_room_edit $room_id $pretty_name $description $moderated_p $active_p $archive_p} errmsg]} {
+        ad_return_complaint 1 "[_ chat.Could_not_update_room]: $errmsg"
+        break
+    }
+} -after_submit {
+    ad_returnredirect "room?room_id=$room_id"
+    ad_script_abort    
 }
-
-ns_log notice "send: moderated_p:$moderated_p archive_p:$archive_p  active_p:$active_p"
-
-set context_bar [list "Edit room '$pretty_name'"]
-set title "Edit room '$pretty_name'"
-set action "room-edit-2"
-set submit_label "[_ chat.Update_room]"
-
-ad_return_template "room-entry"
-
-
-
-
-
 

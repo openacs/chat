@@ -14,7 +14,7 @@ ad_page_contract {
     transcript_id:onevalue
 }
 
-ad_require_permission $transcript_id chat_transcript_delete
+permission::require_permission -object_id $transcript_id -privilege chat_transcript_delete
 
 set context_bar [list "[_ chat.Delete_transcript]"]
 ad_return_template

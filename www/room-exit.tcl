@@ -10,11 +10,9 @@ ad_page_contract {
 }
 
 set user_id [ad_conn user_id]
-
-
-set read_p [ad_permission_p $room_id "chat_read"]
-set write_p [ad_permission_p $room_id "chat_write"]
-set ban_p [ad_permission_p $room_id "chat_ban"]
+set read_p [permission::permission_p -object_id $room_id -privilege "chat_read"]
+set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
+set ban_p [permission::permission_p -object_id $room_id -privilege "chat_ban"]
 
 if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
     #Display unauthorize privilege page.
@@ -24,5 +22,12 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 
 chat_message_post $room_id $user_id "[_ chat.has_left_the_room]." "1"
 
-#ad_returnredirect index
-ad_returnredirect [dotlrn::get_url]
+# send to AJAX
+if { [llength [info command ::chat::Chat]] > 0 } {
+    set session_id [ad_conn session_id]
+    ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
+    c1 logout
+}
+
+ad_returnredirect index
+#ad_returnredirect [dotlrn::get_url]

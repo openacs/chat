@@ -1,7 +1,7 @@
 #/chat/www/chat.tcl
 ad_page_contract {
 
-    Decide which template to use HTML or Java.
+    Decide which template to use HTML or AJAX.
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 22, 2000
@@ -29,18 +29,15 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
 }
 
-set context_bar [list $room_name]
-
+set context_bar $room_name
 set user_id [ad_conn user_id]
-
-set read_p [ad_permission_p $room_id "chat_read"]
-set write_p [ad_permission_p $room_id "chat_write"]
-set ban_p [ad_permission_p $room_id "chat_ban"]
-
+set read_p [permission::permission_p -object_id $room_id -privilege "chat_read"]
+set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
+set ban_p [permission::permission_p -object_id $room_id -privilege "chat_ban"]
 set moderate_room_p [chat_room_moderate_p $room_id]
 
 if { $moderate_room_p == "t" } {
-    set moderator_p [ad_permission_p $room_id "chat_moderator"]
+    set moderator_p [permission::permission_p -object_id $room_id -privilege "chat_moderator"]
 } else {
     # This is an unmoderate room, therefore everyone is a moderator.
     set moderator_p "1"
@@ -54,42 +51,27 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 
 # Get chat screen name.
 set user_name [chat_user_name $user_id]
-# Determine which template to use for html or java client
-if {$client == "java"} {
-    set template_use "java-chat"
 
-    # Get config paramater for applet.
-    set width [ad_parameter AppletWidth "" 500]
-    set height [ad_parameter AppletHeight "" 400]   
-    
-    set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
-    set port [ad_parameter ServerPort "" 8200]
-} else {
-    set template_use "html-chat"
+# send message to the database 
+if { ![empty_string_p $message] } {
+    chat_message_post $room_id $user_id $message $moderator_p
+}
 
-    chat_message_retrieve msgs $room_id $user_id
-
-    if { ![empty_string_p $message] } {
-        chat_message_post $room_id $user_id $message $moderator_p
+# Determine which template to use for html or ajax client
+switch $client {
+    "html" {
+        set template_use "html-chat"
+        # forward to ajax if necessary
+        if { ![empty_string_p $message] && [llength [info command ::chat::Chat]] > 0 } {
+            set session_id [ad_conn session_id]
+            ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
+            c1 add_msg $message
+        }
     }
-
-
-
+    "ajax" {
+        set template_use "ajax-chat-script"
+    }
 }
 
 ad_return_template $template_use
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

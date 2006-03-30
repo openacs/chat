@@ -97,7 +97,8 @@ where cu.user_id = gm.member_id
 } else {
 set query "select username, user_id, email_verified_p, first_names, last_name, email, member_state
 from cc_users
-where [join $where_clause "\nand "]"
+where [join $where_clause "\nand "]
+limit $SQL_LIMIT"
 }
 
 set i 0

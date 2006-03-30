@@ -24,20 +24,12 @@
 
 <fullquery name="list_user_ban">
   <querytext>
-   select party_id, acs_object.name(party_id) as name
-    from acs_object_party_privilege_map
-    where object_id = :room_id
-    and privilege = 'chat_ban'
+   select m.party_id, p.last_name || ', ' || p.first_names as name, pa.email
+    from acs_object_party_privilege_map m, persons p, parties pa
+    where m.party_id = p.person and m.object_id = :room_id
+    and m.privilege = 'chat_ban' and p.person_id = pa.party_id
+    order by p.last_name, p.first_names
   </querytext>
-</fullquery>
-
-
-<fullquery name="list_transcripts">
-  <querytext>
-   select transcript_id, pretty_name
-    from chat_transcripts
-    where room_id = :room_id
- </querytext>
 </fullquery>
 
 </queryset>

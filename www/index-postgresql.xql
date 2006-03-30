@@ -19,8 +19,10 @@
     from chat_rooms rm, 
          acs_objects obj
     where rm.room_id = obj.object_id
+    and   obj.context_id = :package_id
     order by rm.pretty_name
   </querytext>
 </fullquery>
 
 </queryset>
+
