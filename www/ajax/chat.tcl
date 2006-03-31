@@ -12,7 +12,7 @@ ad_page_contract {
 }
 
 set message_output ""
-set user_output ""
+set user_output "-"
 
 ::chat::Chat c1 -volatile -chat_id $id -session_id $s
 
@@ -43,7 +43,7 @@ switch -- $m {
   default {ns_log error "--c unknown method $m called."} 
 }
 
-ns_return 200 text/html "
+set output "
 <HTML>
 <style type='text/css'>
 #messages { font-size: 12px; color: #666666; font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Arial, sans-serif; }
@@ -55,5 +55,18 @@ ns_return 200 text/html "
 #users .user {text-align: left; vertical-align: top; font-weight:bold; }
 #users .timestamp {text-align: right; vertical-align: top; }
 </style>
-<body style='margin:0px; padding:5px;'><div id='messages'>$message_output</div><table id='users'><tbody>$user_output</tbody></table></body>
+<body style='margin:0px; padding:5px;'>"
+
+if { $message_output ne "" } {
+    append output "<div id='messages'>$message_output</div>\n"
+}
+
+if { $user_output ne "-" } {
+    append output "<table id='users'><tbody>$user_output</tbody></table>\n"
+}
+
+append output "
+</body>
 </HTML>"
+
+ns_return 200 text/html $output

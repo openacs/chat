@@ -48,7 +48,7 @@ function messagesReceiver(node,doc,div) {
     var tr, td, e, s;
     var msgCount = 0;
     for (var i = 0 ; i < node.childNodes.length ; i++) {
-        if (node.childNodes[i].nodeType == 3 ){
+        if (node.childNodes[i].nodeType == 3 ) {
             // if this is a textnode, skip it
             continue;
         }
@@ -91,18 +91,28 @@ function updateReceiver(content) {
     var xmlobject = (new DOMParser()).parseFromString(content, 'application/xhtml+xml');
     var body = xmlobject.getElementsByTagName('body');
     
-    var usersNode = body[0].childNodes[1].childNodes[0];
-    if (usersNode.hasChildNodes()) {
-        var usersDoc = frames['ichat-users'].document;
-        var usersTbody = frames['ichat-users'].document.getElementById('users').tBodies[0];
-        usersReceiver(usersNode,usersDoc,usersTbody);
+    for (var i = 0 ; i < body[0].childNodes.length ; i++) {
+        if (body[0].childNodes[i].nodeType == 3 ) {
+            // if this is a textnode, skip it
+            continue;
     }
-    
-    var messagesNode = body[0].childNodes[0];
+        var attribute = body[0].childNodes[i].getAttribute('id');
+        switch (attribute) {
+            case "messages":
+                var messagesNode = body[0].childNodes[i];
     if (messagesNode.hasChildNodes()) {
         var messagesDoc = frames['ichat'].document;
         var messagesDiv = frames['ichat'].document.getElementById('messages');
         messagesReceiver(messagesNode,messagesDoc,messagesDiv);
+    }
+                break;
+            case "users":
+                var usersNode = body[0].childNodes[i].childNodes[0];
+                var usersDoc = frames['ichat-users'].document;
+                var usersTbody = frames['ichat-users'].document.getElementById('users').tBodies[0];
+                usersReceiver(usersNode,usersDoc,usersTbody);                
+                break;
+        }
     }
 }
 
