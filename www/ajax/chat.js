@@ -1,8 +1,8 @@
 // small cross browser function to get an HTTP object for making 
 // AJAX style http requests in the background 
 // -gustaf neumann Jan, 2006
-// exended for dotlrn-chat and listing of users
-// -peter alberer
+// exended for dotlrn-chat, message coloring and listing of users
+// -peter alberer March, 2006
 
 // global variables
 var msgcount = 0; // hack to overcome IE
@@ -44,89 +44,92 @@ if (typeof DOMParser == "undefined") {
 }
 
 // functions that handle the incoming xml/html data
-function messagesReceiver(content) {
-  var xmlobject = (new DOMParser()).parseFromString(content, 'application/xhtml+xml');
-  var items = xmlobject.getElementsByTagName('p');
-  // alert('found ' + items.length + ' items');
-
-  //var counter = document.getElementById('chatCounter');
-  //counter.innerHTML = parseInt(counter.innerHTML) + 1;
-  //document.getElementById('chatResponse').innerHTML = 'items = ' + items.length + ' l=' + content.length + ' ' + escape(content);
-
-  //if (items.length > 0) {alert('appending ' + content);}
-  var doc = frames['ichat'].document;
-  var div = frames['ichat'].document.getElementById('messages');
-  //var tbody = tbodies[tbodies.length -1];
-  //for (var i = 0 ; i < items.length ; i++) {
-  //  tbody.appendChild(frames['ichat'].document.importNode(items[i],true));
-  //}
-  var tr, td, e, s;
-  var msgCount = 0;
-  for (var i = 0 ; i < items.length ; i++) {
-    msgCount++;
-      // tbody.appendChild(items[i]);
-    p = doc.createElement('p');
-    p.className = 'line';
-    e = items[i].getElementsByTagName('span');
-    span = doc.createElement('span');
-    span.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue);
-    span.className = 'timestamp';
-    p.appendChild(span);
-
-    span = doc.createElement('span');
-    s = e[1].firstChild.nodeValue;
-    span.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
-    span.className = 'user';
-    p.appendChild(span);
-
-    span = doc.createElement('span');
-    span.innerHTML = decodeURIComponent(e[2].firstChild.nodeValue.replace(/\+/g,' '));
-    span.className = 'message';
-    p.appendChild(span);
-
-    div.appendChild(p);
-  }
-  if ( msgCount > 0 ) { 
-      frames['ichat'].window.scrollTo(0,div.offsetHeight);
-  }
+function messagesReceiver(node,doc,div) {
+    var tr, td, e, s;
+    var msgCount = 0;
+    for (var i = 0 ; i < node.childNodes.length ; i++) {
+        if (node.childNodes[i].nodeType == 3 ){
+            // if this is a textnode, skip it
+            continue;
+        }
+        msgCount++;
+        p = doc.createElement('p');
+        p.className = 'line';
+        e = node.childNodes[i].getElementsByTagName('span');
+        span = doc.createElement('span');
+        span.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue);
+        span.className = 'timestamp';
+        p.appendChild(span);
+        
+        span = doc.createElement('span');
+        s = e[1].firstChild.nodeValue;
+        span.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
+        span.className = 'user';
+        p.appendChild(span);
+        
+        span = doc.createElement('span');
+        span.innerHTML = decodeURIComponent(e[2].firstChild.nodeValue.replace(/\+/g,' '));
+        span.className = 'message';
+        p.appendChild(span);
+        
+        div.appendChild(p);
+    }
+    if ( msgCount > 0 ) { 
+        frames['ichat'].window.scrollTo(0,div.offsetHeight);
+    }
 }
 
 function pushReceiver(content) {
-    messagesReceiver(content);
+    updateReceiver(content);
     var msgField = document.getElementById('chatMsg');
     msgField.value = '';
     msgField.disabled = false;
     msgField.focus();
 }
 
-function usersReceiver(content) {
-  var xmlobject = (new DOMParser()).parseFromString(content, 'application/xhtml+xml');
-  var items = xmlobject.getElementsByTagName('TR');
-  var doc = frames['ichat-users'].document;
-  var tbody = frames['ichat-users'].document.getElementById('users').tBodies[0];
-  var tr, td, e, s, nbody;
-  
-  nbody = doc.createElement('tbody');
-  
-  for (var i = 0 ; i < items.length ; i++) {
-    tr = doc.createElement('tr');
-    e = items[i].getElementsByTagName('TD');
+function updateReceiver(content) {
+    var xmlobject = (new DOMParser()).parseFromString(content, 'application/xhtml+xml');
+    var body = xmlobject.getElementsByTagName('body');
     
-    td = doc.createElement('td');
-    td.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue.replace(/\+/g,' '));
-    td.className = 'user';
-    tr.appendChild(td);
+    var usersNode = body[0].childNodes[1].childNodes[0];
+    if (usersNode.hasChildNodes()) {
+        var usersDoc = frames['ichat-users'].document;
+        var usersTbody = frames['ichat-users'].document.getElementById('users').tBodies[0];
+        usersReceiver(usersNode,usersDoc,usersTbody);
+    }
     
-    td = doc.createElement('td');
-    td.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
-    td.className = 'timestamp';
-    tr.appendChild(td);   
-    
-    nbody.appendChild(tr);
-  }
-  
-  tbody.parentNode.replaceChild(nbody,tbody);
-  
+    var messagesNode = body[0].childNodes[0];
+    if (messagesNode.hasChildNodes()) {
+        var messagesDoc = frames['ichat'].document;
+        var messagesDiv = frames['ichat'].document.getElementById('messages');
+        messagesReceiver(messagesNode,messagesDoc,messagesDiv);
+    }
+}
+
+function usersReceiver(node,doc,tbody) {
+    var tr, td, e, s, nbody;
+    nbody = doc.createElement('tbody');
+    for (var i = 0 ; i < node.childNodes.length ; i++) {
+        if (node.childNodes[i].nodeType == 3 ){
+            // if this is a textnode, skip it
+            continue;
+        }      
+        tr = doc.createElement('tr');
+        e = node.childNodes[i].getElementsByTagName('TD');
+        
+        td = doc.createElement('td');
+        td.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue.replace(/\+/g,' '));
+        td.className = 'user';
+        tr.appendChild(td);
+        
+        td = doc.createElement('td');
+        td.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
+        td.className = 'timestamp';
+        tr.appendChild(td);   
+        
+        nbody.appendChild(tr);
+    }
+    tbody.parentNode.replaceChild(nbody,tbody);
 }
 
 function DataConnection() {};
@@ -189,9 +192,11 @@ DataConnection.prototype = {
     updateBackground: function() {
         //alert("binda = " + this);
         if (this.busy) {
-            alert("Message update function cannot run because the last connection is still busy!");
+            //alert("Message update function cannot run because the last connection is still busy!");
+            return;
+        } else {
+            this.httpSendCmd(this.url);
         }
-        this.httpSendCmd(this.url);
     }
 }
 
@@ -209,6 +214,7 @@ function registerDataConnection(handler,url,autoConnect) {
 function updateDataConnections() {
     for (var ds in dataConnections) {
         if (dataConnections[ds].autoConnect) {
+            // alert("updating " + dataConnections[ds].url);
             dataConnections[ds].updateBackground();
         }
     }

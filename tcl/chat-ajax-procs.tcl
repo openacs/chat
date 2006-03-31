@@ -3,6 +3,7 @@ ad_library {
 
     @creation-date 2006-02-02
     @author Gustaf Neumann
+    @author Peter Alberer
     @cvs-id $Id$  
 }
 
@@ -20,22 +21,16 @@ namespace eval ::chat {
       return -code error "File [acs_root_dir]/$path does not exist"
     }
     set file [open [acs_root_dir]/$path]; set js [read $file]; close $file
-    #set location  [util_current_location]
     set path      [site_node::get_url_from_object_id -object_id $package_id]
     set login_url $path/ajax/chat?m=login&$context
     set send_url  $path/ajax/chat?m=add_msg&$context&msg=
-    set users_url $path/ajax/users?m=login&$context
-    #set get_update  "chatUpdateData()"
-    #chatSendCmd(\"$path/ajax/chat?m=get_new&$context\",chatReceiver)"
-    set get_userlist "chatUpdateUserList(\"$users_url\",usersReceiver)"
-    #set get_all     "chatSendCmd(\"$path/ajax/chat?m=get_all&$context\",chatReceiver)"
+    set users_url $path/ajax/chat?m=get_users&$context
     return "\
       <script type='text/javascript' language='javascript'>
       $js
-      // register the three data sources (for sending messages, receiving messages and the user list)
+      // register the data sources (for sending messages, receiving updates)
       var pushMessage = registerDataConnection(pushReceiver, '$path/ajax/chat?m=get_new&$context', false);
-      var pullMessage = registerDataConnection(messagesReceiver, '$path/ajax/chat?m=get_new&$context', true);
-      var onlineUsers  = registerDataConnection(usersReceiver, '$path/ajax/users?$context', true);
+      var pullUpdates = registerDataConnection(updateReceiver, '$path/ajax/chat?m=get_updates&$context', true);
       // register an update function to refresh the data sources every 5 seconds
       var updateInterval = setInterval(updateDataConnections,5000);
       </script>
