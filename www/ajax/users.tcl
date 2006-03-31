@@ -10,12 +10,14 @@ ad_page_contract {
 }
 #after 1000
 ::chat::Chat c1 -volatile -chat_id $id -session_id $s
+
 if { $m eq "login" } { c1 encoder noencode }
 set output ""
 foreach {user_id timestamp} [c1 active_user_list] {
   if {$user_id > 0} {
-      set diff [clock format [expr {[clock seconds] - $timestamp}] -format "%H:%M:%S" -gmt 1]
-    append output "<TR><TD class='user'>[c1 user_link $user_id]</TD><TD class='timestamp'>$diff</TD></TR>\n"
+    set diff [clock format [expr {[clock seconds] - $timestamp}] -format "%H:%M:%S" -gmt 1]
+    set userlink  [c1 user_link -user_id $user_id]
+    append output "<TR><TD class='user'>$userlink</TD><TD class='timestamp'>$diff</TD></TR>\n"
   }
 }
 
