@@ -7,9 +7,9 @@ ad_page_contract {
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
-    room_id
-    client
-    {message:html ""}
+  room_id
+  {client "ajax"}
+  {message:html ""}
 } -properties {
     context_bar:onevalue
     user_id:onevalue
@@ -30,10 +30,11 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
 }
 
 set context_bar $room_name
+auth::require_login
 set user_id [ad_conn user_id]
-set read_p [permission::permission_p -object_id $room_id -privilege "chat_read"]
+set read_p  [permission::permission_p -object_id $room_id -privilege "chat_read"]
 set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
-set ban_p [permission::permission_p -object_id $room_id -privilege "chat_ban"]
+set ban_p   [permission::permission_p -object_id $room_id -privilege "chat_ban"]
 set moderate_room_p [chat_room_moderate_p $room_id]
 
 if { $moderate_room_p == "t" } {

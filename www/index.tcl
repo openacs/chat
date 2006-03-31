@@ -18,7 +18,7 @@ set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 set actions [list]
 set room_create_p [permission::permission_p -object_id $package_id -privilege chat_room_create]
-set default_client [parameter::get -parameter "DefaultClient"]
+set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 set warning ""
 
 if { $default_client eq "ajax" } {
