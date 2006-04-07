@@ -10,6 +10,23 @@ ad_library {
 namespace eval ::chat {
   ::xo::ChatClass Chat -superclass ::xo::Chat
 
+  Chat instproc render {} {
+    my orderby time
+    set result ""
+    foreach child [my children] {
+      set msg       [$child msg]
+      set user_id   [$child user_id]
+      set color     [$child color]
+      set timelong  [clock format [$child time]]
+      set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
+      set userlink  [my user_link -user_id $user_id -color $color]
+      append result "<p class='line'><span class='timestamp'>$timeshort</span>" \
+	  "<span class='user'>$userlink:</span>" \
+	  "<span class='message'>[my encode $msg]</span></p>\n"
+    }
+    return $result
+  }
+
   Chat proc login {-chat_id -package_id} {
     auth::require_login
     if {![info exists package_id]} {set package_id [ad_conn package_id] }
