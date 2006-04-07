@@ -72,6 +72,7 @@ list::create \
         }
         pretty_name {
             label "Name"
+            html { width 400px }
             display_template {
                 <if @rooms.active_p@ eq t>
                 <a href="room-enter?room_id=@rooms.room_id@&client=$default_client">@rooms.pretty_name@</a>
@@ -79,6 +80,7 @@ list::create \
                 <else>
                 @rooms.pretty_name@
                 </else>
+                <div style="float:left">@rooms.description@</div>                
             }
         }
         active_users {

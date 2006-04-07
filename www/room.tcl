@@ -51,7 +51,7 @@ set transcript_create_p [permission::permission_p -object_id $room_id -privilege
 # Get room basic information.
 ###
 db_1row room_info {
-    select pretty_name, description, moderated_p, active_p, archive_p
+    select pretty_name, description, moderated_p, active_p, archive_p, auto_flush_p, auto_transcript_p
     from chat_rooms
     where room_id = :room_id
 }

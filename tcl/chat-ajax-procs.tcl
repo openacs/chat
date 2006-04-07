@@ -34,13 +34,13 @@ namespace eval ::chat {
       // register an update function to refresh the data sources every 5 seconds
       var updateInterval = setInterval(updateDataConnections,5000);
       </script>
-      <form name='ichat_form' action='#' onsubmit='pushMessage.chatSendMsg(\"$send_url\"); return false;'>
+      <form id='ichat_form' name='ichat_form' action='#' onsubmit='pushMessage.chatSendMsg(\"$send_url\"); return false;'>
       <iframe name='ichat' id='ichat' frameborder='0' src='$login_url'
-          style='width:70%; border:1px solid black; padding:2px; margin-right:15px;' height='250'></iframe>
+          style='width:70%; border:1px solid black; margin-right:15px;' height='257'></iframe>
       <iframe name='ichat-users' id='ichat-users' frameborder='0' src='$users_url'
-          style='width:25%; border:1px solid black; padding:2px;' height='250'></iframe>
+          style='width:25%; border:1px solid black;' height='257'></iframe>
       <div style='margin-top:10px;'>
-      #chat.message# <input type='text' size='80' name='msg' id='chatMsg'>
+      #chat.message# <input tabindex='1' type='text' size='80' name='msg' id='chatMsg'>
       <input type='submit' value='#chat.Send_Refresh#'>
       </div>
       </form> 

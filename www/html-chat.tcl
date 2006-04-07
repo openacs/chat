@@ -32,13 +32,13 @@ template::list::create -name chat_msg \
     -no_data "[_ chat.no_messages]" \
     -page_flush_p 1 \
     -elements {
-        creation_date { label "[_ chat.date]" }
+        creation_date_pretty { label "[_ chat.date]" }
         person_name { label "[_ acs-kernel.User]" }
         msg { label "[_ chat.msg]" }
     }
 	 
 db_multirow -extend { person_name } chat_msg_query select_msg_itens {
-    select to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date, creation_user, msg
+    select to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date_pretty, creation_user, msg
     from chat_msgs 
     where room_id  = :room_id 
     order by creation_date desc

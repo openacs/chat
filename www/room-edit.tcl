@@ -21,9 +21,6 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     {moderated_p:boolean(hidden)
         {value "f"}
     }    
-    {archive_p:boolean(hidden)
-        {value "t"}
-    }
     {pretty_name:text(text)
         {label "#chat.Room_name#" }
     }
@@ -36,11 +33,30 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         {options {{Ja t} {Nein f}}}
         {value "t"}
     }
+    {archive_p:boolean(radio)
+        {label "#chat.Archive#" }
+        {options {{Ja t} {Nein f}}}
+        {value "t"}
+    }    
+    {auto_flush_p:boolean(radio)
+        {label "#chat.AutoFlush#" }
+        {options {{Ja t} {Nein f}}}
+        {value "t"}
+        {help_text "[_ chat.AutoFlushHelp]"}
+    }  
+    {auto_transcript_p:boolean(radio)
+        {label "#chat.AutoTranscript#" }
+        {options {{Ja t} {Nein f}}}
+        {value "f"}
+        {help_text "[_ chat.AutoTranscriptHelp]"}
+    }      
 } -new_data {
     if {[catch {set room_id [chat_room_new -moderated_p $moderated_p \
                               -description $description \
                               -active_p $active_p \
                               -archive_p $archive_p \
+                              -auto_flush_p $auto_flush_p \
+                              -auto_transcript_p $auto_transcript_p \
                               -context_id [ad_conn package_id] \
                               -creation_user [ad_conn user_id] \
                               -creation_ip [ad_conn peeraddr] $pretty_name]} errmsg]} {
@@ -60,17 +76,18 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     }
 } -edit_request {
     if {[catch {db_1row room_info {
-        select pretty_name, description, moderated_p, archive_p, active_p
+        select pretty_name, description, moderated_p, archive_p, active_p, auto_flush_p, auto_transcript_p
         from chat_rooms
         where room_id = :room_id}} errmsg]} {
         ad_return_complaint 1 "[_ chat.Room_not_found]."
         break
     }
 } -edit_data {
-    if {[catch {chat_room_edit $room_id $pretty_name $description $moderated_p $active_p $archive_p} errmsg]} {
+    if {[catch {chat_room_edit $room_id $pretty_name $description $moderated_p $active_p $archive_p $auto_flush_p $auto_transcript_p} errmsg]} {
         ad_return_complaint 1 "[_ chat.Could_not_update_room]: $errmsg"
         break
     }
+    util_memoize_flush [list chat_room_get_not_cached $room_id]
 } -after_submit {
     ad_returnredirect "room?room_id=$room_id"
     ad_script_abort    

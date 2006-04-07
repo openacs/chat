@@ -133,6 +133,8 @@ ad_proc -public chat_room_new {
     {-moderated_p f}
     {-active_p t}
     {-archive_p f}
+    {-auto_flush_p t}
+    {-auto_transcript_p f}
     {-context_id ""}
     {-creation_user ""}
     {-creation_ip ""}
@@ -158,6 +160,8 @@ ad_proc -public chat_room_edit {
     moderated_p
     active_p
     archive_p
+    auto_flush_p
+    auto_transcript_p
 } {
     Edit information on chat room. All information require.
 } {
@@ -328,10 +332,24 @@ ad_proc -public chat_message_post {
         set status "pending"
     }
 
-    if [catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg] {
-        ns_log error "chat_post_message_to_db: error: $errmsg"
-    }
+    # do not write messages to the database if the room should not be archived
+    chat_room_get -room_id $room_id -array room_info
+    if { $room_info(archive_p) eq "f" } { return }
     
+	set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
+
+	if {$default_client eq "java"} {
+		set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
+		# Add message to queue. Notify thread responsible for 
+		# broadcast message to applets.
+    
+		nsv_set chat html_message $chat_msg
+		ns_mutex unlock [nsv_get chat new_message]  
+	} else {
+        if [catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg] {
+            ns_log error "chat_post_message_to_db: error: $errmsg"
+        }
+    }
 }
 
 
@@ -443,4 +461,50 @@ ad_proc -public chat_transcript_edit {
     db_exec_plsql edit_transcript {}
 }
 
+ad_proc -public chat_room_get {
+    {-room_id {}}
+    {-array:required}
+} {
+    Get all the information about a chat room into an array
+} {
+    upvar $array row
+    array set row [util_memoize [list chat_room_get_not_cached $room_id]]
+}
+
+ad_proc -private chat_room_get_not_cached { 
+    room_id
+} {
+    db_1row select_user_info {select * from chat_rooms where room_id = :room_id} -column_array row
+    return [array get row]    
+}
+
+ad_proc -private chat_flush_rooms {} {Flush the messages in all of the chat rooms} {
+    # ns_log Notice "YY Starting chat_flush_rooms operation"
+    set room_ids [db_list get_rooms *SQL*] 
+    foreach room_id $room_ids {
+        chat_room_flush $room_id
+    }
+}   
+
+ad_proc -private chat_room_flush { room_id } {Flush the messages a single chat room} {
+    # ns_log Notice "YY flushing room $room_id"
+    db_transaction {
+        array set room_info [chat_room_get_not_cached $room_id]
+        set contents ""
+        # do we have to create a transcript for the room
+        if { $room_info(auto_transcript_p) eq "t" } {
+            # build a list of all messages
+            db_foreach get_archives_messages {} {
+                append contents "\[$creation_date\] <b>[chat_user_name $creation_user]</b>: $msg<br>\n"
+            }
+            if { $contents ne "" } {
+                chat_transcript_new \
+                    -description "#chat.automatically_created_transcript#" \
+                    "#chat.transcript_of_date# [clock format [clock seconds] -format "%d.%m.%Y"]" $contents $room_id
+            }
+        }
+        # clear all the messages in the room
+        chat_room_message_delete $room_id
+    }
+}
 

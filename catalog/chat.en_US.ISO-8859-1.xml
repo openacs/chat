@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="chat" package_version="5.0d3" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="chat" package_version="5.0d5" locale="en_US" charset="ISO-8859-1">
 
   <msg key="actions">Actions</msg>
   <msg key="Active">Active</msg>
@@ -13,6 +13,11 @@
   <msg key="Are_you_sure_you_want_to_revoke">Are you sure you want to revoke chat user privilege of</msg>
   <msg key="Are_you_sure_you_want_to_revoke_moderator">Are you sure you want to revoke moderator privilege of</msg>
   <msg key="Are_you_sure_you_want_to_unban">Are you sure you want to unban</msg>
+  <msg key="AutoFlush">Automatically flush messages at midnight</msg>
+  <msg key="AutoFlushHelp">Automatically flush the messages in the database at midnight. This is only used if the rooms is archived.</msg>
+  <msg key="automatically_created_transcript">Automatically created transcript</msg>
+  <msg key="AutoTranscript">Auto Transcript</msg>
+  <msg key="AutoTranscriptHelp">Automatically create a transcript of the messages after flushing.</msg>
   <msg key="Ban">Ban</msg>
   <msg key="Ban_chat_read_write">Ban chat read/write privilege for</msg>
   <msg key="Ban_user">Ban user</msg>
@@ -76,6 +81,7 @@
   <msg key="Name">Name</msg>
   <msg key="No_information_available">No information available</msg>
   <msg key="noactive">No active</msg>
+  <msg key="Refresh">Refresh</msg>
   <msg key="remove">remove</msg>
   <msg key="Revoke">Revoke</msg>
   <msg key="revoke">revoke</msg>

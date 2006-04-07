@@ -7,5 +7,9 @@ set sql {
 }
 
 db_multirow -extend { person_name } messages select_msg_itens $sql {
-    set person_name [chat_user_name $creation_user]
+    if { $creation_user eq 0 } {
+        set person_name "Nobody"
+    } else {
+        set person_name [chat_user_name $creation_user]
+    }
 }

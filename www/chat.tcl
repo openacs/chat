@@ -72,6 +72,16 @@ switch $client {
     "ajax" {
         set template_use "ajax-chat-script"
     }
+	"java" {
+		set template_use "java-chat"
+
+		# Get config paramater for applet.
+		set width [ad_parameter AppletWidth "" 500]
+		set height [ad_parameter AppletHeight "" 400]   
+    
+		set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
+		set port [ad_parameter ServerPort "" 8200]
+	}
 }
 
 ad_return_template $template_use

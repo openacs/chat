@@ -8,7 +8,7 @@ ad_page_contract {
   m
   id
   s
-  {msg ""}
+  {msg:optional,allhtml ""}
 }
 
 set message_output ""
@@ -24,14 +24,15 @@ switch -- $m {
     }
     # do not insert empty messages, if they managed to get here
     if { $msg ne "" } {
-        set message_output [c1 $m $msg]
-        set user_id [ad_conn user_id]
-        chat_message_post $id $user_id $msg f
+        set message_output [c1 add_msg $msg]
+        if { [c1 current_message_valid] } {
+            chat_message_post $id [c1 euid] [c1 emsg] f
+        }
     }
   }
   login - get_new - get_all {
     set message_output [c1 $m]
-  } 
+  }
   get_updates {
       set message_output [c1 get_new]
       set user_output [c1 get_users]

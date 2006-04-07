@@ -95,16 +95,16 @@ function updateReceiver(content) {
         if (body[0].childNodes[i].nodeType == 3 ) {
             // if this is a textnode, skip it
             continue;
-    }
+        }
         var attribute = body[0].childNodes[i].getAttribute('id');
         switch (attribute) {
             case "messages":
                 var messagesNode = body[0].childNodes[i];
-    if (messagesNode.hasChildNodes()) {
-        var messagesDoc = frames['ichat'].document;
-        var messagesDiv = frames['ichat'].document.getElementById('messages');
-        messagesReceiver(messagesNode,messagesDoc,messagesDiv);
-    }
+                if (messagesNode.hasChildNodes()) {
+                    var messagesDoc = frames['ichat'].document;
+                    var messagesDiv = frames['ichat'].document.getElementById('messages');
+                    messagesReceiver(messagesNode,messagesDoc,messagesDiv);
+                }                
                 break;
             case "users":
                 var usersNode = body[0].childNodes[i].childNodes[0];
@@ -123,7 +123,7 @@ function usersReceiver(node,doc,tbody) {
         if (node.childNodes[i].nodeType == 3 ){
             // if this is a textnode, skip it
             continue;
-        }      
+        }
         tr = doc.createElement('tr');
         e = node.childNodes[i].getElementsByTagName('TD');
         
@@ -237,4 +237,14 @@ function stopUpdates() {
     clearTimeout(inactivityTimeout);
     inactivityTimeout = null;
 }
+
+function startProc() {
+    document.getElementById('chatMsg').focus();
+    var messagesDiv = frames['ichat'].document.getElementById('messages');
+    if (messagesDiv) { 
+        frames['ichat'].window.scrollTo(0,messagesDiv.offsetHeight); 
+    }
+}
+
+window.onload = startProc;
 

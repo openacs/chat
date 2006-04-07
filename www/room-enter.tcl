@@ -24,10 +24,13 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") || ($active == "f") 
     ad_script_abort
 }
 
+set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
+
+if {$default_client eq "java"} {
+	chat_start_server
+}
+
 switch $client {
-    "java" {
-        chat_start_server
-    }
     "html" - "ajax" - "html-chat-script" {
         ns_log Notice "YY room-enter: has_entered_the room"
         chat_message_post $room_id $user_id "[_ chat.has_entered_the_room]." "1"
