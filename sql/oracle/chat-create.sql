@@ -142,7 +142,13 @@ create table chat_rooms (
     -- if set then log all chat messages in this room. 
     archive_p          char(1) default 'f'
                        constraint chat_rooms_archive_p_ck 
-                       check (archive_p in ('t', 'f'))
+                       check (archive_p in ('t', 'f')),
+	auto_flush_p	   char(1) default 't'
+					   constraint chat_rooms_auto_flush_ck
+					   check (auto_flush_p in ('t', 'f')),
+	auto_transcript_p  char(1) default 'f'
+					   constraint chat_rooms_auto_transcript_ck
+					   check (auto_transcript_p in ('t', 'f'))
 ); 
 
 declare
@@ -237,6 +243,8 @@ as
         moderated_p    in chat_rooms.moderated_p%TYPE    default 'f',
         active_p       in chat_rooms.active_p%TYPE       default 't',
         archive_p      in chat_rooms.archive_p%TYPE      default 'f',
+		auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
+		auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
         context_id     in acs_objects.context_id%TYPE    default null,
         creation_date  in acs_objects.creation_date%TYPE default sysdate,
         creation_user  in acs_objects.creation_user%TYPE default null,
@@ -254,7 +262,9 @@ as
         description    in chat_rooms.description%TYPE,
         moderated_p    in chat_rooms.moderated_p%TYPE,
         active_p       in chat_rooms.active_p%TYPE,
-        archive_p      in chat_rooms.archive_p%TYPE
+        archive_p      in chat_rooms.archive_p%TYPE,
+   		auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
+		auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE
     );        
 
     function name (
@@ -329,6 +339,8 @@ as
         moderated_p    in chat_rooms.moderated_p%TYPE    default 'f',
         active_p       in chat_rooms.active_p%TYPE       default 't',
         archive_p      in chat_rooms.archive_p%TYPE      default 'f',
+		auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
+		auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
         context_id     in acs_objects.context_id%TYPE    default null,
         creation_date  in acs_objects.creation_date%TYPE default sysdate,
         creation_user  in acs_objects.creation_user%TYPE default null,
@@ -352,14 +364,19 @@ as
             description, 
             moderated_p, 
             active_p, 
-            archive_p)
-        values (
+            archive_p,
+			auto_flush_p,
+			auto_transcript_p
+		) values (
             v_room_id, 
-            pretty_name, 
-            description, 
-            moderated_p, 
-            active_p, 
-            archive_p);
+            chat_room.new.pretty_name, 
+            chat_room.new.description, 
+            chat_room.new.moderated_p, 
+            chat_room.new.active_p, 
+            chat_room.new.archive_p,
+			chat_room.new.auto_flush_p,
+			chat_room.new.auto_transcript_p
+		);
 
         return v_room_id;
     end new;
@@ -387,7 +404,9 @@ as
         description    in chat_rooms.description%TYPE,
         moderated_p    in chat_rooms.moderated_p%TYPE,
         active_p       in chat_rooms.active_p%TYPE,
-        archive_p      in chat_rooms.archive_p%TYPE
+        archive_p      in chat_rooms.archive_p%TYPE,
+		auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
+		auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE
     ) 
     is
     begin
@@ -396,7 +415,9 @@ as
             description = chat_room.edit.description,
             moderated_p = chat_room.edit.moderated_p,
             active_p    = chat_room.edit.active_p,
-            archive_p   = chat_room.edit.archive_p
+            archive_p   = chat_room.edit.archive_p,
+            auto_flush_p   = chat_room.edit.auto_flush_p,
+            auto_transcript_p = chat_room.edit.auto_transcript_p
         where 
             room_id = chat_room.edit.room_id;
     end edit;        
