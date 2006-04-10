@@ -243,8 +243,8 @@ as
         moderated_p    in chat_rooms.moderated_p%TYPE    default 'f',
         active_p       in chat_rooms.active_p%TYPE       default 't',
         archive_p      in chat_rooms.archive_p%TYPE      default 'f',
-		auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
-		auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
+	auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
+	auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
         context_id     in acs_objects.context_id%TYPE    default null,
         creation_date  in acs_objects.creation_date%TYPE default sysdate,
         creation_user  in acs_objects.creation_user%TYPE default null,
@@ -339,8 +339,8 @@ as
         moderated_p    in chat_rooms.moderated_p%TYPE    default 'f',
         active_p       in chat_rooms.active_p%TYPE       default 't',
         archive_p      in chat_rooms.archive_p%TYPE      default 'f',
-		auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
-		auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
+	auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
+	auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
         context_id     in acs_objects.context_id%TYPE    default null,
         creation_date  in acs_objects.creation_date%TYPE default sysdate,
         creation_user  in acs_objects.creation_user%TYPE default null,
@@ -351,12 +351,12 @@ as
         v_room_id chat_rooms.room_id%TYPE;
     begin
         v_room_id := acs_object.new (
-            object_type   => object_type,
-            creation_date => creation_date,
-            creation_user => creation_user,
-            creation_ip   => creation_ip,
-            context_id    => context_id
-            );
+            object_type   => chat_room.new.object_type,
+            creation_date => chat_room.new.creation_date,
+            creation_user => chat_room.new.creation_user,
+            creation_ip   => chat_room.new.creation_ip,
+            context_id    => chat_room.new.context_id
+        );
 
         insert into chat_rooms (
             room_id,   
@@ -365,18 +365,17 @@ as
             moderated_p, 
             active_p, 
             archive_p,
-			auto_flush_p,
-			auto_transcript_p
-		) values (
+	    auto_flush_p,
+	    auto_transcript_p)
+	values (
             v_room_id, 
             chat_room.new.pretty_name, 
             chat_room.new.description, 
             chat_room.new.moderated_p, 
             chat_room.new.active_p, 
             chat_room.new.archive_p,
-			chat_room.new.auto_flush_p,
-			chat_room.new.auto_transcript_p
-		);
+	    chat_room.new.auto_flush_p,
+	    chat_room.new.auto_transcript_p);
 
         return v_room_id;
     end new;
@@ -405,8 +404,8 @@ as
         moderated_p    in chat_rooms.moderated_p%TYPE,
         active_p       in chat_rooms.active_p%TYPE,
         archive_p      in chat_rooms.archive_p%TYPE,
-		auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
-		auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE
+	auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
+	auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE
     ) 
     is
     begin
@@ -510,7 +509,6 @@ as
 end chat_room;
 /
 show errors
-
 
 create or replace package body chat_transcript
 as
