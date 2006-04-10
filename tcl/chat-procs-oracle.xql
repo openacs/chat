@@ -121,7 +121,9 @@
                 description   => :description,
 	        moderated_p   => :moderated_p,
 	        active_p      => :active_p,
-                archive_p     => :archive_p
+                archive_p     => :archive_p,
+		auto_flush_p  => :auto_flush_p,
+            	auto_transcript_p => :auto_transcript_p
 	    );
 	end;
      </querytext>
