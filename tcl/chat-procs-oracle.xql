@@ -226,8 +226,4 @@
       </querytext>
 </fullquery>
 
-
-
-
-
 </queryset>
