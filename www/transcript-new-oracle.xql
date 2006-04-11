@@ -5,13 +5,12 @@
 
 <fullquery name="get_archives_messages">
   <querytext>
-    select msg, person.name(creation_user) as name
+    select msg, creation_user, to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date
     from chat_msgs
     where room_id = :room_id
           and msg is not null
-    order by msg_id
+    order by creation_date
   </querytext>
 </fullquery>
-
 
 </queryset>

@@ -220,7 +220,7 @@
 	    chat_transcript.edit(
 	        transcript_id => :transcript_id,
 	        pretty_name   => :pretty_name,
-                contents      => :empty_clob(),
+		contents      => empty_clob(),
                 description   => :description);
 	    end;
       </querytext>

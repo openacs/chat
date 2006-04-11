@@ -435,7 +435,10 @@ ad_proc -public chat_transcript_new {
 
     db_transaction {
         set transcript_id [db_exec_plsql create_transcript {}]
-        db_exec_plsql grant_permission {}
+	if { $transcript_id ne 0 } {
+	    db_dml update_contents {}
+	    db_exec_plsql grant_permission {}
+	}
     }
 
     return $transcript_id
@@ -459,6 +462,7 @@ ad_proc -public chat_transcript_edit {
     Edit chat transcript.
 } {
     db_exec_plsql edit_transcript {}
+    db_dml update_contents {}
 }
 
 ad_proc -public chat_room_get {
