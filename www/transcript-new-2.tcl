@@ -27,9 +27,7 @@ set transcript_id [chat_transcript_new \
 if { $delete_messages eq "on" } {
     chat_room_message_delete $room_id
     # forward the information to AJAX
-    if { [llength [info command ::chat::Chat]] > 0 } {
-        ::chat::Chat flush_messages -chat_id $room_id
-    }
+    ::chat::Chat flush_messages -chat_id $room_id
 }
 
 if { $deactivate_room eq "on" } {

@@ -21,14 +21,8 @@ set room_create_p [permission::permission_p -object_id $package_id -privilege ch
 set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 set warning ""
 
-if { $default_client eq "ajax" } {
-    if { ![apm_package_installed_p xotcl-core] } {
-        set warning "[_ chat.xotcl_missing]"
-        set default_client "html"
-    } elseif { [llength [info command ::chat::Chat]] == 0 } {
-        set warning "[_ chat.bootstrap_patch_missing]"
-        set default_client "html"
-    }
+if { $default_client eq "ajax" && ![apm_package_installed_p xotcl-core] } {
+    set warning "[_ chat.xotcl_missing]"
 }
 
 if { $room_create_p } {
@@ -36,14 +30,9 @@ if { $room_create_p } {
 }
 
 db_multirow -extend { active_users last_activity } rooms rooms_list {} {
-    if { [llength [info command ::chat::Chat]] > 0 } {
-        set room [::chat::Chat create new -volatile -chat_id $room_id]
-        set active_users [$room nr_active_users]
-        set last_activity [$room last_activity]
-    } else {
-        set active_users "-"
-        set last_activity "-"        
-    }
+  set room [::chat::Chat create new -volatile -chat_id $room_id]
+  set active_users [$room nr_active_users]
+  set last_activity [$room last_activity]
 }
 
 list::create \

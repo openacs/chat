@@ -121,7 +121,7 @@
 	    perform chat_room__edit (
 	        :room_id,
 	        :pretty_name,
-                :description,
+            :description,
 	        :moderated_p,
 	        :active_p,
             :archive_p,
@@ -219,6 +219,24 @@
                 return 0;
 	    end;
       </querytext>
+</fullquery>
+
+<fullquery name="chat_flush_rooms.get_rooms">
+      <querytext>
+            select room_id 
+            from chat_rooms 
+            where archive_p = 't' and auto_flush_p = 't'
+      </querytext>
+</fullquery>
+
+<fullquery name="chat_room_flush.get_archives_messages">
+  <querytext>
+    select msg, creation_user, to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date
+    from chat_msgs
+    where room_id = :room_id
+          and msg is not null
+    order by creation_date
+  </querytext>
 </fullquery>
 
 </queryset>

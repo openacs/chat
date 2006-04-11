@@ -15,8 +15,6 @@ if { [catch {chat_room_message_delete $room_id} errmsg] } {
     ad_return_complaint 1 "[_ chat.Delete_messages_failed]: $errmsg"
 }
 
-if { [llength [info command ::chat::Chat]] > 0 } {
-    ::chat::Chat flush_messages -chat_id $room_id
-}
+::chat::Chat flush_messages -chat_id $room_id
 
 ad_returnredirect .

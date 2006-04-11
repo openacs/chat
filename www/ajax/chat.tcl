@@ -26,7 +26,7 @@ switch -- $m {
     if { $msg ne "" } {
         set message_output [c1 add_msg $msg]
         if { [c1 current_message_valid] } {
-            chat_message_post $id [c1 user_id] $msg f
+            chat_message_post $id [c1 user_id] $msg 1
         }
     }
   }

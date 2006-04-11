@@ -102,6 +102,9 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                     nsv_set chat_room $room_id {}                   
                 }
 
+                ns_log Notice "YY Adding message $msg to chat room $room_id"
+                ::chat::Chat c1 -volatile -chat_id $room_id -user_id 0 -session_id 0
+                c1 add_msg -uid $user_id $msg
 
                 if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
                     ns_log error "chat_post_message_to_db: error: $errmsg"
@@ -324,7 +327,7 @@ ad_proc -public chat_message_post {
     message
     moderator_p
 } {
-    Post message to the chat room and broadcast to all applet clients. Only use by HTML client.
+    Post message to the chat room and broadcast to all applet clients. Used by ajax + html.
 } {
     if {$moderator_p == "1" } {
         set status "approved"
@@ -332,24 +335,24 @@ ad_proc -public chat_message_post {
         set status "pending"
     }
 
-    # do not write messages to the database if the room should not be archived
-    chat_room_get -room_id $room_id -array room_info
-    if { $room_info(archive_p) eq "f" } { return }
-    
 	set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 
 	if {$default_client eq "java"} {
 		set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
 		# Add message to queue. Notify thread responsible for 
 		# broadcast message to applets.
-    
 		nsv_set chat html_message $chat_msg
 		ns_mutex unlock [nsv_get chat new_message]  
-	} else {
+	}
+    
+        # do not write messages to the database if the room should not be archived
+        chat_room_get -room_id $room_id -array room_info
+        if { $room_info(archive_p) eq "f" } { return }
+        
+        # write message to the database
         if [catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg] {
             ns_log error "chat_post_message_to_db: error: $errmsg"
         }
-    }
 }
 
 

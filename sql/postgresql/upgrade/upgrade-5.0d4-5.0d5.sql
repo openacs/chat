@@ -1,7 +1,16 @@
 
-alter table chat_rooms add column auto_flush_p boolean default 't';
-alter table chat_rooms add column auto_transcript_p boolean default 'f';
+alter table chat_rooms add column auto_flush_p boolean;
+alter table chat_rooms alter column auto_flush_p set default 't';
+
+alter table chat_rooms add column auto_transcript_p boolean;
+alter table chat_rooms alter column auto_transcript_p set default 'f';
+
 update chat_rooms set auto_flush_p = 't', auto_transcript_p = 'f';
+
+alter table chat_msgs add column creation_date2 timestamptz;
+update chat_msgs set creation_date2 = creation_date;
+alter table chat_msgs drop column creation_date;
+alter table chat_msgs rename column creation_date2 to creation_date;
 
 create or replace function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean, boolean, boolean)
 returns integer as '

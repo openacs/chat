@@ -27,18 +27,8 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
 }
 
-template::list::create -name chat_msg \
-    -multirow chat_msg_query \
-    -no_data "[_ chat.no_messages]" \
-    -page_flush_p 1 \
-    -elements {
-        creation_date_pretty { label "[_ chat.date]" }
-        person_name { label "[_ acs-kernel.User]" }
-        msg { label "[_ chat.msg]" }
-    }
-	 
-db_multirow -extend { person_name } chat_msg_query select_msg_items {} {
-    set person_name [person::name -person_id $creation_user]
-}
+::chat::Chat c1 -volatile -encoder noencode -chat_id $room_id
+set html_chat [c1 get_all]
+set html_users [c1 get_users]
 
 ad_return_template

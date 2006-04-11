@@ -7,17 +7,18 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="5.0d5" url="http://openacs.org/repository/download/apm/chat-5.0d5.apm">
+    <version name="5.0d6" url="http://openacs.org/repository/download/apm/chat-5.0d6.apm">
         <owner url="http://www.openacs.org">Peter Alberer</owner>
         <summary>Server based chat with an html and ajax client.</summary>
-        <release-date>2006-04-06</release-date>
+        <release-date>2006-04-11</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
         <description format="text/html">Adapted by Peter Alberer 2006/03/25 to allow java and ajax to coexist. 
 Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of generalized chat class from xotcl-core.</description>
         <maturity>0</maturity>
 
-        <provides url="chat" version="5.0d5"/>
+        <provides url="chat" version="5.0d6"/>
         <requires url="acs-kernel" version="5.0d13"/>
+        <requires url="xotcl-core" version="0.36"/>
 
         <callbacks>
         </callbacks>

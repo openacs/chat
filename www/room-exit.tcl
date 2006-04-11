@@ -23,11 +23,9 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 chat_message_post $room_id $user_id "[_ chat.has_left_the_room]." "1"
 
 # send to AJAX
-if { [llength [info command ::chat::Chat]] > 0 } {
-    set session_id [ad_conn session_id]
-    ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
-    c1 logout
-}
+set session_id [ad_conn session_id]
+::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
+c1 logout
 
 ad_returnredirect index
 #ad_returnredirect [dotlrn::get_url]
