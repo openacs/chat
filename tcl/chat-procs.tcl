@@ -102,9 +102,21 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                     nsv_set chat_room $room_id {}                   
                 }
 
-                ns_log Notice "YY Adding message $msg to chat room $room_id"
-                ::chat::Chat c1 -volatile -chat_id $room_id -user_id 0 -session_id 0
+                ns_log Notice "YY Nachricht: $msg"
+                ::chat::Chat c1 -volatile -chat_id $room_id -user_id $user_id -session_id 0
+                switch $msg {
+                    "/enter" {
+                        c1 login
+                        set msg [_ xotcl-core.has_entered_the_room]
+                    }
+                    "/leave" {
+                        c1 logout
+                        set msg [_ xotcl-core.has_left_the_room]
+                    }
+                    default {
                 c1 add_msg -uid $user_id $msg
+                    }
+                }
 
                 if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
                     ns_log error "chat_post_message_to_db: error: $errmsg"
