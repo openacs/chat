@@ -334,8 +334,7 @@ create table chat_msgs (
                        references parties(party_id)
                        constraint chat_msgs_creation_user_nn not null,
     creation_ip        varchar(50) ,
-    creation_date      date
-                       constraint chat_msgs_creation_date_nn not null,
+    creation_date      timestamptz,
     room_id            integer
                        constraint chat_msgs_room_id_fk references chat_rooms
 );
