@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="chat" package_version="5.0d5" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="chat" package_version="5.0d6" locale="en_US" charset="ISO-8859-1">
 
   <msg key="actions">Actions</msg>
   <msg key="Active">Active</msg>
@@ -41,7 +41,7 @@
   <msg key="creation_date">Creation date</msg>
   <msg key="current_transcript">Current conversation</msg>
   <msg key="date">date</msg>
-  <msg key="deactivate_room_after_transcript">Raum nach Erstellung des Protokolls deaktivieren</msg>
+  <msg key="deactivate_room_after_transcript">Deactive the room after creating transcript</msg>
   <msg key="Delete_all_messages_in_the_room">Delete all messages in the room</msg>
   <msg key="Delete_messages">Delete messages</msg>
   <msg key="delete_messages_after_transcript">Delete messages after creating the transcript</msg>
@@ -67,7 +67,7 @@
   <msg key="Hml">HTML</msg>
   <msg key="HTML_chat">HTML</msg>
   <msg key="html_client_msg">html client</msg>
-  <msg key="Java">JavaScript</msg>
+  <msg key="Java">Java</msg>
   <msg key="Java_chat">Java</msg>
   <msg key="Javascript">Javascript</msg>
   <msg key="key">key</msg>
@@ -79,6 +79,7 @@
   <msg key="Moderated">Moderated</msg>
   <msg key="msg">Message</msg>
   <msg key="Name">Name</msg>
+  <msg key="No">No</msg>
   <msg key="No_information_available">No information available</msg>
   <msg key="noactive">No active</msg>
   <msg key="Refresh">Refresh</msg>
@@ -100,7 +101,7 @@
   <msg key="to">to</msg>
   <msg key="Transcript">Protocol</msg>
   <msg key="Transcript_name">Transcript name</msg>
-  <msg key="transcript_of_date">Protocol of</msg>
+  <msg key="transcript_of_date">Transcript of</msg>
   <msg key="transcript_of_room">Protocol of the messages in room</msg>
   <msg key="Transcript_preview">Transcript preview</msg>
   <msg key="transcription_msg">transcription of all chat messages</msg>

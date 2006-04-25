@@ -44,7 +44,7 @@ list::create \
     -row_pretty_plural [_ chat.rooms] \
     -elements {
         active {
-            label "Aktiv"
+            label "#chat.Active#"
             html { align "center" }
             display_template {
                 <if @rooms.active_p@ eq t>
@@ -60,11 +60,11 @@ list::create \
             }
         }
         pretty_name {
-            label "Name"
+            label "#chat.Name#"
             html { width 400px }
             display_template {
                 <if @rooms.active_p@ eq t>
-                <a href="room-enter?room_id=@rooms.room_id@&client=$default_client">@rooms.pretty_name@</a>
+                <a href="room-enter?room_id=@rooms.room_id@&client=$default_client">@rooms.pretty_name@</a>&nbsp;\[<a href="room-enter?room_id=@rooms.room_id@&client=html">#chat.HTML_chat#</a>\]
                 </if>
                 <else>
                 @rooms.pretty_name@

@@ -118,9 +118,12 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                     }
                 }
 
-                if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
-                    ns_log error "chat_post_message_to_db: error: $errmsg"
-                }
+				chat_room_get -room_id $room_id -array room_info
+				if { $room_info(archive_p) eq "t" } { 
+					if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
+						ns_log error "chat_post_message_to_db: error: $errmsg"
+					}
+				}
 
                 nsv_lappend chat_room $room_id $line
 

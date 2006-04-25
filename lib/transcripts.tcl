@@ -4,7 +4,7 @@ set transcript_view_p [permission::permission_p -object_id $room_id -privilege c
 
 # List available chat transcript
 db_multirow -extend { creation_date_pretty viewer } chat_transcripts list_transcripts *SQL* {
-    set creation_date_pretty [lc_time_fmt $creation_date "%d.%m.%Y %T"]
+    set creation_date_pretty [lc_time_fmt $creation_date "%q %X"]
 }
 
 list::create \
@@ -15,7 +15,7 @@ list::create \
     -row_pretty_plural [_ chat.Transcripts] \
     -elements {
         pretty_name {
-            label "Name"
+            label "#chat.Name#"
             link_url_eval {chat-transcript?room_id=$room_id&transcript_id=$transcript_id}
         }
         creation_date_pretty {
