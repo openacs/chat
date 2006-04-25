@@ -105,7 +105,8 @@ class adClientSession extends Thread {
 
                             datasource.addSession(this, room_id);
                             datasource.broadcastAppletOnly(adChatSystemMessage.buildUserEnterMsg(user_id, user_name), room_id);
-                            datasource.broadcast(adChatMessage.buildBroadcastMsg(user_id, user_name, room_id, " has entered the room."), room_id);
+                            datasource.broadcastAppletOnly(adChatMessage.buildBroadcastMsg(user_id, user_name, room_id, " has entered the room!"), room_id);
+                            datasource.broadcastAolOnly(adChatMessage.buildBroadcastMsg(user_id, user_name, room_id, "/enter"), room_id);
                             authenticate_p = true;
                         }
                     }
@@ -130,7 +131,14 @@ class adClientSession extends Thread {
                     adChatMessage msg = new adChatMessage(str);
                     str = adChatMessage.buildModerateMsg(msg.getFromUser(), msg.getRoomId(), msg.getBody());
                 }
-            datasource.broadcast(str, room_id);
+                
+                if (from_HTML_client) {
+                	//System.out.println("BroadCasting to applets only!");
+                	datasource.broadcastAppletOnly(str, room_id);
+                } else {
+                	//System.out.println("BroadCasting to all stations!");
+                	datasource.broadcast(str, room_id);
+                }
                     
             }
             socket.close();
@@ -139,7 +147,8 @@ class adClientSession extends Thread {
         }
         // Remove user from room. And broadcast message to everyone in the room.
         datasource.removeSession(this, room_id);
-        datasource.broadcast(adChatMessage.buildBroadcastMsg(user_id, user_name, room_id, " has leave the room."), room_id);
+        datasource.broadcastAppletOnly(adChatMessage.buildBroadcastMsg(user_id, user_name, room_id, " has left the room!"), room_id);
+        datasource.broadcastAolOnly(adChatMessage.buildBroadcastMsg(user_id, user_name, room_id, "/leave"), room_id);
     }
 
     public void postMessage(String msg) {
