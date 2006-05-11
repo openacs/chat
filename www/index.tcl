@@ -60,7 +60,7 @@ list::create \
             }
         }
         pretty_name {
-            label "#chat.Name#"
+            label "#chat.Room_name#"
             html { width 400px }
             display_template {
                 <if @rooms.active_p@ eq t>
