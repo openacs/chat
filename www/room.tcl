@@ -70,10 +70,10 @@ list::create \
     -row_pretty_plural [_ chat.banned_users] \
     -elements {
         name {
-            label "Name"
+            label "#chat.Name#"
         }
         email {
-            label "Email"
+            label "#acs-kernel.Email_Address#"
         }
         actions {
             label "#chat.actions#"

@@ -30,23 +30,23 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     }
     {active_p:boolean(radio)
         {label "#chat.Active#" }
-        {options {{"#chat.Yes#" t} {"#chat.No#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
         {value "t"}
     }
     {archive_p:boolean(radio)
         {label "#chat.Archive#" }
-        {options {{"#chat.Yes#" t} {"#chat.No#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
         {value "t"}
     }    
     {auto_flush_p:boolean(radio)
         {label "#chat.AutoFlush#" }
-        {options {{"#chat.Yes#" t} {"#chat.No#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
         {value "t"}
         {help_text "[_ chat.AutoFlushHelp]"}
     }  
     {auto_transcript_p:boolean(radio)
         {label "#chat.AutoTranscript#" }
-        {options {{"#chat.Yes#" t} {"#chat.No#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
         {value "f"}
         {help_text "[_ chat.AutoTranscriptHelp]"}
     }      

@@ -31,6 +31,7 @@
   <msg key="Confirm_room_delete">Raum tatsächlich löschen?</msg>
   <msg key="Confirm_unban_user">Bestätigen Sie die Aufhebung der Sperre</msg>
   <msg key="Contents">Inhalt</msg>
+  <msg key="Could_not_update_room">Raum konnte nicht aktualisiert werden</msg>
   <msg key="Could_not_update_transcript">Protokoll konnte nicht aktualisiert werden</msg>
   <msg key="Create_a_new_room">Neuen Raum anlegen</msg>
   <msg key="Create_a_room">Raum anlegen</msg>
@@ -65,7 +66,7 @@
   <msg key="Hml">HTML</msg>
   <msg key="HTML_chat">HTML</msg>
   <msg key="html_client_msg">Browser</msg>
-  <msg key="Java">JavaScript </msg>
+  <msg key="Java">Java</msg>
   <msg key="Java_chat">Java </msg>
   <msg key="Javascript">Javascript</msg>
   <msg key="key">Schlüssel</msg>
@@ -99,10 +100,10 @@
   <msg key="Transcript_name">Bezeichnung des Protokoll</msg>
   <msg key="transcript_of_date">Protokol vom</msg>
   <msg key="transcript_of_room">Protokol der Nachrichten im Raum</msg>
+  <msg key="Transcript_preview">Protokoll ansehen</msg>
   <msg key="transcription_msg">Protokoll aller Nachrichten anzeigen</msg>
   <msg key="Transcripts">Protokolle</msg>
   <msg key="transcripts_of_room">Verfügbare Protokolle im Raum</msg>
-  <msg key="Trascript">Protokoll</msg>
   <msg key="Unauthorized">Nicht authorisiert</msg>
   <msg key="Unban">Sperre aufheben</msg>
   <msg key="unban">Sperre aufheben</msg>
@@ -113,7 +114,6 @@
   <msg key="View">Anzeigen</msg>
   <msg key="View_transcript">Protokoll anzeigen</msg>
   <msg key="xotcl_missing">&lt;b&gt;Warnung&lt;/b&gt; Der Parameter &quot;DefaultClient&quot; des aktuellen Chat-Packets hat den Wert &quot;Ajax&quot; aber das Packet &quot;xotcl-core&quot; ist nicht installiert. Das Ajax Client Interface funktioniert nicht, wenn das Packet xotcl-core nicht installiert ist.</msg>
-  <msg key="Yes">Ja</msg>
   <msg key="You_dont_have_permission_room">Sie sind nicht berechtigt, diesen Chatraum zu betreten</msg>
   <msg key="your_name_is">Ihr Name ist</msg>
 </message_catalog>
