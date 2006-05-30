@@ -79,7 +79,6 @@
   <msg key="Moderated">Moderada</msg>
   <msg key="msg">Mensaje</msg>
   <msg key="Name">Nombre</msg>
-  <msg key="No">No</msg>
   <msg key="No_information_available">No hay información disponible</msg>
   <msg key="noactive">No activa</msg>
   <msg key="Refresh">Refrescar</msg>
@@ -107,8 +106,6 @@
   <msg key="transcription_msg">Transcripción de todos los mensajes</msg>
   <msg key="Transcripts">Transcripciones</msg>
   <msg key="transcripts_of_room">Transcripciones de la sala</msg>
-  <msg key="Trascript">Transcripción</msg>
-  <msg key="Trasncript">Transcripción</msg>
   <msg key="Unauthorized">No autorizado</msg>
   <msg key="Unauthorized_privilege">Privilegio no autorizado</msg>
   <msg key="Unban">No expulsar</msg>
@@ -116,13 +113,11 @@
   <msg key="Unban_user">No expulsar usuario</msg>
   <msg key="Untitled">Sin título</msg>
   <msg key="Update_room">Actualizar sala</msg>
-  <msg key="Users_allow">Usuarios autorizados</msg>
   <msg key="Users_ban">Usuarios expulsados</msg>
   <msg key="View">Ver</msg>
   <msg key="View_transcript">Ver transcrición</msg>
   <msg key="What_search">por nombre o email o usuario limitado a</msg>
   <msg key="xotcl_missing">&lt;b&gt;Atención&lt;/b&gt; El parámetro &quot;DefaultClient&quot; contiene &quot;Ajax&quot; pero el paquete xotcl-core no está instalado. El chat Ajax no podrá funcionar sin xotcl-core.</msg>
-  <msg key="Yes">Sí</msg>
   <msg key="You_dont_have_permission_room">No tienes permiso para entrar en esta sala</msg>
   <msg key="your_name_is">tu nombre es</msg>
 </message_catalog>
