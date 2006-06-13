@@ -18,10 +18,11 @@ set user_output "-"
 
 switch -- $m {
   add_msg {
+    # i see no reason, why this is limited to 200 characters.... GN
     # do not allow messages longer than 200 characters
-    if { [string length $msg] > 200 } {
-      set msg [string range $msg 0 200]
-    }
+    #if { [string length $msg] > 200 } {
+    #  set msg [string range $msg 0 200]
+    #}
     # do not insert empty messages, if they managed to get here
     if { $msg ne "" } {
         set message_output [c1 add_msg $msg]
