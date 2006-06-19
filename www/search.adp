@@ -7,6 +7,6 @@
   <input type="hidden" name="target" value="one" />
   <input type="hidden" name="type" value="@type@" />
   <input type="text" size="15" name="keyword" />
-  <input type="submit" value="#dotlrn.User_Search#" />
+  <input type="submit" value="#acs-subsite.Search_For_Exist_User#" />
 </FORM>
 

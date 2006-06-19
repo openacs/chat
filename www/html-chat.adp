@@ -15,7 +15,7 @@
 
 <p>
 <a href="room-exit?room_id=@room_id@" class=button title="#chat.exit_msg#">#chat.Log_off#</a>
-<a href="chat-transcript?room_id=@room_id@" class=button title="#chat.transcription_msg#" >#chat.Trascript#</a>
+<a href="chat-transcript?room_id=@room_id@" class=button title="#chat.transcription_msg#" >#chat.Transcript#</a>
 <a href="room-enter?room_id=@room_id@&client=@richclient.short@#xj220" class=button title="@richclient.msg@" >@richclient.title@</a>
 </p>
 
