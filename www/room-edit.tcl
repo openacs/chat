@@ -63,9 +63,12 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         ad_return_complaint 1 "[_ chat.Create_new_room_failed]: $errmsg"
         break
     }
-    set comm_id [dotlrn_community::get_community_id] 
+    set comm_id ""
+    if {[info command dotlrn_community::get_community_id] ne ""} {
+      set comm_id [dotlrn_community::get_community_id] 
+    }
     if {$comm_id ne ""} {
-      chat_user_grant $room_id [dotlrn_community::get_community_id]
+      chat_user_grant $room_id $comm_id
     } else {
       #-2 Registered Users
       #chat_user_grant $room_id -2 
