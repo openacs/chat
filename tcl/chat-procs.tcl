@@ -281,6 +281,8 @@ ad_proc -public chat_user_ban {
 } {
     Explicit ban user from this chat room.
 } {
+    util_memoize_flush  \
+	"permission::permission_p_not_cached -party_id $party_id -object_id $room_id -privilege chat_ban"
     db_exec_plsql ban_user {}
 }
 
@@ -291,6 +293,8 @@ ad_proc -public chat_user_unban {
 } {
     unban user from this chat room.
 } {
+    util_memoize_flush  \
+	"permission::permission_p_not_cached -party_id $party_id -object_id $room_id -privilege chat_ban"
     db_exec_plsql ban_user {}
 }
 

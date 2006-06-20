@@ -186,7 +186,7 @@ DataConnection.prototype = {
         //     updateInterval = setInterval(updateDataConnections,5000);
         // }
         if (this.busy) {
-            alert("chatSendMsg conflict!");
+            alert("chatSendMsg conflict! Maybe banned?");
         }
         var msgField = document.getElementById('chatMsg');
         if (msgField.value == '') {

@@ -23,7 +23,7 @@ ad_page_contract {
 # Check input.
 set exception_count 0
 set exception_text ""
-set SQL_LIMIT 10
+set SQL_LIMIT 20
 
 set context [list [list "./" "Users"] "Search"]
 
