@@ -6,7 +6,7 @@ ad_page_contract {
     party_id:integer,notnull
 }
 
-if {[string equal $type "user"] == 1} {
+if {$type eq "user"} {
   ad_require_permission $room_id chat_user_grant
   chat_user_grant $room_id $party_id
 } else {

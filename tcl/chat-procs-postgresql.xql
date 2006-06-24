@@ -10,6 +10,8 @@
              :moderated_p,
              :active_p,
              :archive_p,
+             :auto_flush_p,
+             :auto_transcript_p,
              :context_id,
              now(),
              :creation_user,
@@ -119,10 +121,12 @@
 	    perform chat_room__edit (
 	        :room_id,
 	        :pretty_name,
-                :description,
+	        :description,
 	        :moderated_p,
 	        :active_p,
-                :archive_p
+            :archive_p,
+            :auto_flush_p,
+            :auto_transcript_p
 	    );
             return 0;
 	end;
@@ -216,8 +220,6 @@
 	    end;
       </querytext>
 </fullquery>
-
-
 
 </queryset>
 

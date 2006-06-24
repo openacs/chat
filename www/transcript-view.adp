@@ -11,9 +11,13 @@
 
 [<a href="transcript-edit?transcript_id=@transcript_id@&room_id=@room_id@">#chat.Edit#</a>]
 <ul>
-<li>#chat.Name#: <b>@transcript_name@</b></li>
-<li>#chat.Description#: <b><i>@description@</i></b></li>
-<li>#chat.Contents#:  <p> <pre>@contents@</pre></p></li>
+<li>#chat.Name#: <b>@transcript_name@</b>
+<li>#chat.Description#: <b><i>@description@</i></b>
+
+
+<ul>
+<p>@contents;noquote@
+</ul>
 </ul>
 
 

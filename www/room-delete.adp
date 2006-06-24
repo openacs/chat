@@ -12,7 +12,7 @@
 <form method="post" action="room-delete-2">	
 <input type=hidden name=room_id value=@room_id@>
 #chat.Are_you_sure_you_want_to_delete# @pretty_name@?
-<p><input type=submit value=#chat.Yes#>
+<p><input type=submit value=#acs-kernel.common_Yes#>
 </form>
 
 

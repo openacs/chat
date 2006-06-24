@@ -54,6 +54,7 @@ begin
     acs_privilege.remove_child('chat_room_admin', 'chat_moderator_revoke');
     acs_privilege.remove_child('chat_room_admin', 'chat_moderator');
 
+    acs_privilege.remove_child('admin', 'chat_room_admin');        
 
     acs_privilege.drop_privilege('chat_room_create');
     acs_privilege.drop_privilege('chat_room_view');

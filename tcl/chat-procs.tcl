@@ -9,7 +9,7 @@ ad_library {
 
 ad_proc -private chat_start_server {} { Start Java chat server. } {
 
-    if [nsv_get chat server_started] {
+    if {[nsv_get chat server_started]} {
         return
     }
     ns_log notice "chat_start_server: Starting chat server"
@@ -62,7 +62,7 @@ ad_proc -private chat_broadcast_to_applets {host port} { Broadcast chat message 
     while { 1 } {
         # Wait until there is new message in queue.
         ns_mutex lock [nsv_get chat new_message]
-        if [nsv_exists chat html_message] {
+        if {[nsv_exists chat html_message]} {
             # Get message from queue.
             puts $w [nsv_get chat html_message]
             flush $w
@@ -98,14 +98,32 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                 regexp "<from>(.*)</from>" $line match screen_name
                 regexp "<body>(.*)</body>" $line match msg
                 regexp "<from_user_id>(.*)</from_user_id>" $line match user_id
-                if ![nsv_exists chat_room $room_id] {
+                if {![nsv_exists chat_room $room_id]} {
                     nsv_set chat_room $room_id {}                   
                 }
 
-
-                if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
-                    ns_log error "chat_post_message_to_db: error: $errmsg"
+                ns_log Notice "YY Nachricht: $msg"
+                ::chat::Chat c1 -volatile -chat_id $room_id -user_id $user_id -session_id 0
+                switch $msg {
+                    "/enter" {
+                        c1 login
+                        set msg [_ xotcl-core.has_entered_the_room]
+                    }
+                    "/leave" {
+                        c1 logout
+                        set msg [_ xotcl-core.has_left_the_room]
+                    }
+                    default {
+                c1 add_msg -uid $user_id $msg
+                    }
                 }
+
+				chat_room_get -room_id $room_id -array room_info
+				if { $room_info(archive_p) eq "t" } { 
+					if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg]} {
+						ns_log error "chat_post_message_to_db: error: $errmsg"
+					}
+				}
 
                 nsv_lappend chat_room $room_id $line
 
@@ -124,7 +142,7 @@ ad_proc -private chat_post_message_to_db {
 } {
     Log chat message to the database.
 } {
-    ns_log Notice $msg
+    # ns_log Notice $msg
     db_exec_plsql post_message {}
 
 }
@@ -133,6 +151,8 @@ ad_proc -public chat_room_new {
     {-moderated_p f}
     {-active_p t}
     {-archive_p f}
+    {-auto_flush_p t}
+    {-auto_transcript_p f}
     {-context_id ""}
     {-creation_user ""}
     {-creation_ip ""}
@@ -158,6 +178,8 @@ ad_proc -public chat_room_edit {
     moderated_p
     active_p
     archive_p
+    auto_flush_p
+    auto_transcript_p
 } {
     Edit information on chat room. All information require.
 } {
@@ -259,6 +281,8 @@ ad_proc -public chat_user_ban {
 } {
     Explicit ban user from this chat room.
 } {
+    util_memoize_flush  \
+	"permission::permission_p_not_cached -party_id $party_id -object_id $room_id -privilege chat_ban"
     db_exec_plsql ban_user {}
 }
 
@@ -269,6 +293,8 @@ ad_proc -public chat_user_unban {
 } {
     unban user from this chat room.
 } {
+    util_memoize_flush  \
+	"permission::permission_p_not_cached -party_id $party_id -object_id $room_id -privilege chat_ban"
     db_exec_plsql ban_user {}
 }
 
@@ -308,8 +334,9 @@ ad_proc -public chat_user_name {
 } {
     Return display name of this user to use in chat.
 } {
-
-    return [db_exec_plsql get_chat_user_name {}]
+	acs_user::get -user_id $user_id -array user
+	set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]
+    return $name
 
 }
 
@@ -319,7 +346,7 @@ ad_proc -public chat_message_post {
     message
     moderator_p
 } {
-    Post message to the chat room and broadcast to all applet clients. Only use by HTML client.
+    Post message to the chat room and broadcast to all applet clients. Used by ajax + html.
 } {
     if {$moderator_p == "1" } {
         set status "approved"
@@ -327,12 +354,24 @@ ad_proc -public chat_message_post {
         set status "pending"
     }
 
-    set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
-    # Add message to queue. Notify thread responsible for broadcast message to applets.
+	set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 
-    nsv_set chat html_message $chat_msg
-    ns_mutex unlock [nsv_get chat new_message]
-
+	if {$default_client eq "java"} {
+		set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
+		# Add message to queue. Notify thread responsible for 
+		# broadcast message to applets.
+		nsv_set chat html_message $chat_msg
+		ns_mutex unlock [nsv_get chat new_message]  
+	}
+    
+        # do not write messages to the database if the room should not be archived
+        chat_room_get -room_id $room_id -array room_info
+        if { $room_info(archive_p) eq "f" } { return }
+        
+        # write message to the database
+        if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
+            ns_log error "chat_post_message_to_db: error: $errmsg"
+        }
 }
 
 
@@ -362,13 +401,13 @@ ad_proc -public chat_message_retrieve {
 
     # The first time html client enter chat room, chat_room variable is not initialize correctly.
     # Therefore I just hard code the variable.
-    if ![nsv_exists chat_room $room_id] {
+    if {![nsv_exists chat_room $room_id]} {
         nsv_set chat_room $room_id [list "<message><from>[chat_user_name $user_id]</from><room_id>$room_id</room_id><body>[_ chat.has_entered_the_room]</body><status>approved</status></message>"]
     }
 
     set user_name [chat_user_name $user_id]
 
-    upvar "$msgs:rowcount" counter
+     upvar "$msgs:rowcount" counter
 
     set chat_messages [nsv_get chat_room $room_id]
 
@@ -378,14 +417,14 @@ ad_proc -public chat_message_retrieve {
     set counter 0
 
     #foreach msg $chat_messages 
-    for { set i [expr $cnt - 1] } { $i >= 0 } { set i [expr $i - 1] } {
+    for { set i [expr {$cnt - 1}] } { $i >= 0 } { set i [expr {$i - 1}] } {
         set msg [lindex $chat_messages $i]
         regexp "<from>(.*)</from>" $msg match screen_name
         regexp "<body>(.*)</body>" $msg match chat_msg
         regexp "<status>(.*)</status>" $msg match status
 
 
-        if {$status == "pending" || $status == "rejected"} {
+        if {$status eq "pending" || $status eq "rejected"} {
             continue;
         }
 
@@ -396,7 +435,7 @@ ad_proc -public chat_message_retrieve {
         incr counter
         set array_val(rownum) $counter
 
-        if {$screen_name == $user_name && $chat_msg == "has entered the room."} {
+        if {$screen_name == $user_name && $chat_msg eq "has entered the room."} {
             return
         }
     }
@@ -418,16 +457,10 @@ ad_proc -public chat_transcript_new {
 
     db_transaction {
         set transcript_id [db_exec_plsql create_transcript {}]
-        db_exec_plsql grant_permission {}
-#
-#       db_dml transcript_content {
-#           update chat_transcripts
-#            set contents = empty_clob()
-#           where transcript_id = :transcript_id
-#            returning contents into :1
-#       } -clobs [list $contents]
-#    } on_error {
-#       ad_return_complaint 1 "Insert fail: $errmsg"
+	if { $transcript_id ne 0 } {
+	    db_dml update_contents {}
+	    db_exec_plsql grant_permission {}
+	}
     }
 
     return $transcript_id
@@ -450,26 +483,54 @@ ad_proc -public chat_transcript_edit {
 } {
     Edit chat transcript.
 } {
-    db_transaction {
-        db_exec_plsql edit_transcript {
-
-        }
-        #db_dml transcript_content {
-        #    update chat_transcripts
-        #    set contents = empty_clob()
-        #   where transcript_id = :transcript_id
-        #    returning contents into :1
-        #} -clobs [list $contents]
-    }
-        
+    db_exec_plsql edit_transcript {}
+    db_dml update_contents {}
 }
 
+ad_proc -public chat_room_get {
+    {-room_id {}}
+    {-array:required}
+} {
+    Get all the information about a chat room into an array
+} {
+    upvar $array row
+    array set row [util_memoize [list chat_room_get_not_cached $room_id]]
+}
 
+ad_proc -private chat_room_get_not_cached { 
+    room_id
+} {
+    db_1row select_user_info {select * from chat_rooms where room_id = :room_id} -column_array row
+    return [array get row]    
+}
 
+ad_proc -private chat_flush_rooms {} {Flush the messages in all of the chat rooms} {
+    # ns_log Notice "YY Starting chat_flush_rooms operation"
+    set room_ids [db_list get_rooms *SQL*] 
+    foreach room_id $room_ids {
+        chat_room_flush $room_id
+    }
+}   
 
-
-
-
-
-
+ad_proc -private chat_room_flush { room_id } {Flush the messages a single chat room} {
+    # ns_log Notice "YY flushing room $room_id"
+    db_transaction {
+        array set room_info [chat_room_get_not_cached $room_id]
+        set contents ""
+        # do we have to create a transcript for the room
+        if { $room_info(auto_transcript_p) eq "t" } {
+            # build a list of all messages
+            db_foreach get_archives_messages {} {
+                append contents "\[$creation_date\] <b>[chat_user_name $creation_user]</b>: $msg<br>\n"
+            }
+            if { $contents ne "" } {
+                chat_transcript_new \
+                    -description "#chat.automatically_created_transcript#" \
+                    "#chat.transcript_of_date# [clock format [clock seconds] -format "%d.%m.%Y"]" $contents $room_id
+            }
+        }
+        # clear all the messages in the room
+        chat_room_message_delete $room_id
+    }
+}
 

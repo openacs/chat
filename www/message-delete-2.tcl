@@ -9,11 +9,12 @@ ad_page_contract {
     room_id:integer,notnull
 }
 
-ad_require_permission $room_id chat_room_delete
-
+permission::require_permission -object_id $room_id -privilege chat_room_delete
 
 if { [catch {chat_room_message_delete $room_id} errmsg] } {
     ad_return_complaint 1 "[_ chat.Delete_messages_failed]: $errmsg"
 }
+
+::chat::Chat flush_messages -chat_id $room_id
 
 ad_returnredirect .

@@ -201,13 +201,13 @@ create table chat_rooms (
                        check (active_p in ('t','f')),
     -- if set then log all chat messages in this room.
     archive_p          boolean
-                       default 'f'
+                        default 't'
                        constraint chat_rooms_archive_p_ck
-                       check (archive_p in ('t', 'f'))
-
-
-
-
+                        check (archive_p in ('t', 'f')),
+    -- flush the rooms messages every night at 00:05                    
+    auto_flush_p        boolean default 't',
+    -- automatically create a transcript after flushing the room
+    auto_transcript_p   boolean default 'f'
 );
 
 
@@ -334,8 +334,7 @@ create table chat_msgs (
                        references parties(party_id)
                        constraint chat_msgs_creation_user_nn not null,
     creation_ip        varchar(50) ,
-    creation_date      date
-                       constraint chat_msgs_creation_date_nn not null,
+    creation_date      timestamptz,
     room_id            integer
                        constraint chat_msgs_room_id_fk references chat_rooms
 );
@@ -343,7 +342,7 @@ create table chat_msgs (
 
 ---------------------------------
 
-create function chat_room__new (integer, varchar, varchar, boolean, boolean, boolean, integer, timestamptz, integer, varchar, varchar)
+create or replace function chat_room__new (integer, varchar, varchar, boolean, boolean, boolean, boolean, boolean, integer, timestamptz, integer, varchar, varchar)
 returns integer as '
 declare
    p_room_id        alias for $1;
@@ -352,11 +351,13 @@ declare
    p_moderated_p    alias for $4;
    p_active_p       alias for $5;
    p_archive_p      alias for $6;
-   p_context_id     alias for $7;
-   p_creation_date  alias for $8;
-   p_creation_user  alias for $9;
-   p_creation_ip    alias for $10;
-   p_object_type    alias for $11;
+   p_auto_flush_p      alias for $7;
+   p_auto_transcript_p      alias for $8;
+   p_context_id     alias for $9;
+   p_creation_date  alias for $10;
+   p_creation_user  alias for $11;
+   p_creation_ip    alias for $12;
+   p_object_type    alias for $13;
    v_room_id        chat_rooms.room_id%TYPE;
 begin
    v_room_id := acs_object__new (
@@ -369,9 +370,9 @@ begin
    );
 
    insert into chat_rooms
-       (room_id, pretty_name, description, moderated_p, active_p, archive_p)
+       (room_id, pretty_name, description, moderated_p, active_p, archive_p, auto_flush_p, auto_transcript_p)
    values
-       (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p);
+       (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p, p_auto_flush_p, p_auto_transcript_p);
 
 return v_room_id;
 
@@ -507,7 +508,8 @@ begin
 end;' language 'plpgsql';
 ----------------------------
 
-create function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean)
+
+create or replace function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean, boolean, boolean)
 returns integer as '
 declare
    p_room_id        alias for $1;
@@ -516,6 +518,8 @@ declare
    p_moderated_p    alias for $4;
    p_active_p       alias for $5;
    p_archive_p      alias for $6;
+   p_auto_flush_p      alias for $7;
+   p_auto_transcript_p      alias for $8;
 begin
 
         update chat_rooms set
@@ -523,7 +527,9 @@ begin
             description = p_description,
             moderated_p = p_moderated_p,
             active_p    = p_active_p,
-            archive_p   = p_archive_p
+            archive_p   = p_archive_p,
+            auto_flush_p   = p_auto_flush_p,
+            auto_transcript_p   = p_auto_transcript_p
         where
             room_id = p_room_id;
         return 0;

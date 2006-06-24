@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="chat" package_version="5.0d2" locale="ca_ES" charset="ISO-8859-1">
+<message_catalog package_key="chat" package_version="5.0d6" locale="ca_ES" charset="ISO-8859-1">
 
   <msg key="Active">Activa</msg>
   <msg key="Add_moderator">Afegeix moderador</msg>
@@ -79,12 +79,10 @@
   <msg key="Unban_user">Deixa de bandejar l'usuari</msg>
   <msg key="Untitled">Sense títol</msg>
   <msg key="Update_room">Actualitza la sala</msg>
-  <msg key="Users_allow">Permet l'usuari</msg>
   <msg key="Users_ban">Bandeja l'usuari</msg>
   <msg key="View">Veure</msg>
   <msg key="View_transcript">Veure transcripció</msg>
   <msg key="What_search">per nom o correu electrònic o nom d'usuari limitat a</msg>
-  <msg key="Yes">Sí</msg>
   <msg key="You_dont_have_permission_room">No teniu permís per entrar en aquesta sala de xat</msg>
   <msg key="your_name_is">el vostre nom és</msg>
 </message_catalog>

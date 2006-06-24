@@ -23,31 +23,31 @@ ad_page_contract {
 # Check input.
 set exception_count 0
 set exception_text ""
-set SQL_LIMIT 10
+set SQL_LIMIT 20
 
 set context [list [list "./" "Users"] "Search"]
 
-if [info exists keyword] {
+if {[info exists keyword]} {
     # this is an administrator 
-    if { [empty_string_p $keyword] } {
+    if { $keyword eq "" } {
         incr exception_count
         append exception_text "<li>You forgot to type a search string!\n"
     }
 } else {
     # from one of the user pages
-    if { (![info exists email] || [empty_string_p $email]) && \
-            (![info exists last_name] || [empty_string_p $last_name]) } {
+    if { (![info exists email] || $email eq "") && \
+            (![info exists last_name] || $last_name eq "") } {
         incr exception_count
         append exception_text "<li>You must specify either an email address or last name to search for.\n"
     }
 
     if { [info exists email] && [info exists last_name] && \
-            ![empty_string_p $email] && ![empty_string_p $last_name] } {
+            $email ne "" && $last_name ne "" } {
         incr exception_count
         append exception_text "<li>You can only specify either email or last name, not both.\n"
     }
 
-    if { ![info exists target] || [empty_string_p $target] } {
+    if { ![info exists target] || $target eq "" } {
         incr exception_count
         append exception_text "<li>Target was not specified. This shouldn't have happened,
 please contact the <a href=\"mailto:[ad_host_administrator]\">administrator</a>
@@ -68,7 +68,7 @@ if { [info exists keyword] } {
     set search_type "keyword"
     set sql_keyword "%[string tolower $keyword]%"
     lappend where_clause "(username like :sql_keyword or email like :sql_keyword or lower(first_names || ' ' || last_name) like :sql_keyword)"
-} elseif { [info exists email] && ![empty_string_p $email] } {
+} elseif { [info exists email] && $email ne "" } {
     set search_type "email"    
     set sql_email "%[string tolower $email]%"
     lappend where_clause "email like :sql_email"
@@ -97,7 +97,8 @@ where cu.user_id = gm.member_id
 } else {
 set query "select username, user_id, email_verified_p, first_names, last_name, email, member_state
 from cc_users
-where [join $where_clause "\nand "]"
+where [join $where_clause "\nand "]
+limit $SQL_LIMIT"
 }
 
 set i 0
@@ -123,7 +124,7 @@ db_foreach user_search_admin $query {
     set user_search:[set rowcount](member_state) $member_state
 
     
-    if { $member_state != "approved" } {
+    if { $member_state ne "approved" } {
         set user_search:[set rowcount](user_finite_state_links) [join [ad_registration_finite_state_machine_admin_links $member_state $email_verified_p $user_id_from_search "search?[export_url_vars email last_name keyword target passthrough limit_users_in_group_id only_authorized_p]"] " | "]
     } else {
         set user_search:[set rowcount](user_finite_state_links) ""
