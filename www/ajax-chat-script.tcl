@@ -9,4 +9,3 @@ ad_page_contract {
 }
 
 set chat_frame [ ::chat::Chat login -chat_id $room_id]
-

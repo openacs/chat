@@ -30,12 +30,13 @@ set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 if {$default_client eq "java"} {
 	chat_start_server
 }
-
 switch $client {
-    "html" - "ajax" - "html-chat-script" {
-        ns_log Notice "YY room-enter: has_entered_the room"
-        chat_message_post $room_id $user_id "[_ chat.has_entered_the_room]." "1"
-    }
+    		"html" - "ajax" - "html-chat-script" {
+        	ns_log Notice "YY room-enter: has_entered_the room"        	
+        	chat_message_post $room_id $user_id "[_ chat.has_entered_the_room]." "1"
+        	}
 }
+
+
 
 ad_returnredirect "chat?room_id=$room_id&client=$client"

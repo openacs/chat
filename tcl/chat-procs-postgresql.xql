@@ -3,20 +3,23 @@
    <rdbms><type>postgresql</type><version>7.1</version></rdbms>
 <fullquery name="chat_room_new.create_room">
       <querytext>
-            select chat_room__new (
-             NULL,
+            select chat_room__new (            
              :pretty_name,
+             :alias,
              :description,
-             :moderated_p,
-             :active_p,
-             :archive_p,
-             :auto_flush_p,
-             :auto_transcript_p,
-             :context_id,
-             now(),
-             :creation_user,
-             :creation_ip,
-             'chat_room'
+             :key_words,
+             :maxP,
+             timestamp :end_date,
+             boolean :Rss_service,
+             boolean :Mail_service,
+             boolean :moderated_p,
+             boolean :active_p,
+             boolean :archive_p,
+             integer :context_id,
+             integer :comm_id,             
+             integer :creation_user,
+             varchar :creation_ip,
+             varchar 'chat_room'                          
             )
       </querytext>
 </fullquery>
@@ -112,21 +115,25 @@
            return 0;
 	end;
      </querytext>
-</fullquery>
-
+</fullquery>   
 
 <fullquery name="chat_room_edit.edit_room">
       <querytext>
          begin
 	    perform chat_room__edit (
-	        :room_id,
 	        :pretty_name,
+	        :alias,
 	        :description,
+	        :key_words,
+	        :maxP,
+	        :end_date,
+	        :Rss_service,
+	        :Mail_service,
 	        :moderated_p,
 	        :active_p,
             :archive_p,
-            :auto_flush_p,
-            :auto_transcript_p
+            :user_id,
+            :room_id
 	    );
             return 0;
 	end;
@@ -141,10 +148,11 @@
 </fullquery>
 
 
-<fullquery name="chat_room_message_delete.delete_message">
+
+<fullquery name="chat_room_delete_registered_users.delete_users">
       <querytext>
-          begin
-	    perform chat_room__delete_all_msgs(:room_id);
+          begin          
+	    perform chat_room__delete_registered_users(:room_id,:user_id);
             return 0;
 	end;
      </querytext>
@@ -220,6 +228,22 @@
 	    end;
       </querytext>
 </fullquery>
+
+<fullquery name="chat_registered_user.register">
+      <querytext>
+            select chat_room_registered__user (
+             varchar :alias,
+             integer :user_id,
+             integer :room_id,
+             boolean :RSS_service,
+             boolean :mail_service,
+             integer :context_id,
+             varchar :creation_ip
+            )
+      </querytext>
+</fullquery>
+
+
 
 </queryset>
 

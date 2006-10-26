@@ -146,18 +146,24 @@ ad_proc -private chat_post_message_to_db {
     db_exec_plsql post_message {}
 
 }
-ad_proc -public chat_room_new {
-    {-description ""}
-    {-moderated_p f}
-    {-active_p t}
-    {-archive_p f}
-    {-auto_flush_p t}
-    {-auto_transcript_p f}
-    {-context_id ""}
+ad_proc -public chat_room_new {    
+    {-alias ""}    
+    {-key_words ""}
+    {-maxP ""}
+    {-end_date ""}
+    {-Rss_service ""}
+    {-Mail_service ""}
+    {-moderated_p ""}
+    {-active_p ""}
+    {-archive_p ""}
+    {-auto_flush_p ""}
+    {-auto_transcript_p ""}
+    {-context_id ""}    
+    {-comm_id ""}
     {-creation_user ""}
     {-creation_ip ""}
+    description
     pretty_name
-
 } {
     Create new chat room. Return room_id if successful else raise error.
 } {
@@ -172,18 +178,23 @@ ad_proc -public chat_room_new {
 }
 
 ad_proc -public chat_room_edit {
-    room_id
-    pretty_name
+    {-alias ""}
+    {-key_words ""}
+    {-maxP ""}
+    {-end_date ""}
+    {-Rss_service ""}
+    {-Mail_service ""}
+    {-moderated_p ""}
+    {-active_p ""}
+    {-archive_p ""}
+    {-user_id ""}
+    {-room_id ""}
     description
-    moderated_p
-    active_p
-    archive_p
-    auto_flush_p
-    auto_transcript_p
+    pretty_name
 } {
     Edit information on chat room. All information require.
 } {
-   db_exec_plsql edit_room {}
+  db_exec_plsql edit_room {}
 }
 
 ad_proc -public chat_room_delete {
@@ -375,6 +386,8 @@ ad_proc -public chat_message_post {
 }
 
 
+
+
 ad_proc -public chat_moderate_message_post {
     room_id
     user_id
@@ -382,7 +395,7 @@ ad_proc -public chat_moderate_message_post {
 } {
     Post moderate message to the chat room and broadcast to all applet clients. Only use by HTML client.
 } {
-    set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>pending</status></message>"
+    set chat_msg "<message><from>[chat_user_name2 $user_id $alias]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>pending</status></message>"
 
     # Add message to queue. Notify thread responsible for broadcast message to applets.
     nsv_set chat html_message $chat_msg
@@ -521,7 +534,7 @@ ad_proc -private chat_room_flush { room_id } {Flush the messages a single chat r
         if { $room_info(auto_transcript_p) eq "t" } {
             # build a list of all messages
             db_foreach get_archives_messages {} {
-                append contents "\[$creation_date\] <b>[chat_user_name $creation_user]</b>: $msg<br>\n"
+                append contents "\[$creation_date\] <b>[chat_user_name $alias]</b>: $msg<br>\n"
             }
             if { $contents ne "" } {
                 chat_transcript_new \
@@ -534,3 +547,77 @@ ad_proc -private chat_room_flush { room_id } {Flush the messages a single chat r
     }
 }
 
+ad_proc -public chat_registered_user {     
+    {-RSS_service ""}
+    {-mail_service ""}
+    {-context_id ""}
+    {-creation_ip ""}
+    room_id   
+    alias    
+    user_id
+} {
+    A user is regitered in a chat room.
+} {
+
+    db_transaction {
+    	set registered_id [db_exec_plsql register {}]
+    }  
+
+    return $registered_id
+}
+
+
+ad_proc -public chat_message_post2 {
+    room_id
+    user_id
+    alias
+    message
+    moderator_p
+} {
+    Post message to the chat room and broadcast to all applet clients. Used by ajax + html.
+} {
+    if {$moderator_p == "1" } {
+        set status "approved"
+    } else {
+        set status "pending"
+    }
+    	
+	set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
+	if {$default_client eq "java"} {
+		set chat_msg "<message><from>[chat_user_name2 $user_id $alias]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
+		# Add message to queue. Notify thread responsible for 
+		# broadcast message to applets.
+		nsv_set chat html_message $chat_msg
+		ns_mutex unlock [nsv_get chat new_message]  
+	}
+    
+        # do not write messages to the database if the room should not be archived
+        chat_room_get -room_id $room_id -array room_info
+        if { $room_info(archive_p) eq "f" } { return }
+        
+        # write message to the database
+        if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
+            ns_log error "chat_post_message_to_db: error: $errmsg"
+        }
+}
+
+ad_proc -public chat_user_name2 {
+    user_id
+    alias
+} {
+    Return display name of this user to use in chat.
+} {
+	acs_user::get -user_id $user_id -array user
+	set name [expr {$alias ne "" ? $alias : $alias}]
+    return $name
+
+}
+
+ad_proc -public chat_room_delete_registered_users {
+    room_id
+    user_id
+} {
+    Delete the registered users in a room.
+} {
+   db_exec_plsql delete_users {}
+}

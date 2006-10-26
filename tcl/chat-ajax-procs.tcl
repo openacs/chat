@@ -13,7 +13,9 @@ namespace eval ::chat {
   Chat instproc render {} {
     my orderby time
     set result ""
-    foreach child [my children] {
+    
+    foreach child [my children] {      
+      
       set msg       [$child msg]
       set user_id   [$child user_id]
       set color     [$child color]
@@ -23,7 +25,7 @@ namespace eval ::chat {
       append result "<p class='line'><span class='timestamp'>$timeshort</span>" \
 	  "<span class='user'>$userlink:</span>" \
 	  "<span class='message'>[my encode $msg]</span></p>\n"
-    }
+    }        
     return $result
   }
 
@@ -41,7 +43,8 @@ namespace eval ::chat {
     set path      [site_node::get_url_from_object_id -object_id $package_id]
     set login_url ${path}ajax/chat?m=login&$context
     set send_url  ${path}ajax/chat?m=add_msg&$context&msg=
-    set users_url ${path}ajax/chat?m=get_users&$context
+   
+    set users_url ${path}ajax/chat?m=get_users&$context    
     return "\
       <script type='text/javascript' language='javascript'>
       $js
@@ -62,6 +65,59 @@ namespace eval ::chat {
       </div>
       </form> 
     "
+    
   }
-}
+  
+  
+  Chat instproc render2 {-chat_id } {
+    my orderby time
+    set result ""
 
+    db_1row room_info {
+        select room.maximal_participants as maxp
+        from chat_rooms as room
+        where room.room_id = :chat_id        
+      }
+     
+     
+    foreach child [my children] {
+      set msg       [$child msg]
+      set user_id   [$child user_id]
+      set color     [$child color]
+      set timelong  [clock format [$child time]]
+      set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
+      
+      db_1row room_info {
+        select count(1) as info
+        from chat_registered_users
+        where room_id = :chat_id
+        and user_id = :user_id
+      }    
+    
+    if { $info > 0 } {
+	db_1row room_info {	
+        	select alias as alias
+        	from chat_registered_users
+        	where room_id = :chat_id
+        	and user_id = :user_id
+	}	
+	set userlink  [my user_link2 -user_id $user_id -color $color -alias $alias]
+        append result "<p class='line'><span class='timestamp'>$timeshort</span>" \
+	  "<span class='user'>$userlink:</span>" \
+	  "<span class='message'>[my encode $msg]</span></p>\n"
+    }
+    if {$info eq 0} {   
+    	set userlink  [my user_link -user_id $user_id -color $color]
+        	append result "<p class='line'><span class='timestamp'>$timeshort</span>" \
+	  	"<span class='user'>$userlink:</span>" \
+	  	"<span class='message'>[my encode $msg]</span></p>\n"
+	  }
+    }
+    
+    
+    return $result
+  }
+  
+  
+  
+}	

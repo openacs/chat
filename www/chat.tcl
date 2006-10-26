@@ -58,6 +58,7 @@ if { $message ne "" } {
     chat_message_post $room_id $user_id $message $moderator_p
 }
 
+
 # Determine which template to use for html or ajax client
 switch $client {
     "html" {
@@ -69,10 +70,10 @@ switch $client {
             c1 add_msg $message
         }
     }
-    "ajax" {
+    "ajax" {        
         set template_use "ajax-chat-script"
     }
-    "java" {
+    "java" {    
         set template_use "java-chat"
 
         # Get config paramater for applet.
@@ -83,6 +84,5 @@ switch $client {
         set port [ad_parameter ServerPort "" 8200]
      }
 }
-
 ad_return_template $template_use
 
