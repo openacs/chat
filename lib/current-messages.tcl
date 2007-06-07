@@ -7,7 +7,25 @@ set sql {
 }
 
 db_multirow -extend { person_name } messages select_msg_itens $sql {
-    if { [catch { set person_name [chat_user_name $creation_user] }] } {
-        set person_name "Unknown"
+    db_1row room_info2 {
+    		select count(r.alias)
+    		from chat_registered_users r
+    		where r.user_id = :creation_user
+    		and r.room_id = :room_id
+    }
+    if { $count > 0} {
+	db_1row room_info2 {
+		select r.alias
+		from chat_registered_users r
+    		where r.user_id = :creation_user
+    		and r.room_id = :room_id
+	}
+        if { [catch { set person_name [chat_user_name2 $creation_user $alias] }] } {
+        	set person_name "System"
+    	}
+    } else {
+    	if { [catch { set person_name [chat_user_name $creation_user] }] } {
+        	set person_name "System"
+    	}
     }
 }

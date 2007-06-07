@@ -17,10 +17,11 @@ Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of genera
         <maturity>0</maturity>
 
         <provides url="chat" version="5.0d6"/>
-        <requires url="acs-kernel" version="5.3.1a1"/>
-        <requires url="xotcl-core" version="0.46"/>
+        <requires url="acs-kernel" version="5.0d13"/>
+        <requires url="xotcl-core" version="0.36"/>
 
         <callbacks>
+            <callback type="after-install"  proc="chat::install::package_install"/>
         </callbacks>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="AppletHeight"  default="500" description="Height of the applet"/>

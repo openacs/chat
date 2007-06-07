@@ -43,6 +43,10 @@
           <td><textarea name="description" rows=6 cols=65>@description@</textarea>
        </tr>
        <tr class="form-element">
+          <td class="form-label">#chat.keywords#</th>
+          <td><textarea name="keywords" rows=3 cols=65>@keywords@</textarea>
+       </tr>
+       <tr class="form-element">
           <td class="form-label">#chat.Contents#</th>
     	  <td><div style="border: 1px solid #A4B97F; padding:3px; color: #666666;">@contents;noquote@</div>
        </tr>

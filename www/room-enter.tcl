@@ -9,6 +9,7 @@ ad_page_contract {
 } {
     room_id:integer,notnull
     client:trim
+    
 } 
 
 set user_id [ad_conn user_id]

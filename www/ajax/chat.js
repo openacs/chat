@@ -51,7 +51,7 @@ function messagesReceiver(node,doc,div) {
         if (node.childNodes[i].nodeType == 3 ) {
             // if this is a textnode, skip it
             continue;
-        }
+        }        
         msgCount++;
         p = doc.createElement('p');
         p.className = 'line';
@@ -80,7 +80,8 @@ function messagesReceiver(node,doc,div) {
 }
 
 function pushReceiver(content) {
-    updateReceiver(content);
+	//alert(content);
+    updateReceiver(content);   
     var msgField = document.getElementById('chatMsg');
     msgField.value = '';
     msgField.disabled = false;
@@ -88,59 +89,134 @@ function pushReceiver(content) {
 }
 
 function updateReceiver(content) {
+  //  alert(content);
     var xmlobject = (new DOMParser()).parseFromString(content, 'application/xhtml+xml');
     var body = xmlobject.getElementsByTagName('body');
+   //alert(content);
     
-    for (var i = 0 ; i < body[0].childNodes.length ; i++) {
+    for (var i = 0 ; i < body[0].childNodes.length ; i++) {    
         if (body[0].childNodes[i].nodeType == 3 ) {
             // if this is a textnode, skip it
             continue;
         }
+       
         var attribute = body[0].childNodes[i].getAttribute('id');
+      
         switch (attribute) {
             case "messages":
-                var messagesNode = body[0].childNodes[i];
+                var messagesNode = body[0].childNodes[i];                
                 if (messagesNode.hasChildNodes()) {
-                    var messagesDoc = frames['ichat'].document;
-                    var messagesDiv = frames['ichat'].document.getElementById('messages');
-                    messagesReceiver(messagesNode,messagesDoc,messagesDiv);
+                    var messagesDoc = frames['ichat'].document; //esto es lo actual de mi pagina
+                    var messagesDiv = frames['ichat'].document.getElementById('messages'); //actual de mi pagina
+                    messagesReceiver(messagesNode,messagesDoc,messagesDiv);//con todos los elemtnos nuevos en messagesNode, el documento messagesDco y la capa exacta, creare una nueva capa y sustituyo en el documento la que tengo por la nueva
                 }                
                 break;
-            case "users":
-                var usersNode = body[0].childNodes[i].childNodes[0];
+            case "users":     
+            	var usersNode = body[0].childNodes[i].childNodes[0];
+            	             
                 var usersDoc = frames['ichat-users'].document;
+                
                 var usersTbody = frames['ichat-users'].document.getElementById('users').tBodies[0];
+                
                 usersReceiver(usersNode,usersDoc,usersTbody);                
+                break;
+            case "files":
+                var filesNode = body[0].childNodes[i].childNodes[0];                
+                var filesDoc = frames['ichat-files'].document;
+                var filesTbody = frames['ichat-files'].document.getElementById('files').tBodies[0];
+                filesReceiver(filesNode,filesDoc,filesTbody);                
                 break;
         }
     }
+    
+    
+    
+    
 }
 
 function usersReceiver(node,doc,tbody) {
     var tr, td, e, s, nbody;
+    
+    
     nbody = doc.createElement('tbody');
     for (var i = 0 ; i < node.childNodes.length ; i++) {
         if (node.childNodes[i].nodeType == 3 ){
             // if this is a textnode, skip it
             continue;
         }
+        
         tr = doc.createElement('tr');
-        e = node.childNodes[i].getElementsByTagName('TD');
+        e = node.childNodes[i].getElementsByTagName('td');
+        
         
         td = doc.createElement('td');
-        td.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue.replace(/\+/g,' '));
+        var ref = e[0].firstChild.getAttribute('href');
+        var ref2 = e[0].firstChild.firstChild.getAttribute('src');            
+        var aux = "<img src='"+ref2+"' />"; 
+        var aux2 = "<a target='_blank' title='Private Room' href='"+ref+"'>"+aux+"</a>";
+        td.innerHTML = decodeURIComponent(aux2);       
+        tr.appendChild(td);         
+        
+        
+                      
+        td = doc.createElement('td');        
+        td.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
         td.className = 'user';
+        tr.appendChild(td);      
+                
+        
+        td = doc.createElement('td');
+        td.innerHTML = decodeURIComponent(e[2].firstChild.nodeValue.replace(/\+/g,' '));
+        td.className = 'timestamp';
         tr.appendChild(td);
         
-        td = doc.createElement('td');
-        td.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
-        td.className = 'timestamp';
-        tr.appendChild(td);   
         
         nbody.appendChild(tr);
+        
     }
     tbody.parentNode.replaceChild(nbody,tbody);
+    
+    
 }
+
+function filesReceiver(node,doc,tbody) {
+    var tr, td, e, s, nbody;
+    
+    
+    nbody = doc.createElement('tbody');
+    for (var i = 0 ; i < node.childNodes.length ; i++) {
+        if (node.childNodes[i].nodeType == 3 ){
+            // if this is a textnode, skip it
+            continue;
+        }
+        
+        tr = doc.createElement('tr');
+        e = node.childNodes[i].getElementsByTagName('td');
+        
+        td = doc.createElement('td');
+        
+        var ref = e[0].childNodes[0];
+        
+        if(ref.nodeType != 1){
+        	td = doc.createElement('td');       	
+        	td.appendChild(e[0].firstChild);        	
+        	td.className = 'files';
+        	tr.appendChild(td);
+        	nbody.appendChild(tr);	
+        }
+        else{
+        	var ref = e[0].childNodes[0].getAttribute('href');            
+        	var aux = "<a href="+ref+">"+e[0].firstChild.childNodes[0].nodeValue.replace(/\+/g,' ')+"</a>"; 	
+        	td.innerHTML = decodeURIComponent(aux);
+        	td.className = 'files';
+        	tr.appendChild(td);    
+        	nbody.appendChild(tr);
+	}
+    }
+    tbody.parentNode.replaceChild(nbody,tbody);
+    
+}
+
 
 function DataConnection() {};
 
@@ -152,10 +228,14 @@ DataConnection.prototype = {
     autoConnect: null,
     
     httpSendCmd: function(url) {
+    	
         // if (!this.connection) {
+        //alert('httpSendCmd');
+        //alert(url);
             this.busy = true;
             this.connection = getHttpObject();
         // }
+        
         this.connection.open('GET', url + '&mc=' + msgcount++, true);
         var self = this;
         this.connection.onreadystatechange = function() {
@@ -165,6 +245,7 @@ DataConnection.prototype = {
     },
     
     httpReceiver: function(obj) {
+    //	alert('httpReceiver');
          if (obj.connection.readyState == 4) {
             if (obj.connection.status == 200) {
                 obj.handler(obj.connection.responseText);
@@ -177,6 +258,7 @@ DataConnection.prototype = {
     }, 
     
     chatSendMsg: function(send_url) {
+    	//alert('chatSendMsg');
         // if (inactivityTimeout) {
         //     clearTimeout(inactivityTimeout);
             // alert("Clearing inactivityTimeout");
@@ -189,9 +271,11 @@ DataConnection.prototype = {
             alert("chatSendMsg conflict! Maybe banned?");
         }
         var msgField = document.getElementById('chatMsg');
+        //alert(msgField);
         if (msgField.value == '') {
             return;
         }
+        //alert(send_url);
         msgField.disabled = true;
         this.httpSendCmd(send_url + escape(msgField.value));
         msgField.value = '#chat.sending_message#';
@@ -211,6 +295,10 @@ DataConnection.prototype = {
 }
 
 function registerDataConnection(handler,url,autoConnect) {
+//	alert('registerDataConnection');
+	//alert(handler);
+	//alert(url);
+	//alert(autoConnect);
     // var ds = new DataConnection(handler,url,autoConnect);
     var ds = new DataConnection();
     ds.handler = handler;
@@ -222,7 +310,9 @@ function registerDataConnection(handler,url,autoConnect) {
 }
 
 function updateDataConnections() {
+	//alert('updateDataConnections');
     for (var ds in dataConnections) {
+    	//alert(ds);
         if (dataConnections[ds].autoConnect) {
             // alert("updating " + dataConnections[ds].url);
             dataConnections[ds].updateBackground();
@@ -239,11 +329,15 @@ function stopUpdates() {
 }
 
 function startProc() {
+   // alert('startProc');
     document.getElementById('chatMsg').focus();
     var messagesDiv = frames['ichat'].document.getElementById('messages');
+   // alert(frames['ichat'].document.getElementById('messages'));
+   // alert('startProc2');
     if (messagesDiv) { 
         frames['ichat'].window.scrollTo(0,messagesDiv.offsetHeight); 
     }
+  //  alert('startProc3');
 }
 
 window.onload = startProc;

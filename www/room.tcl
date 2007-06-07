@@ -1,9 +1,8 @@
 #/www/chat/room.tcl
 ad_page_contract {
     Display information about chat room.
-    @author David Dao (ddao@arsdigita.com)
-    @creation-date November 15, 2000
-    @cvs-id $Id$
+    @author David Dao (ddao@arsdigita.com) and Pablo Muñoz(pablomp@tid.es)
+    
 } {
     room_id:integer,notnull
 } -properties {
@@ -32,7 +31,32 @@ ad_page_contract {
 }
 
 set context_bar [list "[_ chat.Room_Information]"]
+set user_id [ad_conn user_id]
 
+#A professor who creates a rooom will be able to admin it.
+db_1row room_info2 {
+		select count(cr.creator) as counter2
+		from chat_rooms cr
+		where cr.room_id = :room_id
+		and cr.creator = :user_id		
+ }
+ if { $counter2 > 0} { 	
+ 		set admin_professor "t"
+ } else {
+ 	 set admin_professor "f"
+ } 
+if { $admin_professor eq "t"} {
+set room_view_p 1
+set room_edit_p 1
+set room_delete_p 1
+set user_ban_p 1
+set user_unban_p 1
+set user_grant_p 1
+set user_revoke_p 1
+#set moderator_grant_p 1
+#set moderator_revoke_p 1
+set transcript_create_p 1
+} else {
 ###
 # Get all available permission of this user on this room.
 ###
@@ -43,10 +67,10 @@ set user_ban_p [permission::permission_p -object_id $room_id -privilege chat_use
 set user_unban_p [permission::permission_p -object_id $room_id -privilege chat_user_unban]
 set user_grant_p [permission::permission_p -object_id $room_id -privilege chat_user_grant]
 set user_revoke_p [permission::permission_p -object_id $room_id -privilege chat_user_revoke]
-set moderator_grant_p [permission::permission_p -object_id $room_id -privilege chat_moderator_grant]
-set moderator_revoke_p [permission::permission_p -object_id $room_id -privilege chat_moderator_revoke]
+#set moderator_grant_p [permission::permission_p -object_id $room_id -privilege chat_moderator_grant]
+#set moderator_revoke_p [permission::permission_p -object_id $room_id -privilege chat_moderator_revoke]
 set transcript_create_p [permission::permission_p -object_id $room_id -privilege chat_transcript_create]
-
+}
 ###
 # Get room basic information.
 ###

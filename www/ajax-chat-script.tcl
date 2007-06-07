@@ -5,7 +5,7 @@ ad_page_contract {
   @creation-date Jan 31, 2006
   @cvs-id $Id$
 } -query {
-  msg:optional
+  msg:optional   
 }
 
 set chat_frame [ ::chat::Chat login -chat_id $room_id]

@@ -2,7 +2,7 @@
 ad_page_contract {
     Add a new room to the database.
 
-    @author David Dao (ddao@arsdigita.com)
+    @author David Dao (ddao@arsdigita.com) and Pablo Muñoz(pablomp@tid.es)
     @creation-date November 15, 2000
     @cvs-id $Id$
 } {

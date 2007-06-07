@@ -13,10 +13,25 @@ ad_page_contract {
     {archive_p "f"}
     {active_p "f"}
 }
+set user_id [ad_conn user_id]
 
+#A professor who creates a rooom will be able to admin it.
+db_1row room_info2 {
+		select count(cr.creator) as counter2
+		from chat_rooms cr
+		where cr.room_id = :room_id
+		and cr.creator = :user_id		
+ }
+ if { $counter2 > 0} { 	
+ 		set admin_professor "t"
+ } else {
+ 	 set admin_professor "f"
+ } 
+if { $admin_professor eq "t"} {
+	
+} else {
 ad_require_permission $room_id chat_room_edit
-
-ns_log notice "receive: moderated_p:$moderated_p archive_p:$archive_p  active_p:$active_p"
+}
 
 
 if {[catch {chat_room_edit $room_id $pretty_name $description $moderated_p $active_p $archive_p} errmsg]} {

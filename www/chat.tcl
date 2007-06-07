@@ -3,7 +3,7 @@ ad_page_contract {
 
     Decide which template to use HTML or AJAX.
 
-    @author David Dao (ddao@arsdigita.com)
+    @author David Dao (ddao@arsdigita.com) and Pablo Muñoz(pablomp@tid.es)
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
@@ -45,9 +45,17 @@ if { $moderate_room_p eq "t" } {
 }
 
 if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
-    #Display unauthorize privilege page.
-    ad_returnredirect unauthorized
-    ad_script_abort
+	db_1row room_info {
+		select cr.private as private
+		from chat_rooms as cr
+		where cr.room_id = :room_id
+	}
+	if { $private eq "f"} {
+	
+    		#Display unauthorize privilege page.    
+    		ad_returnredirect unauthorized
+    		ad_script_abort
+    	}	
 }
 
 # Get chat screen name.
