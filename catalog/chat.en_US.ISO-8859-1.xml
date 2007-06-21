@@ -97,6 +97,7 @@
   <msg key="rooms">rooms</msg>
   <msg key="Send_Refresh">Send/Refresh</msg>
   <msg key="sending_message">Sending message...</msg>
+  <msg key="There">There are no messages to delete</msg>
   <msg key="There_are_no_rooms_available">There are no rooms available</msg>
   <msg key="to">to</msg>
   <msg key="Transcript">Transcript</msg>
