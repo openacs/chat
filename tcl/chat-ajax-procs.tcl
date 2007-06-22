@@ -4,11 +4,7 @@ ad_library {
     @creation-date 2006-02-02
     @author Gustaf Neumann
     @author Peter Alberer
-<<<<<<< chat-ajax-procs.tcl
     @cvs-id $Id$  
-=======
-    @cvs-id $Id$  
->>>>>>> 1.5
 }
 
 namespace eval ::chat {
@@ -90,24 +86,9 @@ namespace eval ::chat {
     set file [open [acs_root_dir]/$jspath]; set js [read $file]; close $file
     set path      [site_node::get_url_from_object_id -object_id $package_id]
     set login_url ${path}ajax/chat?m=login&$context
-<<<<<<< chat-ajax-procs.tcl
-    set send_url  ${path}ajax/chat?m=add_msg&$context&msg=    
-    
-=======
     set send_url  ${path}ajax/chat?m=add_msg&$context&msg=    
     #$send_file
->>>>>>> 1.5
    
-<<<<<<< chat-ajax-procs.tcl
-    set user_id [ad_conn user_id]
-    set return_url [ad_return_url]
-        
-    set users_url ${path}ajax/chat?m=get_users&$context  
-    
-    set files_url ${path}ajax/chat?m=get_files&$context      
-    
-    
-=======
     set user_id [ad_conn user_id]
     set return_url [ad_return_url]
     db_1row room_info {
@@ -148,7 +129,6 @@ namespace eval ::chat {
     set files_url ${path}ajax/chat?m=get_files&$context      
     
     
->>>>>>> 1.5
     return "\
       <script type='text/javascript' language='javascript'>
       $js
@@ -188,11 +168,7 @@ namespace eval ::chat {
 "
   }  
   
-<<<<<<< chat-ajax-procs.tcl
-  Chat instproc render {} {
-=======
   Chat instproc render2 {-chat_id} {
->>>>>>> 1.5
     my orderby time
     set result ""
     set msg_true "f"
@@ -242,14 +218,6 @@ namespace eval ::chat {
       }
             
       set user_id   [$child user_id]
-<<<<<<< chat-ajax-procs.tcl
-      set color     [$child color]           
-     set timelong  [clock format [$child time]]
-      set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
-      set timeshort2 [clock format [$child time] -format {[%D]}]
-    
-    
-=======
       set color     [$child color]           
      set timelong  [clock format [$child time]]
       set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
@@ -260,20 +228,13 @@ namespace eval ::chat {
       
       
       
->>>>>>> 1.5
       db_1row room_info {
         select count(1) as info
         from chat_registered_users
         where room_id = :chat_id
         and user_id = :user_id
-<<<<<<< chat-ajax-procs.tcl
-      }
-   
-=======
       }
         
-    
->>>>>>> 1.5
     
     if { $info > 0 } {
     	set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
@@ -366,103 +327,9 @@ namespace eval ::chat {
 	  "<span class='message'>[my encode $msg]</span></p>\n"
 	}
     }
-    }
-<<<<<<< chat-ajax-procs.tcl
-     
-         
-    
-    db_1row room_info1 {
-        select count(files.message) as message
-        from chat_rooms_files_sent as files
-        where files.room_id = :chat_id
-        and files.message = false
-      }
-    
-    if { $message > 0 } {
-      db_1row room_info1 {
-      select files.title as title,files.file as fil
-        from chat_rooms_files_sent as files
-        where files.room_id = :chat_id
-        and files.message = false
-      }      
-           
-      db_1row room_info {
-        select room.comm_name
-        from chat_rooms as room
-        where room.room_id = :chat_id        
-      }  		
-    	set folder_id "$comm_name's Public Files" 
-    	   
-    	db_1row room_info {
-        select count(acs.object_id) as count
-        from acs_objects as acs
-        where acs.title = :folder_id        
-      	}  
-      	if { $count > 0 } {
-      		db_1row room_info {
-        		select acs.object_id as id
-        		from acs_objects as acs
-        		where acs.title = :folder_id        
-      		}
-      		set url [ad_conn url]  
-      		set folder_id $id
-      		set inicio 0
-      		set final [expr [string length $url]-16]
-      		set comm_name [string range $url $inicio $final]  
-      		if { [string length $comm_name] > 0 } {      			 
-      			set url "$comm_name/file-storage/index?folder_id=$folder_id"
-      		}
-      	} else {
-      		
-      		acs_user::get -user_id $user_id -array user      		
-      		set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]      		
-      		set folder_id "$name's Shared Files" 
-      		
-      		
-      		
-      		db_1row room_info {
-        		select fs.folder_id as id
-        		from fs_folders as fs
-        		where fs.name = :folder_id        
-      		}  
-      		set folder_id $id
-      		set url "/dotlrn/file-storage/index?folder_id=$folder_id"  
-      	}
-   	   	
+  }
       
-      
-      set user_file -1
-      
-      
-      set userlink  [my user_link -user_id "-1" -color ""]
-      set msg_file  [my user_link4 -url "I has uploaded the '$title' file ($fil) to the " -color ""]    
-      append result2 "<span class='message'>"
-      
-      append msg_file [my user_link5 -url "$url" -msg "public files of the community" -color ""]      
-         
-      append result2 $msg_file
-      append result2 " "
-      append result2 "</span>\n"
-      set delete_message [send_file_message $chat_id]
-      set uid -1
-      set m [my add_msg -get_new true -uid $user_id "$result2"]
-      
-      set userlink  [my user_link -user_id $user_file -color ""]        
-      append result "<p class='line'><span class='timestamp'>$timeshort</span><span class='user'>$userlink:</span>"
-      append result "<span class='message'>"
-      set msg_file  [my user_link4 -url "The file '$title' has been sent to the " -color ""]
-      append msg_file [my user_link5 -url "$url" -msg "public files of the community." -color ""]      
-     append result $msg_file
-      append result " "
-      append result "</span></p>\n"
-      
-     
-    }
-    
-    
-=======
-     
-          #test send files
+      #test send files
     
     db_1row room_info1 {
         select count(files.message) as message
@@ -557,8 +424,6 @@ namespace eval ::chat {
      
     }
     
-    
->>>>>>> 1.5
     return $result
   }
   
