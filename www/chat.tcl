@@ -29,39 +29,33 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
 }
 
-    set user_id [ad_conn user_id]
-    set return_url [ad_return_url]
-    db_1row room_info {
-        select room.comm_name
-        from chat_rooms as room
+set user_id [ad_conn user_id]
+set return_url [ad_return_url]
+db_1row room_info {
+	select room.comm_name
+       	from chat_rooms as room
         where room.room_id = :room_id        
-      }  		
-    	set folder_id "$comm_name's Public Files" 
-    	db_1row room_info {
-        	select count(acs.object_id) as count
+} 
+ 	       
+set folder_title "$comm_name's Public Files" 
+
+set folder_id [db_string count {select object_id
         	from acs_objects as acs
-        	where acs.title = :folder_id        
-      	}  
-    	if { $count > 0 } {   
-    		db_1row room_info {
-        		select acs.object_id as id
-        		from acs_objects as acs
-        		where acs.title = :folder_id        
-      		}
-      		set folder_id $id  
-      	} else {
-      		acs_user::get -user_id $user_id -array user      		
-      		set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]      		
-      		set folder_id "$name's Shared Files"      		
-      		  
-      		#$folder_id
-      		db_1row room_info {
-        		select fs.folder_id as id
-        		from fs_folders as fs
-        		where fs.name = :folder_id
-      		}  
-      		set folder_id $id  
-      	}
+        	where acs.title = :folder_title} -default ""]  
+
+if {$folder_id eq ""} {
+    acs_user::get -user_id $user_id -array user      		
+    set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]      		
+    set folder_id "$name's Shared Files"      		
+    
+    #$folder_id
+    db_1row room_info {
+    	    		select fs.folder_id as id
+        			from fs_folders as fs
+        			where fs.name = :folder_id
+    }  
+    set folder_id $id  
+}
 
 
 

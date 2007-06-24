@@ -136,7 +136,8 @@ CREATE TABLE chat_transcription_rss (
  
 ---------------------------------
 
-CREATE OR REPLACE FUNCTION chat_room__new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, integer, integer, varchar, varchar, varchar, varchar) RETURNS integer AS'
+CREATE OR REPLACE FUNCTION chat_room__new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, varchar, integer, varchar, varchar, varchar, varchar) RETURNS integer AS'
+/* Nuevo cuerpo de Function */
 declare
    p_pretty_name    alias for $1;
    p_alias          alias for $2;
@@ -150,7 +151,7 @@ declare
    p_active_p       alias for $10;
    p_archive_p      alias for $11;
    p_context_id     alias for $12;
-   p_comm_id        alias for $13;
+   p_comm_name      alias for $13;
    p_creation_user  alias for $14;
    p_creation_ip    alias for $15;
    p_object_type    alias for $16;
@@ -163,18 +164,10 @@ begin
      v_room_id := acs_object__new(null,''chat_room'',now(),p_creation_user,p_creation_ip,p_context_id   );
      v_registered_id := acs_object__new(null,''chat_room'',now(),p_creation_user,p_creation_ip,p_context_id   );
 
-     if exists (select dot.pretty_name from dotlrn_communities_all as dot where dot.community_id = p_comm_id) then
-        select into v_comm_name dot.pretty_name from dotlrn_communities_all as dot where dot.community_id = p_comm_id;
         insert into chat_rooms
                (room_id, pretty_name, description, moderated_p, active_p, archive_p, maximal_participants, end_date, creator, context_id,comm_name,auto_transcript_p,file_sent,private,frequency1)
        values
              (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p, p_maxP, p_end_date,p_creation_user, p_context_id,v_comm_name,''true'',''false'',''false'',p_frequency1);
-     else
-         insert into chat_rooms
-                (room_id, pretty_name, description, moderated_p, active_p, archive_p, maximal_participants, end_date, creator, context_id,comm_name,auto_transcript_p, file_sent,private,frequency1)
-         values
-               (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p, p_maxP, p_end_date,p_creation_user, p_context_id,''Dotlrn'',''true'', ''false'',''false'',p_frequency1);
-     end if;
 
 
    insert into chat_registered_users
@@ -364,7 +357,7 @@ end;
 
 ----------------------------
 
-CREATE OR REPLACE FUNCTION chat_room__private_new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, integer, integer, varchar, varchar, boolean) RETURNS integer AS'
+CREATE OR REPLACE FUNCTION chat_room__private_new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, varchar, integer, varchar, varchar, boolean) RETURNS integer AS'
 /* Nuevo cuerpo de Function */
 declare
    p_pretty_name    alias for $1;
@@ -379,7 +372,7 @@ declare
    p_active_p       alias for $10;
    p_archive_p      alias for $11;
    p_context_id     alias for $12;
-   p_comm_id        alias for $13;
+   p_comm_name        alias for $13;
    p_creation_user  alias for $14;
    p_creation_ip    alias for $15;
    p_object_type    alias for $16;
@@ -392,18 +385,10 @@ begin
      v_room_id := acs_object__new(null,''chat_room'',now(),p_creation_user,p_creation_ip,p_context_id   );
      v_registered_id := acs_object__new(null,''chat_room'',now(),p_creation_user,p_creation_ip,p_context_id   );
 
-     if exists (select dot.pretty_name from dotlrn_communities_all as dot where dot.community_id = p_comm_id) then
-        select into v_comm_name dot.pretty_name from dotlrn_communities_all as dot where dot.community_id = p_comm_id;
-        insert into chat_rooms
+     insert into chat_rooms
                (room_id, pretty_name, description, moderated_p, active_p, archive_p, maximal_participants, end_date, creator, context_id,comm_name,auto_transcript_p,file_sent,private)
        values
              (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p, p_maxP, p_end_date,p_creation_user, p_context_id,v_comm_name,''true'',''false'',p_private);
-     else
-         insert into chat_rooms
-                (room_id, pretty_name, description, moderated_p, active_p, archive_p, maximal_participants, end_date, creator, context_id,comm_name,auto_transcript_p, file_sent,private)
-         values
-               (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p, p_maxP, p_end_date,p_creation_user, p_context_id,''Dotlrn'',''true'', ''false'',p_private);
-     end if;
 
 
    insert into chat_registered_users

@@ -31,7 +31,11 @@ if { $room_create_p } {
 }
 lappend actions "#chat.Search_a_room#" room-search?package_id=[ad_conn package_id] "#chat.Search_a_room#"
 
-set community_id [dotlrn_community::get_community_id]
+if {[info procs dotlrn_community::get_community_id] eq ""} {
+    set community_id ""
+} else {
+    set community_id [dotlrn_community::get_community_id]
+}
 
 if { $community_id eq "" } {	
 	set list 0
@@ -115,35 +119,35 @@ list::create \
     -row_pretty_plural [_ chat.rooms] \
     -elements {
         open {
-            label "#chat-portlet.open_room#"
+            label "#chat.open_room#"
             html { align "center" }
             display_template {
             	
                 <if @rooms.open@ eq t>
                 <div style="padding-top:5px;">
-                <img src="/resources/chat/active.png" title="#chat-portlet.open_room#">
+                <img src="/resources/chat/active.png" title="#chat.open_room#">
                 </div>
                 </if>
                 <else>
                 <div style="padding-top:5px;">                
-                <img src="/resources/chat/inactive.png" title="#chat-portlet.close_room#">
+                <img src="/resources/chat/inactive.png" title="#chat.close_room#">
                 </div>
                 </else>
             }
         }        
         private {
-            label "#chat-portlet.private_room#"
+            label "#chat.private_room#"
             html { align "center" }
             display_template {
             	
                 <if @rooms.private@ eq f>
                 <div style="padding-top:5px;">
-                <img src="/resources/chat/active.png" title="#chat-portlet.not_private_room#">
+                <img src="/resources/chat/active.png" title="#chat.not_private_room#">
                 </div>
                 </if>
                 <else>
                 <div style="padding-top:5px;">                
-                <img src="/resources/chat/inactive.png" title="#chat-portlet.private_room#">
+                <img src="/resources/chat/inactive.png" title="#chat.private_room#">
                 </div>
                 </else>
             }
@@ -162,7 +166,7 @@ list::create \
             }
         }
         community {
-            label "#chat-portlet.community_class#"
+            label "#chat.community_class#"
             html { align "center"}
             display_template {
             	<if @rooms.user_p@ eq t>
@@ -171,7 +175,7 @@ list::create \
             }
         }
         rss {
-        	label "#chat-portlet.rss#"
+        	label "#chat.rss#"
             	html { align "center" }
             	display_template {
             		
@@ -179,10 +183,10 @@ list::create \
                 	<if @rooms.rss_service@ eq 1>
 	  		<br/><a href="@rooms.rss_feed_url2@">#rss-support.Syndication_Feed#&nbsp;<img src="/resources/xml.gif" alt="Subscribe via RSS" width="26" height="10" border=0 /></a><hr/><br/>
         		</if>
-        		<else> #chat-portlet.no_rss#
+        		<else> #chat.no_rss#
         		</else>
         		</if>
-        		<else> #chat-portlet.no_rss#
+        		<else> #chat.no_rss#
         		</else>
         	}
         }       
@@ -225,35 +229,35 @@ list::create \
     -row_pretty_plural [_ chat.rooms] \
     -elements {
         open {
-            label "#chat-portlet.open_room#"
+            label "#chat.open_room#"
             html { align "center" }
             display_template {
             	
                 <if @rooms2.open@ eq t>
                 <div style="padding-top:5px;">
-                <img src="/resources/chat/active.png" title="#chat-portlet.open_room#">
+                <img src="/resources/chat/active.png" title="#chat.open_room#">
                 </div>
                 </if>
                 <else>
                 <div style="padding-top:5px;">                
-                <img src="/resources/chat/inactive.png" title="#chat-portlet.close_room#">
+                <img src="/resources/chat/inactive.png" title="#chat.close_room#">
                 </div>
                 </else>
             }
         }        
         private {
-            label "#chat-portlet.private_room#"
+            label "#chat.private_room#"
             html { align "center" }
             display_template {
             	
                 <if @rooms2.private@ eq f>
                 <div style="padding-top:5px;">
-                <img src="/resources/chat/active.png" title="#chat-portlet.not_private_room#">
+                <img src="/resources/chat/active.png" title="#chat.not_private_room#">
                 </div>
                 </if>
                 <else>
                 <div style="padding-top:5px;">                
-                <img src="/resources/chat/inactive.png" title="#chat-portlet.private_room#">
+                <img src="/resources/chat/inactive.png" title="#chat.private_room#">
                 </div>
                 </else>
             }
@@ -272,7 +276,7 @@ list::create \
             }
         }
         community {
-            label "#chat-portlet.community_class#"
+            label "#chat.community_class#"
             html { align "center"}
             display_template {
             	<if @rooms2.user_p@ eq t>
@@ -281,7 +285,7 @@ list::create \
             }
         }
         rss {
-        	label "#chat-portlet.rss#"
+        	label "#chat.rss#"
             	html { align "center" }
             	display_template {
             		
@@ -289,10 +293,10 @@ list::create \
                 	<if @rooms2.rss_service@ eq 1>
 	  		<br/><a href="@rooms2.rss_feed_url2@">#rss-support.Syndication_Feed#&nbsp;<img src="/resources/xml.gif" alt="Subscribe via RSS" width="26" height="10" border=0 /></a><hr/><br/>
         		</if>
-        		<else> #chat-portlet.no_rss#
+        		<else> #chat.no_rss#
         		</else>
         		</if>
-        		<else> #chat-portlet.no_rss#
+        		<else> #chat.no_rss#
         		</else>
         	}
         }       

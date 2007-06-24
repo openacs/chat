@@ -105,14 +105,16 @@ ad_form -name "room-entry" -edit_buttons [list [list [_ chat.Create_room] next]]
     #    {help_text "[_ chat.AutoTranscriptHelp]"}
   #  } 
 }  -after_submit {
-	set date [lrange $end_date 0 2]
+    set date [lrange $end_date 0 2]
+    set dotlrn_p [apm_package_enabled_p "dotlrn"]
+    if {$dotlrn_p} {
 	set comm_id [dotlrn_community::get_community_id]
-	if { $comm_id eq "" } {
-		set comm_id 0
-	} else {
-		set comm_id [dotlrn_community::get_community_id]
-	}
-	
+	set comm_name [dotlrn_community::get_community_name $comm_id]
+    } else {
+	set comm_name [acs_object::get_element -object_id [ad_conn subsite_id] -element title]
+	set comm_id ""
+    }     
+
     # frequency1: rss frequency
     # frequency2: mail frequency
     if {[catch {set room_id [chat_room_new \
@@ -130,17 +132,14 @@ ad_form -name "room-entry" -edit_buttons [list [list [_ chat.Create_room] next]]
 				 -auto_flush_p t \
 				 -auto_transcript_p t \
 				 -context_id [ad_conn package_id] \
-				 -comm_id $comm_id \
+				 -comm_name $comm_name \
 				 -creation_user [ad_conn user_id] \
 				 -creation_ip [ad_conn peeraddr] \
 				 $description $pretty_name]} errmsg]} {
         ad_return_complaint 1 "[_ chat.Create_new_room_failed]: $errmsg"
         break
     }
-    set comm_id ""
-    if {[info command dotlrn_community::get_community_id] ne ""} {
-      set comm_id [dotlrn_community::get_community_id] 
-    }
+
     set sender_id [ad_conn user_id]
     db_1row select_sender_info {
     
@@ -154,8 +153,9 @@ ad_form -name "room-entry" -edit_buttons [list [list [_ chat.Create_room] next]]
     
     }
     set from $sender_email
-    set community_id [dotlrn_community::get_community_id]
-    if { $community_id eq "" } {
+
+
+    if { $comm_id eq "" } {
     	set community_name "All Dotlrn communities"
     	set community_url "Dotlrn"
     	set safe_community_name [db_quote $community_name]
@@ -169,7 +169,7 @@ ad_form -name "room-entry" -edit_buttons [list [list [_ chat.Create_room] next]]
     	append who_will_receive_this_clause [db_map recipients_clause]
     	set query [db_map sender_info]
     }   
-     
+
     
     set send_date [template::util::date::now_min_interval]    
     
@@ -180,73 +180,73 @@ ad_form -name "room-entry" -edit_buttons [list [list [_ chat.Create_room] next]]
     
 
     set package_id [ad_conn package_id]
+
+    if {$Rss_service eq "t"} {
+	db_1row select_sender_info4 {
+    		select count(acs.impl_name) as count
+	    	from acs_sc_impls acs
+	    	where acs.impl_name = 'chat_rss'
+    	}
     
-    db_1row select_sender_info4 {
-    	select count(acs.impl_name) as count
-    	from acs_sc_impls acs
-    	where acs.impl_name = 'chat_rss'
-    }
-    
-   	 set subscr_id [rss_support::add_subscription \
-                       -summary_context_id $room_id \
-                       -impl_name "chat_rss" \
-                       -owner "chat" \
-                       -lastbuild "now"]
-     	rss_gen_report $subscr_id
-         
-       
-        if { $frequency1 eq "dayly" } {
-		ad_schedule_proc -thread t -schedule_proc ns_schedule_daily [list 01 00] chat_update_rss $room_id
+	set subscr_id [rss_support::add_subscription \
+			   -summary_context_id $room_id \
+			   -impl_name "chat_rss" \
+			   -owner "chat" \
+			   -lastbuild "now"]
+	rss_gen_report $subscr_id
+	
+	
+	if { $frequency1 eq "daily" } {
+	    ad_schedule_proc -thread t -schedule_proc ns_schedule_daily [list 01 00] chat_update_rss $room_id
 	}
-   	if { $frequency1 eq "weekly" } {
-   		ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_update_rss $room_id
-   	}
-   	if { $frequency1 eq "monthly" } {
-   		set week 1
-   		ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_update_rss_monthly $room_id $week
-   	}
-         
-        
- 
-   	set user_id [ad_conn user_id]
-   
-   
+	if { $frequency1 eq "weekly" } {
+	    ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_update_rss $room_id
+	}
+	if { $frequency1 eq "monthly" } {
+	    set week 1
+	    ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_update_rss_monthly $room_id $week
+	}
+    }
+
+    set user_id [ad_conn user_id]
+    
+    
     if { $Mail_service eq "t"} {  
-   		if { $frequency2 eq "dayly" } {
-   				ad_schedule_proc -thread t -schedule_proc ns_schedule_daily [list 01 00] chat_send_mails $room_id $community_id $user_id $package_id "daily"
-   		}
-   		if { $frequency2 eq "weekly" } {
-   				ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_send_mails $room_id $community_id $user_id $package_id "weekly"
-   		}
-   		if { $frequency2 eq "monthly" } {
-   				set week 1
-   				ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_send_mails_monthly $room_id $community_id $user_id $package_id $week "monthly"
-   		}
-   	}	
+	if { $frequency2 eq "daily" } {
+	    ad_schedule_proc -thread t -schedule_proc ns_schedule_daily [list 01 00] chat_send_mails $room_id $community_id $user_id $package_id "daily"
+	}
+	if { $frequency2 eq "weekly" } {
+	    ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_send_mails $room_id $community_id $user_id $package_id "weekly"
+	}
+	if { $frequency2 eq "monthly" } {
+	    set week 1
+	    ad_schedule_proc -thread t -schedule_proc ns_schedule_weekly [list 0 01 00] chat_send_mails_monthly $room_id $community_id $user_id $package_id $week "monthly"
+	}
+    }	
     
-    	bulk_mail::new \
-       	 -package_id [site_node_apm_integration::get_child_package_id -package_key [bulk_mail::package_key]] \
-       	 -send_date [template::util::date::get_property linear_date $send_date] \
-      	  -date_format "YYYY MM DD HH24 MI SS" \
-      	  -from_addr $from \
-      	  -subject "\[$community_name\] $subject" \
-      	  -message $message \
-      	  -message_type $message_type \
-          -query $query \
+    bulk_mail::new \
+	-package_id [site_node_apm_integration::get_child_package_id -package_key [bulk_mail::package_key]] \
+	-send_date [template::util::date::get_property linear_date $send_date] \
+	-date_format "YYYY MM DD HH24 MI SS" \
+	-from_addr $from \
+	-subject "\[$community_name\] $subject" \
+	-message $message \
+	-message_type $message_type \
+	-query $query \
+	
     
-    
-   	 if {$comm_id ne ""} {
-    		  chat_user_grant $room_id $comm_id
-   	 } else {
-    		  #-2 Registered Users
-    		  #chat_user_grant $room_id -2 
-    		  #0 Unregistered Visitor
-    		  #chat_user_grant $room_id 0
-   		   #-1 The Public
-   		   chat_user_grant $room_id -2
-   	 }
-   	 ad_returnredirect "room?room_id=$room_id"
-   	 ad_script_abort    
+    if {$comm_id ne ""} {
+	chat_user_grant $room_id $comm_id
+    } else {
+	#-2 Registered Users
+	#chat_user_grant $room_id -2 
+	#0 Unregistered Visitor
+	#chat_user_grant $room_id 0
+	#-1 The Public
+	chat_user_grant $room_id -2
+    }
+    ad_returnredirect "room?room_id=$room_id"
+    ad_script_abort    
 }
 ad_return_template "room-entry"
 

@@ -162,7 +162,7 @@ ad_proc -public chat_room_new {
     {-auto_flush_p ""}
     {-auto_transcript_p ""}
     {-context_id ""}    
-    {-comm_id ""}
+    {-comm_name ""}
     {-creation_user ""}
     {-creation_ip ""}
     description
@@ -171,6 +171,7 @@ ad_proc -public chat_room_new {
     Create new chat room. Return room_id if successful else raise error.
 } {
 
+    
     db_transaction {
         set room_id [db_exec_plsql create_room {}]
     }
@@ -201,7 +202,7 @@ ad_proc -public chat_room_private_new {
     {-auto_flush_p ""}
     {-auto_transcript_p ""}
     {-context_id ""}    
-    {-comm_id ""}
+    {-comm_name ""}
     {-creation_user ""}
     {-creation_ip ""}
     {-private ""}

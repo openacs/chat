@@ -44,7 +44,7 @@
                    from site_nodes
                    where site_nodes.object_id = obj.context_id) as base_url
     from chat_rooms rm, 
-         acs_objects obj,dotlrn_communities_all as dot
+         acs_objects obj
     where rm.room_id = obj.object_id     
     order by rm.pretty_name
   </querytext>
