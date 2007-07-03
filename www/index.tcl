@@ -26,7 +26,7 @@ if { $default_client eq "ajax" && ![apm_package_installed_p xotcl-core] } {
 }
 
 if { $room_create_p } {
-    lappend actions "#chat.Create_a_new_room#" room-new "#chat.Create_a_new_room#"
+    lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
 db_multirow -extend { active_users last_activity } rooms rooms_list {} {

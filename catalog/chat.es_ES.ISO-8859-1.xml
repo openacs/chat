@@ -94,7 +94,6 @@
   <msg key="Room_name">Nombre de la sala</msg>
   <msg key="Room_no_active">Sala no activa</msg>
   <msg key="Room_not_found">Sala no encontrada. Id de sala incorrecto</msg>
-  <msg key="rooms">salas</msg>
   <msg key="Send_Refresh">Enviar/Actualizar</msg>
   <msg key="sending_message">Enviando mensaje...</msg>
   <msg key="There_are_no_rooms_available">No hay salas disponibles</msg>

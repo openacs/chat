@@ -37,7 +37,7 @@ set write_p [permission::permission_p -object_id $room_id -privilege "chat_write
 set ban_p [permission::permission_p -object_id $room_id -privilege "chat_ban"]
 set moderate_room_p [chat_room_moderate_p $room_id]
 
-if { $moderate_room_p eq "t" } {
+if { $moderate_room_p == "t" } {
     set moderator_p [permission::permission_p -object_id $room_id -privilege "chat_moderator"]
 } else {
     # This is an unmoderate room, therefore everyone is a moderator.
@@ -54,35 +54,35 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 set user_name [chat_user_name $user_id]
 
 # send message to the database 
-if { $message ne "" } {
+if { ![empty_string_p $message] } {
     chat_message_post $room_id $user_id $message $moderator_p
 }
-
 
 # Determine which template to use for html or ajax client
 switch $client {
     "html" {
         set template_use "html-chat"
         # forward to ajax if necessary
-        if { $message ne "" } {
+        if { ![empty_string_p $message] } {
             set session_id [ad_conn session_id]
             ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
             c1 add_msg $message
         }
     }
-    "ajax" {        
+    "ajax" {
         set template_use "ajax-chat-script"
     }
-    "java" {    
-        set template_use "java-chat"
+	"java" {
+		set template_use "java-chat"
 
-        # Get config paramater for applet.
-        set width [ad_parameter AppletWidth "" 500]
-        set height [ad_parameter AppletHeight "" 400]   
+		# Get config paramater for applet.
+		set width [ad_parameter AppletWidth "" 500]
+		set height [ad_parameter AppletHeight "" 400]   
     
-        set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
-        set port [ad_parameter ServerPort "" 8200]
-     }
+		set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
+		set port [ad_parameter ServerPort "" 8200]
+	}
 }
+
 ad_return_template $template_use
 

@@ -9,7 +9,7 @@ ad_library {
 
 ad_proc -private chat_start_server {} { Start Java chat server. } {
 
-    if {[nsv_get chat server_started]} {
+    if [nsv_get chat server_started] {
         return
     }
     ns_log notice "chat_start_server: Starting chat server"
@@ -62,7 +62,7 @@ ad_proc -private chat_broadcast_to_applets {host port} { Broadcast chat message 
     while { 1 } {
         # Wait until there is new message in queue.
         ns_mutex lock [nsv_get chat new_message]
-        if {[nsv_exists chat html_message]} {
+        if [nsv_exists chat html_message] {
             # Get message from queue.
             puts $w [nsv_get chat html_message]
             flush $w
@@ -98,7 +98,7 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                 regexp "<from>(.*)</from>" $line match screen_name
                 regexp "<body>(.*)</body>" $line match msg
                 regexp "<from_user_id>(.*)</from_user_id>" $line match user_id
-                if {![nsv_exists chat_room $room_id]} {
+                if ![nsv_exists chat_room $room_id] {
                     nsv_set chat_room $room_id {}                   
                 }
 
@@ -118,12 +118,12 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                     }
                 }
 
-                chat_room_get -room_id $room_id -array room_info
-                if { $room_info(archive_p) eq "t" } { 
-                    if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg]} {
-                        ns_log error "chat_post_message_to_db: error: $errmsg"
-                    }
-                }
+				chat_room_get -room_id $room_id -array room_info
+				if { $room_info(archive_p) eq "t" } { 
+					if [catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg] {
+						ns_log error "chat_post_message_to_db: error: $errmsg"
+					}
+				}
 
                 nsv_lappend chat_room $room_id $line
 
@@ -146,24 +146,18 @@ ad_proc -private chat_post_message_to_db {
     db_exec_plsql post_message {}
 
 }
-ad_proc -public chat_room_new {    
-    {-alias ""}    
-    {-key_words ""}
-    {-maxP ""}
-    {-end_date ""}
-    {-Rss_service ""}
-    {-Mail_service ""}
-    {-moderated_p ""}
-    {-active_p ""}
-    {-archive_p ""}
-    {-auto_flush_p ""}
-    {-auto_transcript_p ""}
-    {-context_id ""}    
-    {-comm_id ""}
+ad_proc -public chat_room_new {
+    {-description ""}
+    {-moderated_p f}
+    {-active_p t}
+    {-archive_p f}
+    {-auto_flush_p t}
+    {-auto_transcript_p f}
+    {-context_id ""}
     {-creation_user ""}
     {-creation_ip ""}
-    description
     pretty_name
+
 } {
     Create new chat room. Return room_id if successful else raise error.
 } {
@@ -178,23 +172,18 @@ ad_proc -public chat_room_new {
 }
 
 ad_proc -public chat_room_edit {
-    {-alias ""}
-    {-key_words ""}
-    {-maxP ""}
-    {-end_date ""}
-    {-Rss_service ""}
-    {-Mail_service ""}
-    {-moderated_p ""}
-    {-active_p ""}
-    {-archive_p ""}
-    {-user_id ""}
-    {-room_id ""}
-    description
+    room_id
     pretty_name
+    description
+    moderated_p
+    active_p
+    archive_p
+    auto_flush_p
+    auto_transcript_p
 } {
     Edit information on chat room. All information require.
 } {
-  db_exec_plsql edit_room {}
+   db_exec_plsql edit_room {}
 }
 
 ad_proc -public chat_room_delete {
@@ -380,12 +369,10 @@ ad_proc -public chat_message_post {
         if { $room_info(archive_p) eq "f" } { return }
         
         # write message to the database
-        if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
+        if [catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg] {
             ns_log error "chat_post_message_to_db: error: $errmsg"
         }
 }
-
-
 
 
 ad_proc -public chat_moderate_message_post {
@@ -395,7 +382,7 @@ ad_proc -public chat_moderate_message_post {
 } {
     Post moderate message to the chat room and broadcast to all applet clients. Only use by HTML client.
 } {
-    set chat_msg "<message><from>[chat_user_name2 $user_id $alias]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>pending</status></message>"
+    set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>pending</status></message>"
 
     # Add message to queue. Notify thread responsible for broadcast message to applets.
     nsv_set chat html_message $chat_msg
@@ -414,7 +401,7 @@ ad_proc -public chat_message_retrieve {
 
     # The first time html client enter chat room, chat_room variable is not initialize correctly.
     # Therefore I just hard code the variable.
-    if {![nsv_exists chat_room $room_id]} {
+    if ![nsv_exists chat_room $room_id] {
         nsv_set chat_room $room_id [list "<message><from>[chat_user_name $user_id]</from><room_id>$room_id</room_id><body>[_ chat.has_entered_the_room]</body><status>approved</status></message>"]
     }
 
@@ -430,14 +417,14 @@ ad_proc -public chat_message_retrieve {
     set counter 0
 
     #foreach msg $chat_messages 
-    for { set i [expr {$cnt - 1}] } { $i >= 0 } { set i [expr {$i - 1}] } {
+    for { set i [expr $cnt - 1] } { $i >= 0 } { set i [expr $i - 1] } {
         set msg [lindex $chat_messages $i]
         regexp "<from>(.*)</from>" $msg match screen_name
         regexp "<body>(.*)</body>" $msg match chat_msg
         regexp "<status>(.*)</status>" $msg match status
 
 
-        if {$status eq "pending" || $status eq "rejected"} {
+        if {$status == "pending" || $status == "rejected"} {
             continue;
         }
 
@@ -448,7 +435,7 @@ ad_proc -public chat_message_retrieve {
         incr counter
         set array_val(rownum) $counter
 
-        if {$screen_name == $user_name && $chat_msg eq "has entered the room."} {
+        if {$screen_name == $user_name && $chat_msg == "has entered the room."} {
             return
         }
     }
@@ -534,7 +521,7 @@ ad_proc -private chat_room_flush { room_id } {Flush the messages a single chat r
         if { $room_info(auto_transcript_p) eq "t" } {
             # build a list of all messages
             db_foreach get_archives_messages {} {
-                append contents "\[$creation_date\] <b>[chat_user_name $alias]</b>: $msg<br>\n"
+                append contents "\[$creation_date\] <b>[chat_user_name $creation_user]</b>: $msg<br>\n"
             }
             if { $contents ne "" } {
                 chat_transcript_new \
@@ -547,77 +534,3 @@ ad_proc -private chat_room_flush { room_id } {Flush the messages a single chat r
     }
 }
 
-ad_proc -public chat_registered_user {     
-    {-RSS_service ""}
-    {-mail_service ""}
-    {-context_id ""}
-    {-creation_ip ""}
-    room_id   
-    alias    
-    user_id
-} {
-    A user is regitered in a chat room.
-} {
-
-    db_transaction {
-    	set registered_id [db_exec_plsql register {}]
-    }  
-
-    return $registered_id
-}
-
-
-ad_proc -public chat_message_post2 {
-    room_id
-    user_id
-    alias
-    message
-    moderator_p
-} {
-    Post message to the chat room and broadcast to all applet clients. Used by ajax + html.
-} {
-    if {$moderator_p == "1" } {
-        set status "approved"
-    } else {
-        set status "pending"
-    }
-    	
-	set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
-	if {$default_client eq "java"} {
-		set chat_msg "<message><from>[chat_user_name2 $user_id $alias]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
-		# Add message to queue. Notify thread responsible for 
-		# broadcast message to applets.
-		nsv_set chat html_message $chat_msg
-		ns_mutex unlock [nsv_get chat new_message]  
-	}
-    
-        # do not write messages to the database if the room should not be archived
-        chat_room_get -room_id $room_id -array room_info
-        if { $room_info(archive_p) eq "f" } { return }
-        
-        # write message to the database
-        if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
-            ns_log error "chat_post_message_to_db: error: $errmsg"
-        }
-}
-
-ad_proc -public chat_user_name2 {
-    user_id
-    alias
-} {
-    Return display name of this user to use in chat.
-} {
-	acs_user::get -user_id $user_id -array user
-	set name [expr {$alias ne "" ? $alias : $alias}]
-    return $name
-
-}
-
-ad_proc -public chat_room_delete_registered_users {
-    room_id
-    user_id
-} {
-    Delete the registered users in a room.
-} {
-   db_exec_plsql delete_users {}
-}

@@ -47,13 +47,12 @@ drop   function chat_transcript__del (integer);
 drop   function chat_transcript__edit (integer, varchar, varchar, varchar );
 
 
-drop   function chat_room__new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, integer, integer, varchar, varchar);
+drop   function chat_room__new (integer, varchar, varchar, boolean, boolean, boolean, integer, timestamptz, integer, varchar, varchar);
 drop   function chat_room__name (integer);
 
 drop   function chat_room__message_post (integer, varchar, integer, varchar);
 
-drop   function chat_room__delete_registered_users (integer, integer);
-drop   funciton chat_room_registered__user (varchar, integer, integer, boolean, boolean, integer, varchar);
+
 
 drop   function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean);
 drop   function chat_room__message_count (integer);
@@ -64,7 +63,6 @@ drop   function chat_room__del (integer);
 drop table chat_msgs;
 drop table chat_transcripts;
 drop table chat_rooms;
-drop table chat_registered_users;
 
 
 --

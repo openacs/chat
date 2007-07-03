@@ -17,7 +17,7 @@
 
 <if @rooms:rowcount@ eq 0>
 <p><i>#chat.There_are_no_rooms_available#</i></p>
-<if @room_create_p@ eq 1><p><a class="button" href="room-new">#chat.Create_a_new_room#</a></p></if>
+<if @room_create_p@ eq 1><p><a class="button" href="room-edit">#chat.Create_a_new_room#</a></p></if>
 </if>
 <else>
 <listtemplate name="rooms"></listtemplate>

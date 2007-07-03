@@ -4,8 +4,8 @@
 
 <center>
    <applet code=adChatApplet.class archive=chat.jar width=@width@ height=@height@>
-   <param name="user_id" value="@user_id@">   	   
-   <param name="user_name" value="@user_name@">    
+   <param name="user_id" value="@user_id@">
+   <param name="user_name" value="@user_name@">
    <param name="room_id" value="@room_id@">
    <param name="host" value="@host@">
    <param name="port" value="@port@">
