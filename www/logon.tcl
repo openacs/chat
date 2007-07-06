@@ -18,7 +18,7 @@ ad_form -name "logon" -edit_buttons [list [list [_ chat.enter_room] next]] -has_
     }
     {Rss_service:boolean(radio)
         {label "Rss_service" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
         {value "f"}
     }
     {frequency1:boolean(select),optional
@@ -27,7 +27,7 @@ ad_form -name "logon" -edit_buttons [list [list [_ chat.enter_room] next]] -has_
     }
     {Mail_service:boolean(radio)
         {label "Mail_service" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
         {value "f"}
     }
     {frequency2:boolean(select),optional

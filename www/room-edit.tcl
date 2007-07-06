@@ -105,7 +105,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     }    
     {rss_service:boolean(radio)
         {label "#chat.rss_service#" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
         {help_text "[_ chat.rss_syndication]"}
     }
     {frequency1:text(select),optional
@@ -115,7 +115,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     }
     {mail_service:boolean(radio)
         {label "#chat.mail_service#" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
         {help_text "[_ chat.receive_mails]"}
     }
     {frequency2:text(select),optional	
@@ -125,24 +125,24 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     }
  #   {moderated:boolean(radio)
  #       {label "#chat.Moderated#" }
- #       {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+ #       {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
  #   }
     {active_p:boolean(radio)
         {label "#chat.Active#" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
     }
     {archive_p:boolean(radio)
         {label "#chat.Archive#" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
     }    
 #    {auto_flush_p:boolean(radio)
  #       {label "#chat.AutoFlush#" }
-  #      {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+  #      {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
    #     {help_text "[_ chat.AutoFlushHelp]"}
  #   }  
  #   {auto_transcript_p:boolean(radio)
  #       {label "#chat.AutoTranscript#" }
-  #      {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+  #      {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
    #     {help_text "[_ chat.AutoTranscriptHelp]"}
   #  }
 } -edit_request {

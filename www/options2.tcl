@@ -37,12 +37,12 @@ ad_form -name "options" -edit_buttons [list [list [_ chat.change_room_options] n
     }
     {rss_service:boolean(radio)
         {label "#chat.rss_service#" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
         {help_text "[_ chat.rss_syndication]"}
     }    
     {mail_service:boolean(radio)
         {label "#chat.mail_service#" }
-        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_No#" f}}}
         {help_text "[_ chat.receive_mails]"}
     }
     {frequency2:text(select),optional	
