@@ -1,12 +1,10 @@
 #/chat/www/transcript-new-2.tcl
 ad_page_contract {
     Save transcript.
-    @author Pablo Muñoz(pablomp@tid.es)
 } {
     room_id:integer,notnull
     transcript_name:trim,notnull
     {description:trim ""}
-    {keywords:trim ""}
     {delete_messages:optional "off"}
     {deactivate_room:optional "off"}
     contents:trim,notnull,html
@@ -26,15 +24,6 @@ set transcript_id [chat_transcript_new \
     $transcript_name $contents $room_id
 ]
 
-#store_transcripts_keywords $keywords transcript_id
-for {set i 0} {$i < [llength $keywords]} {incr i 1} {
-    	set word [lindex $keywords $i]
-    	#set k [store_transcripts_keywords $word $transcript_id]
-    	db_exec_plsql store_transcripts_keywords {}
-	}	
-
-
-
 if { $delete_messages eq "on" } {
     chat_room_message_delete $room_id
     # forward the information to AJAX
@@ -45,19 +34,5 @@ if { $deactivate_room eq "on" } {
     db_dml "update_chat" "update chat_rooms set active_p = 'f' where room_id = $room_id"
 }
 
-
-
 ad_returnredirect "chat-transcript?room_id=$room_id&transcript_id=$transcript_id"
 
-
-ad_proc store_transcripts_keywords { 
-	keywords
-	transcript_id
-} {
-	for {set i 0} {$i < [llength $keywords]} {incr i 1} {
-    	set word [lindex $keywords $i]
-    	#set k [store_transcripts_keywords $word $transcript_id]
-    	db_exec_plsql store_transcripts_keywords {}
-	}	
-	
-}	

@@ -92,7 +92,6 @@
   <msg key="Room_name">Raumname</msg>
   <msg key="Room_no_active">Raum nicht aktiv</msg>
   <msg key="Room_not_found">Raum nicht gefunden</msg>
-  <msg key="rooms">Räume</msg>
   <msg key="Send_Refresh">Senden</msg>
   <msg key="sending_message">Sende Nachricht...</msg>
   <msg key="There_are_no_rooms_available">Es sind keine Räume verfügbar</msg>

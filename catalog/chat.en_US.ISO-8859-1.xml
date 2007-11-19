@@ -94,10 +94,8 @@
   <msg key="Room_name">Room name</msg>
   <msg key="Room_no_active">Room no active</msg>
   <msg key="Room_not_found">Room not found, Invalid room id</msg>
-  <msg key="rooms">rooms</msg>
   <msg key="Send_Refresh">Send/Refresh</msg>
   <msg key="sending_message">Sending message...</msg>
-  <msg key="There">There are no messages to delete</msg>
   <msg key="There_are_no_rooms_available">There are no rooms available</msg>
   <msg key="to">to</msg>
   <msg key="Transcript">Transcript</msg>

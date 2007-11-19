@@ -9,13 +9,8 @@
 <property name="context">@context_bar;noquote@</property>
 <property name="title">#chat.Confirm_message_delete#</property>
 
-<if @message_count@ gt 0>
 <form method="post" action="message-delete-2">
 <input type=hidden name=room_id value=@room_id@>
 #chat.Are_you_sure_you_want_to_delete# @message_count@ #chat.messages_in# @pretty_name@?
 <p><input type=submit value=#acs-kernel.common_Yes#>
 </form>
-</if>
-<else>
-#chat.There#
-</else>

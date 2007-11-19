@@ -46,57 +46,23 @@ drop   function chat_transcript__new (varchar, varchar, varchar, integer, intege
 drop   function chat_transcript__del (integer);
 drop   function chat_transcript__edit (integer, varchar, varchar, varchar );
 
-drop   function chat_room__new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, integer, integer, varchar, varchar, varchar);
+
+drop   function chat_room__new (integer, varchar, varchar, boolean, boolean, boolean, integer, timestamptz, integer, varchar, varchar);
 drop   function chat_room__name (integer);
 
 drop   function chat_room__message_post (integer, varchar, integer, varchar);
 
-drop   function chat_room__delete_registered_users (integer, integer);
-drop   funciton chat_room_registered__user (varchar, integer, integer, boolean, boolean, integer, varchar);
 
-drop   function chat_room__edit (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, integer, varchar);
+
+drop   function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean);
 drop   function chat_room__message_count (integer);
 drop   function chat_room__delete_all_msgs (integer);
 
-drop function chat_room__insert_keywords (varchar, integer);
-
-drop function chat_room__send_files (integer, varchar, varchar, varchar, date, integer, integer, varchar);
-drop function chat_room__send_files_message (integer)
-
-drop function chat_rss__store_db (varchar, varchar, date, varchar, varchar, varchar, timestamp);
-drop function chat_update_rss ();
-drop function chat_upload ();
-
-drop function chat_room__private_new (varchar, varchar, varchar, varchar, integer, timestamp, boolean, boolean, boolean, boolean, boolean, integer, integer, integer, varchar, varchar, boolean);
 drop   function chat_room__del (integer);
 
-drop function chat_room__edit_admin (varchar, boolean, boolean, integer, integer, varchar, integer);
-drop function chat_room__store_transcripts_keywords (varchar, integer);
-drop function chat_rss__store_keywords_rss (integer, varchar);
-drop function chat_rss__store_partitipants_rss (integer, varchar);
-drop function chat_rss__store_sent_files_rss (integer, integer);
-drop function chat_rss__store_transcripts_rss (integer, integer);
-drop function chat_transcript__store_partitipants_transcript (integer, varchar);
-drop function chat_transcript__store_sent_files_tanscript (integer, integer);
-
-
 drop table chat_msgs;
-drop table chat_registered_users;
-drop table chat_file_transcript;
-drop table chat_files_rss;
-drop table chat_key_rss;
-drop table chat_partitipants_rss;
-drop table chat_partitipants_transcript;
-drop table chat_room_transcript_keywords;
-drop table chat_transcription_rss;
 drop table chat_transcripts;
-drop table chat_keywords;
-drop table chat_private_room_users;
-drop table chat_room_user_id;
-drop table chat_rooms_files_sent;
-drop table chat_rss;
 drop table chat_rooms;
-
 
 
 --

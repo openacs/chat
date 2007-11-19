@@ -1,2 +1,0 @@
-set package_id [ad_conn package_id]
-rp_internal_redirect /rss/chat_rss/${package_id}/rss.xml

@@ -35,5 +35,6 @@
 <input type=hidden name="room_id" value="@room_id@">
 <input type=hidden name="client" value="html">
 <input type=submit value="#chat.Send_Refresh#">
+<input type=submit value="#chat.Refresh#">
 </form>
 

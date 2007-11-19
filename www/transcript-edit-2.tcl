@@ -11,7 +11,6 @@ ad_page_contract {
     contents:html,notnull
     room_id:notnull,integer
     {description:trim ""}
-    {keywords:trim ""}
 }
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_edit
