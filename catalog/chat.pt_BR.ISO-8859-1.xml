@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="chat" package_version="5.0d6" locale="pt_BR" charset="ISO-8859-1">
+<message_catalog package_key="chat" locale="pt_BR" charset="ISO-8859-1">
 
   <msg key="actions">Ações</msg>
   <msg key="Active"> Ativa</msg>
@@ -79,7 +79,6 @@
   <msg key="Moderated">Moderada</msg>
   <msg key="msg">Mensagem</msg>
   <msg key="Name">Nome</msg>
-  <msg key="No">Não</msg>
   <msg key="No_information_available">Sem informações disponíveis</msg>
   <msg key="noactive">Desativada</msg>
   <msg key="Refresh">Atualizar</msg>
@@ -107,8 +106,6 @@
   <msg key="transcription_msg">transcrição de todas as mensgens do chat</msg>
   <msg key="Transcripts">Transcrições</msg>
   <msg key="transcripts_of_room">Transcrições disponíveis na sala</msg>
-  <msg key="Trascript">Transcrição</msg>
-  <msg key="Trasncript">Transcrição</msg>
   <msg key="Unauthorized">Não autorizado</msg>
   <msg key="Unauthorized_privilege">Privilégio não autorizado</msg>
   <msg key="Unban">Desbanir</msg>
@@ -116,13 +113,11 @@
   <msg key="Unban_user">Desbanir usuário</msg>
   <msg key="Untitled">Sem Título</msg>
   <msg key="Update_room">Atualizar sala</msg>
-  <msg key="Users_allow">Usuários permitidos</msg>
   <msg key="Users_ban">Usuários banidos</msg>
   <msg key="View">Ver</msg>
   <msg key="View_transcript">Ver transcrição</msg>
   <msg key="What_search">para nome ou e-mail ou usuário limitado a</msg>
   <msg key="xotcl_missing">&lt;b&gt;Aviso&lt;/b&gt; O parâemtro do pacote &quot;DefaultClient&quot; está configurado para &quot;Ajax&quot; mas o pacote xotcl-core não está instalado. Chat em Ajax não funciona sem o xotcl-core!</msg>
-  <msg key="Yes">Sim</msg>
   <msg key="You_dont_have_permission_room">Você não tem permissão para entrar nesta sala de chat</msg>
   <msg key="your_name_is">seu nome é</msg>
 </message_catalog>
