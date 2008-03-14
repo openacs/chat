@@ -64,7 +64,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         break
     }
     set comm_id ""
-    if {[info command dotlrn_community::get_community_id] ne ""} {
+    if {[info commands dotlrn_community::get_community_id] ne ""} {
       set comm_id [dotlrn_community::get_community_id] 
     }
     if {$comm_id ne ""} {
