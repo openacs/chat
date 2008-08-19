@@ -122,7 +122,7 @@ db_foreach user_search_admin $query {
     set user_search:[set rowcount](email) $email
     set user_search:[set rowcount](export_vars) [export_url_vars user_id_from_search first_names_from_search last_name_from_search email_from_search]
     set user_search:[set rowcount](member_state) $member_state
-    set user_search:[set rowcount](url) [export_vars -base "search-3" {room_id type user_id}]
+    set user_search:[set rowcount](url) [export_vars -base "search-3" {room_id type {party_id $user_id}}]
 
     
     if { $member_state != "approved" } {
