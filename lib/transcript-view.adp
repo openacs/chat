@@ -1,5 +1,5 @@
 <if @edit_p@ eq 1>
-<a class="button" href="transcript-edit?transcript_id=@transcript_id@&room_id=@room_id@">#chat.Edit#</a>
+<p><a class="button" href="@edit_url@">#chat.Edit#</a></p>
 </if>
 
 <table border="0" cellpadding="2" cellspacing="2">

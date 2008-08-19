@@ -1,22 +1,11 @@
 <master>
-<property name="context">@context_bar;noquote@</property>
-<property name="title">@room_name;noquote@</property>
-
-<style type='text/css'>
-#messages { margin-right:15px; float:left; width:70%; height:250px; overflow:auto; border:1px solid black; padding:5px; font-size: 12px; color: #666666; font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Arial, sans-serif; }
-#messages .timestamp {vertical-align: top; color: #CCCCCC; }
-#messages .user {margin: 0px 5px; text-align: right; vertical-align: top; font-weight:bold;}
-#messages .message {vertical-align: top;}
-#messages .line {margin:0px;}
-#users { float:right; width:25%; height:250px; border:1px solid black; padding:5px; font-size: 12px; color: #666666; font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Arial, sans-serif; }
-#users .user {text-align: left; vertical-align: top; font-weight:bold; }
-#users .timestamp {text-align: right; vertical-align: top; }
-</style>
+<property name="context">@context;noquote@</property>
+<property name="&doc">doc</property>
 
 <p>
 <a href="room-exit?room_id=@room_id@" class=button title="#chat.exit_msg#">#chat.Log_off#</a>
 <a href="chat-transcript?room_id=@room_id@" class=button title="#chat.transcription_msg#" >#chat.Transcript#</a>
-<a href="room-enter?room_id=@room_id@&client=@richclient.short@#xj220" class=button title="@richclient.msg@" >@richclient.title@</a>
+<a href="@room_enter_url@" class=button title="@richclient.msg@" >@richclient.title@</a>
 </p>
 
 <div id='messages'>

@@ -31,4 +31,16 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
 set html_chat [c1 get_all]
 set html_users [c1 get_users]
 
+template::head::add_style -style "#messages { margin-right:15px; float:left; width:70%; height:250px; overflow:auto; border:1px solid black; padding:5px; font-size: 12px; color: #666666; font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Arial, sans-serif; }
+#messages .timestamp {vertical-align: top; color: #CCCCCC; }
+#messages .user {margin: 0px 5px; text-align: right; vertical-align: top; font-weight:bold;}
+#messages .message {vertical-align: top;}
+#messages .line {margin:0px;}
+#users { float:right; width:25%; height:250px; border:1px solid black; padding:5px; font-size: 12px; color: #666666; font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Arial, sans-serif; }
+#users .user {text-align: left; vertical-align: top; font-weight:bold; }
+#users .timestamp {text-align: right; vertical-align: top; }
+"
+
+set room_enter_url [export_vars -base "room-enter" {room_id {client $richclient(short)}}]
+
 ad_return_template

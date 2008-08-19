@@ -60,7 +60,17 @@ db_1row room_info {
 set message_count [db_string message_count "select count(*) from chat_msgs where room_id = :room_id" -default 0]
 
 # List user ban from chat
-db_multirow banned_users list_user_ban {}
+db_multirow -extend {unban_url unban_text} banned_users list_user_ban {} {
+    if { $user_unban_p } {
+        set unban_url [export_vars -base "user-unban" {room_id party_id}]
+        set unban_text [_ chat.Unban_user]
+    }
+}
+
+set actions ""
+if { $user_ban_p } {
+    set actions [list [_ chat.Ban_user] [export_vars -base "search" {room_id {type ban}}]]
+}
 
 list::create \
     -name "banned_users" \
@@ -68,6 +78,7 @@ list::create \
     -key party_id \
     -pass_properties { user_unban_p room_id } \
     -row_pretty_plural [_ chat.banned_users] \
+    -actions $actions \
     -elements {
         name {
             label "#chat.Name#"
@@ -77,16 +88,11 @@ list::create \
         }
         actions {
             label "#chat.actions#"
-            html { align "center" }
-            display_template {
-                <if @user_unban_p@ eq "1">
-                <a href="user-unban?room_id=@room_id@&party_id=@banned_users.party_id@">
-                <img src="/shared/images/Delete16.gif" border="0">
-                </a>
-                </if>
-            }
+            html { style "text-align:center" }
+            link_url_col unban_url
+            display_col unban_text
+            link_html {class "button"}
         }
     }
 
 ad_return_template
-

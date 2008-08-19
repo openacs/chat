@@ -11,7 +11,7 @@ ad_page_contract {
   {client "ajax"}
     {message:html ""}
 } -properties {
-    context_bar:onevalue
+    context:onevalue
     user_id:onevalue
     user_name:onevalue
     message:onevalue
@@ -29,7 +29,11 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
 }
 
-set context_bar $room_name
+set doc(title) $room_name
+set doc(type) {<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">}
+
+set context [list $doc(title)]
+
 auth::require_login
 set user_id [ad_conn user_id]
 set read_p [permission::permission_p -object_id $room_id -privilege "chat_read"]

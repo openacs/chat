@@ -13,8 +13,10 @@ permission::require_permission -object_id [ad_conn package_id] -privilege chat_r
 if { ![info exists room_id] } {
     set title "[_ chat.Create_a_new_room]"
 } else {
-    set title "[_ chat.Edit_room] \"[chat_room_name $room_id]\""
+    set title "[_ chat.Edit_room]"
 }
+
+set context [list $title]
 
 ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] -has_edit 1 -form {
     {room_id:key}    

@@ -10,9 +10,9 @@
 <property name="title">#chat.Confirm_room_delete#</property>
 
 <form method="post" action="room-delete-2">	
-<input type=hidden name=room_id value=@room_id@>
-#chat.Are_you_sure_you_want_to_delete# @pretty_name@?
-<p><input type=submit value=#acs-kernel.common_Yes#>
+<div><input type=hidden name=room_id value=@room_id@></div>
+<p>#chat.Are_you_sure_you_want_to_delete# @pretty_name@?</p>
+<div><input type=submit value=#acs-kernel.common_Yes#></div>
 </form>
 
 

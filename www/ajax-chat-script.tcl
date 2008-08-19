@@ -8,5 +8,7 @@ ad_page_contract {
   msg:optional
 }
 
+set html_room_url [export_vars -base "room-enter" {room_id {client html}}]
+
 set chat_frame [ ::chat::Chat login -chat_id $room_id]
 
