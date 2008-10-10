@@ -7,7 +7,7 @@ ad_library {
     @cvs-id $Id$
 }
 
-nsv_set chat new_message [ns_mutex create]
+nsv_set chat new_message [ns_mutex create oacs:chat]
 
 nsv_set chat server_started 0
 
