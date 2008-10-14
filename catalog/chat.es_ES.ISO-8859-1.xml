@@ -54,8 +54,8 @@
   <msg key="Edit">Editar</msg>
   <msg key="Edit_room">Editar sala</msg>
   <msg key="Edit_transcript">Editar transcripción</msg>
-  <msg key="Enter_html_pretty_name">Entrar en  \&quot;%pretty_name%\&quot; con el cliente HTML</msg>
-  <msg key="Enter_rooms_pretty_name">Entrar en \&quot;%pretty_name%\&quot;</msg>
+  <msg key="Enter_html_pretty_name">Entrar con el cliente HTML</msg>
+  <msg key="Enter_rooms_pretty_name">Entrar en el chat</msg>
   <msg key="exit_msg">Salir de la sala</msg>
   <msg key="Extreme_Actions">Acciones extremas</msg>
   <msg key="from">de</msg>
