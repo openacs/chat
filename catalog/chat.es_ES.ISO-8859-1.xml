@@ -54,6 +54,8 @@
   <msg key="Edit">Editar</msg>
   <msg key="Edit_room">Editar sala</msg>
   <msg key="Edit_transcript">Editar transcripción</msg>
+  <msg key="Enter_html_pretty_name">Entrar con el cliente HTML</msg>
+  <msg key="Enter_rooms_pretty_name">Entrar en el chat</msg>
   <msg key="exit_msg">Salir de la sala</msg>
   <msg key="Extreme_Actions">Acciones extremas</msg>
   <msg key="from">de</msg>
@@ -87,6 +89,7 @@
   <msg key="revoke">revocar</msg>
   <msg key="Revoke_moderator">Revocar moderador</msg>
   <msg key="Revoke_user">Revocar usuario</msg>
+  <msg key="Room_active">Sala activa</msg>
   <msg key="room_admin">Admin</msg>
   <msg key="Room_deactivate">Desactivar la sala</msg>
   <msg key="Room_Information">Información de sala</msg>

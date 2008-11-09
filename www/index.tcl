@@ -29,10 +29,15 @@ if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
-db_multirow -extend { active_users last_activity } rooms rooms_list {} {
-  set room [::chat::Chat create new -volatile -chat_id $room_id]
-  set active_users [$room nr_active_users]
-  set last_activity [$room last_activity]
+db_multirow -extend { active_users last_activity room_url} rooms rooms_list {} {
+
+    set room [::chat::Chat create new -volatile -chat_id $room_id]
+    set active_users [$room nr_active_users]
+    set last_activity [$room last_activity]
+
+    if { $active_p } {
+        set room_url [export_vars -base "room-enter" {room_id {client $default_client}}]
+    }
 }
 
 list::create \
@@ -42,35 +47,27 @@ list::create \
     -pass_properties {room_create_p} \
     -actions $actions \
     -row_pretty_plural [_ chat.rooms] \
+    -no_data [_ chat.There_are_no_rooms_available] \
     -elements {
         active {
             label "#chat.Active#"
-            html { align "center" }
+            html { style "text-align: center" }
             display_template {
                 <if @rooms.active_p@ eq t>
-                <div style="padding-top:5px;">
-                <img src="/resources/chat/active.png">
-                </div>
+                <img src="/resources/chat/active.png" alt="#chat.Room_active#">
                 </if>
                 <else>
-                <div style="padding-top:5px;">                
-                <img src="/resources/chat/inactive.png">
-                </div>
+                <img src="/resources/chat/inactive.png" alt="#chat.Room_no_active#">
                 </else>
             }
         }
         pretty_name {
             label "#chat.Room_name#"
-            html { width 400px }
-            display_template {
-                <if @rooms.active_p@ eq t>
-                <a href="room-enter?room_id=@rooms.room_id@&client=$default_client">@rooms.pretty_name@</a>&nbsp;\[<a href="room-enter?room_id=@rooms.room_id@&client=html">#chat.HTML_chat#</a>\]
-                </if>
-                <else>
-                @rooms.pretty_name@
-                </else>
-                <div style="float:left">@rooms.description@</div>                
-            }
+            link_url_col room_url
+            link_html {title "[_ chat.Enter_rooms_pretty_name]"}
+        }
+        description {
+            label "[_ chat.Description]"
         }
         active_users {
             label "#chat.active_users#"
@@ -90,5 +87,9 @@ list::create \
             }
         }
     }
+
+# set page properties
+
+set doc(title) [_ chat.Chat_main_page]
 
 ad_return_template

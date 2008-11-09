@@ -9,3 +9,5 @@ db_1row get_transcript {
 }
 
 set edit_p [permission::permission_p -object_id $room_id -privilege "chat_transcript_edit"]
+
+set edit_url [export_vars -base "transcript-edit" {transcript_id room_id}]

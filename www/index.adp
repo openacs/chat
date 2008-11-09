@@ -6,8 +6,7 @@
      @cvs-id $Id$
 -->
 <master>
-<property name="context">#chat.Chat_main_page#</property>
-<property name="title">#chat.Chat_main_page#</property>
+<property name="&doc">doc</property>
 
 <if @warning@ not nil>
 <div style="border: 1px solid red; padding: 5px; margin: 10px;">
@@ -15,11 +14,4 @@
 </div>
 </if>
 
-<if @rooms:rowcount@ eq 0>
-<p><i>#chat.There_are_no_rooms_available#</i></p>
-<if @room_create_p@ eq 1><p><a class="button" href="room-edit">#chat.Create_a_new_room#</a></p></if>
-</if>
-<else>
 <listtemplate name="rooms"></listtemplate>
-</else>
-
