@@ -29,14 +29,16 @@ if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
-db_multirow -extend { active_users last_activity room_url} rooms rooms_list {} {
-
+db_multirow -extend { active_users last_activity room_url room_html_url} rooms rooms_list {} {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
 
     if { $active_p } {
         set room_url [export_vars -base "room-enter" {room_id {client $default_client}}]
+        set room_url [ad_quotehtml $room_url]
+        set room_html_url [export_vars -base "room-enter" {room_id {client html}}]
+        set room_html_url [ad_quotehtml $room_html_url]
     }
 }
 
@@ -63,8 +65,14 @@ list::create \
         }
         pretty_name {
             label "#chat.Room_name#"
-            link_url_col room_url
-            link_html {title "[_ chat.Enter_rooms_pretty_name]"}
+            display_template {
+                <if @rooms.active_p@ eq t>
+                <a href="@rooms.room_url@">@rooms.pretty_name@</a>&nbsp;\[<a href="@rooms.room_html_url@">#chat.HTML_chat#</a>\]
+                </if>
+                <else>
+                @rooms.pretty_name@
+                </else>
+            }
         }
         description {
             label "[_ chat.Description]"
