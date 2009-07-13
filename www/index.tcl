@@ -67,7 +67,7 @@ list::create \
             label "#chat.Room_name#"
             display_template {
                 <if @rooms.active_p@ eq t>
-                <a href="@rooms.room_url@">@rooms.pretty_name@</a>&nbsp;\[<a href="@rooms.room_html_url@">#chat.HTML_chat#</a>\]
+                <a href="@rooms.room_url;noquote@">@rooms.pretty_name@</a>&nbsp;\[<a href="@rooms.room_html_url;noquote@">#chat.HTML_chat#</a>\]
                 </if>
                 <else>
                 @rooms.pretty_name@
