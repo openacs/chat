@@ -31,6 +31,7 @@
   <msg key="Confirm_room_delete">Confirm room delete</msg>
   <msg key="Confirm_unban_user">Confirm unban user</msg>
   <msg key="Contents">Contents</msg>
+  <msg key="Conversation_area">Conversation Area</msg>
   <msg key="Could_not_update_room">Could not update room</msg>
   <msg key="Could_not_update_transcript">Could not update transcript</msg>
   <msg key="Create_a_new_room">Create a new room</msg>
@@ -59,6 +60,7 @@
   <msg key="exit_msg">exit chat room</msg>
   <msg key="Extreme_Actions">Extreme Actions</msg>
   <msg key="from">from</msg>
+  <msg key="Go_to_html_version">Go to HTML version</msg>
   <msg key="Grant">Grant</msg>
   <msg key="Grant_chat_read_rite_privilege_for">Grant chat read/write privilege for</msg>
   <msg key="Grant_moderator">Grant moderator</msg>
@@ -83,6 +85,7 @@
   <msg key="Name">Name</msg>
   <msg key="No_information_available">No information available</msg>
   <msg key="noactive">No active</msg>
+  <msg key="Participants_list">Participants List</msg>
   <msg key="Refresh">Refresh</msg>
   <msg key="remove">remove</msg>
   <msg key="Revoke">Revoke</msg>
@@ -122,5 +125,6 @@
   <msg key="What_search">for name or email or username limited to</msg>
   <msg key="xotcl_missing">&lt;b&gt;Warning&lt;/b&gt; The package parameter &quot;DefaultClient&quot; is set to &quot;Ajax&quot; but the package xotcl-core is not installed. Ajax will not work without xotcl-core!</msg>
   <msg key="You_dont_have_permission_room">You don't have permission to enter this chat room</msg>
+  <msg key="Your_browser_doesnt_support_">Your browser doesn't support frames, please use the HTML version of this chat.</msg>
   <msg key="your_name_is">your name is</msg>
 </message_catalog>

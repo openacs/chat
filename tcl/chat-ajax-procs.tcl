@@ -48,6 +48,9 @@ namespace eval ::chat {
       set login_url "${path}ajax/chat?m=login&amp;$context"
       set send_url  "${path}ajax/chat?m=add_msg&amp;$context&amp;msg="
       set users_url "${path}ajax/chat?m=get_users&amp;$context"
+      set html_url [ad_quotehtml [ad_conn url]?[ad_conn query]]
+      regsub {client=ajax} $html_url {client=html} html_url
+      
       return "\
       <script type='text/javascript'>
       $js
@@ -58,12 +61,18 @@ namespace eval ::chat {
       var updateInterval = setInterval(updateDataConnections,5000);
       </script>
       <form id='ichat_form' name='ichat_form' action='#' onsubmit='pushMessage.chatSendMsg(\"$send_url\"); return false;'>
-      <iframe name='ichat' id='ichat' frameborder='0' src='$login_url'
+      <iframe name='ichat' id='ichat' title='#chat.Conversation_area#' 
+          frameborder='0' src='$login_url'
           style='width:70%; border:1px solid black; margin-right:15px;' height='257'>
       </iframe>
-      <iframe name='ichat-users' id='ichat-users' frameborder='0' src='$users_url'
+      <iframe name='ichat-users' id='ichat-users' title='#chat.Participants_list#' 
+          frameborder='0' src='$users_url'
           style='width:25%; border:1px solid black;' height='257'>
       </iframe>
+      <noframes>
+        <p>#chat.Your_browser_doesnt_support_#</p>
+        <p><a href='$html_url'>#chat.Go_to_html_version#</a></p>
+      </noframes>
       <div style='margin-top:10px;'>
       #chat.message# <input tabindex='1' type='text' size='80' name='msg' id='chatMsg'>
       <input type='submit' value='#chat.Send_Refresh#'>

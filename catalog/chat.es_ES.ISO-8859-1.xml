@@ -31,6 +31,7 @@
   <msg key="Confirm_room_delete">Confirmar borrar la sala</msg>
   <msg key="Confirm_unban_user">Confirmar no expulsión de usuario</msg>
   <msg key="Contents">Contenidos</msg>
+  <msg key="Conversation_area">Area de Conversación</msg>
   <msg key="Could_not_update_room">No se ha podido actualizar la sala</msg>
   <msg key="Could_not_update_transcript">No se ha podido actualizar la transcripción</msg>
   <msg key="Create_a_new_room">Crear una nueva sala</msg>
@@ -59,6 +60,7 @@
   <msg key="exit_msg">Salir de la sala</msg>
   <msg key="Extreme_Actions">Acciones extremas</msg>
   <msg key="from">de</msg>
+  <msg key="Go_to_html_version">Ir a la versión HTML</msg>
   <msg key="Grant">Asignar</msg>
   <msg key="Grant_chat_read_rite_privilege_for">Asignar permisos read/write para la sala para</msg>
   <msg key="Grant_moderator">Asignar moderador</msg>
@@ -83,6 +85,7 @@
   <msg key="Name">Nombre</msg>
   <msg key="No_information_available">No hay información disponible</msg>
   <msg key="noactive">No activa</msg>
+  <msg key="Participants_list">Lista de Participantes</msg>
   <msg key="Refresh">Refrescar</msg>
   <msg key="remove">quitar</msg>
   <msg key="Revoke">Revocar</msg>
@@ -122,5 +125,6 @@
   <msg key="What_search">por nombre o email o usuario limitado a</msg>
   <msg key="xotcl_missing">&lt;b&gt;Atención&lt;/b&gt; El parámetro &quot;DefaultClient&quot; contiene &quot;Ajax&quot; pero el paquete xotcl-core no está instalado. El chat Ajax no podrá funcionar sin xotcl-core.</msg>
   <msg key="You_dont_have_permission_room">No tienes permiso para entrar en esta sala</msg>
+  <msg key="Your_browser_doesnt_support_">Su navegador no soporta marcos, por favor, utilice la versión HTML del chat.</msg>
   <msg key="your_name_is">tu nombre es</msg>
 </message_catalog>
