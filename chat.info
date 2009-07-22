@@ -17,7 +17,7 @@ Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of genera
         <maturity>0</maturity>
 
         <provides url="chat" version="5.0d8"/>
-        <requires url="acs-kernel" version="5.0d13"/>
+        <requires url="acs-kernel" version="5.5.0"/>
         <requires url="xotcl-core" version="0.83"/>
 
         <callbacks>
