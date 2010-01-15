@@ -36,7 +36,7 @@ namespace eval ::chat {
           set chat_id $package_id 
       }
 
-      set context "id=$chat_id&amp;s=[ad_conn session_id].[clock seconds]"
+      set context "id=$chat_id&s=[ad_conn session_id].[clock seconds]"
       set jspath "packages/chat/www/ajax/chat.js"
 
       if { ![file exists [acs_root_dir]/$jspath] } {
@@ -45,9 +45,9 @@ namespace eval ::chat {
       set file [open [acs_root_dir]/$jspath]; set js [read $file]; close $file
 
       set path      [site_node::get_url_from_object_id -object_id $package_id]
-      set login_url "${path}ajax/chat?m=login&amp;$context"
-      set send_url  "${path}ajax/chat?m=add_msg&amp;$context&amp;msg="
-      set users_url "${path}ajax/chat?m=get_users&amp;$context"
+      set login_url [ad_quotehtml "${path}ajax/chat?m=login&$context"]
+      set send_url  [ad_quotehtml "${path}ajax/chat?m=add_msg&$context&msg="]
+      set users_url [ad_quotehtml "${path}ajax/chat?m=get_users&$context"]
       set html_url [ad_quotehtml [ad_conn url]?[ad_conn query]]
       regsub {client=ajax} $html_url {client=html} html_url
       
@@ -55,8 +55,8 @@ namespace eval ::chat {
       <script type='text/javascript'>
       $js
       // register the data sources (for sending messages, receiving updates)
-      var pushMessage = registerDataConnection(pushReceiver, '$path/ajax/chat?m=get_new&amp;$context', false);
-      var pullUpdates = registerDataConnection(updateReceiver, '$path/ajax/chat?m=get_updates&amp;$context', true);
+      var pushMessage = registerDataConnection(pushReceiver, '$path/ajax/chat?m=get_new&$context', false);
+      var pullUpdates = registerDataConnection(updateReceiver, '$path/ajax/chat?m=get_updates&$context', true);
       // register an update function to refresh the data sources every 5 seconds
       var updateInterval = setInterval(updateDataConnections,5000);
       </script>
