@@ -44,7 +44,7 @@ namespace eval ::chat {
       }
       set file [open [acs_root_dir]/$jspath]; set js [read $file]; close $file
 
-      set path      [site_node::get_url_from_object_id -object_id $package_id]
+      set path      [lindex [site_node::get_url_from_object_id -object_id $package_id] 0]
       set login_url [ad_quotehtml "${path}ajax/chat?m=login&$context"]
       set send_url  [ad_quotehtml "${path}ajax/chat?m=add_msg&$context&msg="]
       set users_url [ad_quotehtml "${path}ajax/chat?m=get_users&$context"]
