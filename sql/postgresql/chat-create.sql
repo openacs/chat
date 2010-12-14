@@ -552,7 +552,7 @@ declare
    v_msg chat_msgs.msg%TYPE;
 begin
     -- Get msg id from the global acs_object sequence.
-    select acs_object_id_seq.nextval into v_msg_id from dual;
+    select nextval(''t_acs_object_id_seq'') into v_msg_id from dual;
 
 
     select archive_p into v_msg_archive_p from chat_rooms where room_id = p_room_id;
