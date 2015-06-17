@@ -10,9 +10,9 @@
 <property name="title">#chat.Confirm_unban_user#</property>
 
 <form method=post action=user-unban-2>       
-<input type=hidden name=room_id value="@room_id@">
-<input type=hidden name=party_id value="@party_id@">
+<input type="hidden" name="room_id" value="@room_id@">
+<input type="hidden" name="party_id" value="@party_id@">
 #chat.Are_you_sure_you_want_to_unban#  <b>@party_pretty_name@</b> #chat.from# @pretty_name@?
-<p><input type=submit value="#chat.Unban#">
+<p><input type="submit" value="#chat.Unban#">
  
 </form>

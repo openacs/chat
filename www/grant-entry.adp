@@ -10,7 +10,7 @@
 <property name="title">@title;noquote@</property>
 
 <form method=post action=@action@>
-    <input type=hidden name=room_id value=@room_id@>
+    <input type="hidden" name="room_id" value="@room_id@">
     
     @description@
     <select name=party_id>
@@ -18,6 +18,6 @@
     <option value="@parties.party_id@">@parties.name@
     </multiple>
     </select>
-    <input type=submit value="@submit_label@">
+    <input type="submit" value="@submit_label@">
 </form>
     
