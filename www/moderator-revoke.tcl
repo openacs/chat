@@ -11,7 +11,7 @@ ad_page_contract {
     party_id:integer,notnull
 }
 
-ad_require_permission $room_id chat_moderator_revoke
+permission::require_permission -object_id $room_id -privilege chat_moderator_revoke
 
 set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Revoke_moderator]"]
 

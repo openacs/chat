@@ -7,9 +7,9 @@ ad_page_contract {
 }
    
 set user_id [ad_conn user_id]
-set read_p  [ad_permission_p $room_id "chat_read"]
-set write_p [ad_permission_p $room_id "chat_write"]
-set ban_p   [ad_permission_p $room_id "chat_ban"]
+set read_p  [permission::permission_p -object_id $room_id -privilege "chat_read"]
+set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
+set ban_p   [permission::permission_p -object_id $room_id -privilege "chat_ban"]
 set active  [room_active_status $room_id]
 
 # get the "rich" client settings

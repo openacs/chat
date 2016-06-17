@@ -11,7 +11,7 @@ ad_page_contract {
     party_id:integer,notnull
 }
 
-ad_require_permission $room_id chat_moderator_grant
+permission::require_permission -object_id $room_id -privilege chat_moderator_grant
 
 chat_moderator_grant $room_id $party_id
 

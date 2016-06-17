@@ -10,7 +10,7 @@ ad_page_contract {
     assign_privilege:trim,notnull
 }
 
-ad_require_permission $room_id $require_privilege
+permission::require_permission -object_id $room_id -privilege $require_privilege
 
 doc_body_append "[ad_header "Grant permission on $pretty_name"]
 
@@ -21,7 +21,7 @@ doc_body_append "[ad_header "Grant permission on $pretty_name"]
 <hr>
 
 <form method=post action=chat-room-grant-2>
-[export_form_vars room_id require_privilege assign_privilege]
+[export_vars -form {room_id require_privilege assign_privilege}]
 <select name=party_id>
 "
 

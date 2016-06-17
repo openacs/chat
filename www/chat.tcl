@@ -80,11 +80,11 @@ switch $client {
 		set template_use "java-chat"
 
 		# Get config paramater for applet.
-		set width [ad_parameter AppletWidth "" 500]
-		set height [ad_parameter AppletHeight "" 400]   
+		set width [parameter::get -parameter AppletWidth -default 500]
+		set height [parameter::get -parameter AppletHeight -default 400]   
     
 		set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
-		set port [ad_parameter ServerPort "" 8200]
+		set port [parameter::get -parameter ServerPort -default 8200]
 	}
 }
 

@@ -17,7 +17,7 @@ ad_page_contract {
     parties:multirow
 }
 
-ad_require_permission $room_id chat_moderator_grant
+permission::require_permission -object_id $room_id -privilege chat_moderator_grant
 
 set context_bar [list "[_ chat.Grant_moderator]"]
 set submit_label "[_ chat.Grant]"

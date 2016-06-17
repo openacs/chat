@@ -13,7 +13,7 @@ ad_proc -private chat_start_server {} { Start Java chat server. } {
         return
     }
     ns_log notice "chat_start_server: Starting chat server"
-    set port [ad_parameter ServerPort]
+    set port [parameter::get -parameter ServerPort]
     set path "ns/server/[ns_info server]/module/nssock"
     set host_location "[ns_config $path Address]"
 

@@ -18,7 +18,7 @@ ad_page_contract {
     parties:multirow
 }
 
-ad_require_permission $room_id chat_user_ban
+permission::require_permission -object_id $room_id -privilege chat_user_ban
 
 set context_bar [list "[_ chat.Ban_user]"]
 set submit_label "[_ chat.Ban]"

@@ -36,9 +36,9 @@ db_multirow -extend { active_users last_activity room_url room_html_url} rooms r
 
     if { $active_p } {
         set room_url [export_vars -base "room-enter" {room_id {client $default_client}}]
-        set room_url [ad_quotehtml $room_url]
+        set room_url [ns_quotehtml $room_url]
         set room_html_url [export_vars -base "room-enter" {room_id {client html}}]
-        set room_html_url [ad_quotehtml $room_html_url]
+        set room_html_url [ns_quotehtml $room_html_url]
     }
 }
 

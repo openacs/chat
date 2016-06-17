@@ -7,7 +7,7 @@ ad_page_contract {
     
 }
 
-ad_require_permission $transcript_id chat_transcript_delete
+permission::require_permission -object_id $transcript_id -privilege chat_transcript_delete
 
 
 
