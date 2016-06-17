@@ -6,8 +6,8 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context;noquote@</property>
-<property name="title">@title;noquote@</property>
+<property name="context">@context;literal@</property>
+<property name="doc(title)">@title;literal@</property>
 
 <form action="@action@" method="post" class="margin-form">
     <div>

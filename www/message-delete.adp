@@ -6,8 +6,8 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar;noquote@</property>
-<property name="title">#chat.Confirm_message_delete#</property>
+<property name="context">@context_bar;literal@</property>
+<property name="doc(title)">#chat.Confirm_message_delete#</property>
 
 <form method="post" action="message-delete-2">
 <div><input type="hidden" name="room_id" value="@room_id@"></div>
