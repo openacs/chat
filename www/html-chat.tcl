@@ -17,7 +17,7 @@ set richclient(short) [parameter::get -parameter "DefaultClient"]
 set richclient(msg) "[_ chat.${richclient(short)}_client_msg]"
 set richclient(title) "[_ chat.[string totitle $richclient(short)]]"
 
-if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") || ($active == "f") } {
+if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) || ($active == "f") } {
     #Display unauthorize privilege page.
     ad_returnredirect unauthorized
     ad_script_abort

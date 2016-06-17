@@ -48,7 +48,7 @@ if { $moderate_room_p == "t" } {
     set moderator_p "1"
 }
 
-if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
+if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     #Display unauthorize privilege page.
     ad_returnredirect unauthorized
     ad_script_abort
@@ -58,7 +58,7 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 set user_name [chat_user_name $user_id]
 
 # send message to the database 
-if { ![empty_string_p $message] } {
+if { $message ne "" } {
     chat_message_post $room_id $user_id $message $moderator_p
 }
 
@@ -67,7 +67,7 @@ switch $client {
     "html" {
         set template_use "html-chat"
         # forward to ajax if necessary
-        if { ![empty_string_p $message] } {
+        if { $message ne "" } {
             set session_id [ad_conn session_id]
             ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
             c1 add_msg $message
