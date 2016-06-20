@@ -6,7 +6,7 @@ ad_page_contract {
     @creation-date November 28, 2000
     @cvs-id $Id$
 } {
-    transcript_id:integer,notnull
+    transcript_id:naturalnum,notnull
 } -properties {
     context_bar:onevalue
     transcript_name:onevalue

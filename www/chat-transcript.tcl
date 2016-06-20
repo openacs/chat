@@ -1,8 +1,8 @@
 ad_page_contract {
     mostra mensagens do chat arquivadas
 } {
-   room_id:integer
-   {transcript_id:integer,optional 0}
+   room_id:naturalnum,notnull
+   {transcript_id:naturalnum,optional 0}
 } 
 
 set page_title "[_ chat.Transcript]"   

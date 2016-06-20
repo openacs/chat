@@ -6,7 +6,7 @@ ad_page_contract {
     @creation-date November 15, 2000
     @cvs-id $Id$
 } {
-    room_id:notnull,integer
+    room_id:notnull,naturalnum
 } -properties {
     room_id:onevalue
     pretty_name:onevalue

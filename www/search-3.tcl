@@ -2,8 +2,8 @@ ad_page_contract {
 
 } {
     type:notnull
-    room_id:integer,notnull
-    party_id:integer,notnull
+    room_id:naturalnum,notnull
+    party_id:naturalnum,notnull
 }
 
 if {$type eq "user"} {

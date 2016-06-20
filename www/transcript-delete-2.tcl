@@ -2,8 +2,8 @@
 ad_page_contract {
     Delete chat transcript.
 } {
-    room_id:integer,notnull
-    transcript_id:integer,notnull
+    room_id:naturalnum,notnull
+    transcript_id:naturalnum,notnull
     
 }
 

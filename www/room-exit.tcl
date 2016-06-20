@@ -6,7 +6,7 @@ ad_page_contract {
     @creation-date November 25, 2000
     @cvs-id $Id$
 } {
-    room_id:integer,notnull
+    room_id:naturalnum,notnull
 }
 
 set user_id [ad_conn user_id]

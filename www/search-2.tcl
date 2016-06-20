@@ -6,9 +6,9 @@ ad_page_contract {
     keyword:optional
     target
     type:notnull
-    room_id:notnull
+    room_id:naturalnum,notnull
     {passthrough ""}
-    {limit_users_in_group_id ""}
+    {limit_users_in_group_id:naturalnum ""}
 } -properties {
     group_name:onevalue
     search_type:onevalue

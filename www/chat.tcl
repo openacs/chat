@@ -7,7 +7,7 @@ ad_page_contract {
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
-    room_id
+    room_id:naturalnum,notnull
   {client "ajax"}
     {message:html ""}
 } -properties {
