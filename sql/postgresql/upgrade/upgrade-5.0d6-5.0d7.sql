@@ -1,25 +1,33 @@
 
-create function inline_0 () returns integer as '
-declare 
+
+
+--
+-- procedure inline_0/0
+--
+CREATE OR REPLACE FUNCTION inline_0(
+
+) RETURNS integer AS $$
+DECLARE 
 	col_exists_p boolean;
-begin
-	select count(*) > 0 into col_exists_p from information_schema.columns where table_name=''chat_rooms'' and column_name=''auto_flush_p'';
+BEGIN
+	select count(*) > 0 into col_exists_p from information_schema.columns where table_name='chat_rooms' and column_name='auto_flush_p';
 	if not col_exists_p  then
 		alter table chat_rooms add column auto_flush_p boolean;
-		alter table chat_rooms alter column auto_flush_p set default ''t'';
-		update chat_rooms set auto_flush_p=''t'';
+		alter table chat_rooms alter column auto_flush_p set default 't';
+		update chat_rooms set auto_flush_p='t';
 	end if;
 
-	select count(*) > 0 into col_exists_p from information_schema.columns where table_name=''chat_rooms'' and column_name=''auto_transcript_p'';
+	select count(*) > 0 into col_exists_p from information_schema.columns where table_name='chat_rooms' and column_name='auto_transcript_p';
 	if not col_exists_p then
 		alter table chat_rooms add column auto_transcript_p boolean;
-		alter table chat_rooms alter column auto_transcript_p set default ''f'';
-		update chat_rooms set auto_transcript_p=''f'';
+		alter table chat_rooms alter column auto_transcript_p set default 'f';
+		update chat_rooms set auto_transcript_p='f';
 	end if;
 
 	return null;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select inline_0 ();
 drop function inline_0 ();
@@ -29,18 +37,26 @@ update chat_msgs set creation_date2 = creation_date;
 alter table chat_msgs drop column creation_date;
 alter table chat_msgs rename column creation_date2 to creation_date;
 
-create or replace function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean, boolean, boolean)
-returns integer as '
-declare
-   p_room_id        alias for $1;
-   p_pretty_name    alias for $2;
-   p_description    alias for $3;
-   p_moderated_p    alias for $4;
-   p_active_p       alias for $5;
-   p_archive_p      alias for $6;
-   p_auto_flush_p      alias for $7;
-   p_auto_transcript_p      alias for $8;
-begin
+
+
+-- added
+select define_function_args('chat_room__edit','room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p');
+
+--
+-- procedure chat_room__edit/8
+--
+CREATE OR REPLACE FUNCTION chat_room__edit(
+   p_room_id integer,
+   p_pretty_name varchar,
+   p_description varchar,
+   p_moderated_p boolean,
+   p_active_p boolean,
+   p_archive_p boolean,
+   p_auto_flush_p boolean,
+   p_auto_transcript_p boolean
+) RETURNS integer AS $$
+DECLARE
+BEGIN
 
         update chat_rooms set
             pretty_name = p_pretty_name,
@@ -53,29 +69,38 @@ begin
         where
             room_id = p_room_id;
         return 0;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create or replace function chat_room__new (integer, varchar, varchar, boolean, boolean, boolean, boolean, boolean, integer, timestamptz, integer, varchar, varchar)
-returns integer as '
-declare
-   p_room_id        alias for $1;
-   p_pretty_name    alias for $2;
-   p_description    alias for $3;
-   p_moderated_p    alias for $4;
-   p_active_p       alias for $5;
-   p_archive_p      alias for $6;
-   p_auto_flush_p      alias for $7;
-   p_auto_transcript_p      alias for $8;
-   p_context_id     alias for $9;
-   p_creation_date  alias for $10;
-   p_creation_user  alias for $11;
-   p_creation_ip    alias for $12;
-   p_object_type    alias for $13;
+
+
+-- added
+select define_function_args('chat_room__new','room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p,context_id,creation_date,creation_user,creation_ip,object_type');
+
+--
+-- procedure chat_room__new/13
+--
+CREATE OR REPLACE FUNCTION chat_room__new(
+   p_room_id integer,
+   p_pretty_name varchar,
+   p_description varchar,
+   p_moderated_p boolean,
+   p_active_p boolean,
+   p_archive_p boolean,
+   p_auto_flush_p boolean,
+   p_auto_transcript_p boolean,
+   p_context_id integer,
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_object_type varchar
+) RETURNS integer AS $$
+DECLARE
    v_room_id        chat_rooms.room_id%TYPE;
-begin
+BEGIN
    v_room_id := acs_object__new (
      null,
-     ''chat_room'',
+     'chat_room',
      now(),
      p_creation_user,
      p_creation_ip,
@@ -89,4 +114,5 @@ begin
 
 return v_room_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
