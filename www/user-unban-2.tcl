@@ -7,11 +7,11 @@ ad_page_contract {
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
-    room_id:integer,notnull
-    party_id:integer,notnull
+    room_id:naturalnum,notnull
+    party_id:naturalnum,notnull
 }
 
-ad_require_permission $room_id chat_user_unban
+permission::require_permission -object_id $room_id -privilege chat_user_unban
 
 chat_user_unban $room_id $party_id
 

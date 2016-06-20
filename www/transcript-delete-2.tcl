@@ -2,12 +2,12 @@
 ad_page_contract {
     Delete chat transcript.
 } {
-    room_id:integer,notnull
-    transcript_id:integer,notnull
+    room_id:naturalnum,notnull
+    transcript_id:naturalnum,notnull
     
 }
 
-ad_require_permission $transcript_id chat_transcript_delete
+permission::require_permission -object_id $transcript_id -privilege chat_transcript_delete
 
 
 

@@ -7,7 +7,7 @@ ad_page_contract {
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
-    room_id
+    room_id:naturalnum,notnull
   {client "ajax"}
     {message:html ""}
 } -properties {
@@ -48,7 +48,7 @@ if { $moderate_room_p == "t" } {
     set moderator_p "1"
 }
 
-if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
+if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     #Display unauthorize privilege page.
     ad_returnredirect unauthorized
     ad_script_abort
@@ -58,7 +58,7 @@ if { ($read_p == "0" && $write_p == "0") || ($ban_p == "1") } {
 set user_name [chat_user_name $user_id]
 
 # send message to the database 
-if { ![empty_string_p $message] } {
+if { $message ne "" } {
     chat_message_post $room_id $user_id $message $moderator_p
 }
 
@@ -67,7 +67,7 @@ switch $client {
     "html" {
         set template_use "html-chat"
         # forward to ajax if necessary
-        if { ![empty_string_p $message] } {
+        if { $message ne "" } {
             set session_id [ad_conn session_id]
             ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
             c1 add_msg $message
@@ -80,11 +80,11 @@ switch $client {
 		set template_use "java-chat"
 
 		# Get config paramater for applet.
-		set width [ad_parameter AppletWidth "" 500]
-		set height [ad_parameter AppletHeight "" 400]   
+		set width [parameter::get -parameter AppletWidth -default 500]
+		set height [parameter::get -parameter AppletHeight -default 400]   
     
 		set host [ad_parameter ServerHost "" [ns_config "ns/server/[ns_info server]/module/nssock" Hostname]]
-		set port [ad_parameter ServerPort "" 8200]
+		set port [parameter::get -parameter ServerPort -default 8200]
 	}
 }
 

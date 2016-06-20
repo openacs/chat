@@ -6,12 +6,12 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar;noquote@</property>
-<property name="title">#chat.Confirm_revoke_moderator#</property>
+<property name="context">@context_bar;literal@</property>
+<property name="doc(title)">#chat.Confirm_revoke_moderator#</property>
 
 <form method=post action=moderator-revoke-2>
 <input type="hidden" name="room_id" value="@room_id@">
 <input type="hidden" name="party_id" value="@party_id@">
-#chat.Are_you_sure_you_want_to_revoke_moderator# <b>@party_pretty_name@</b> #chat.from# @pretty_name@?
+#chat.Are_you_sure_you_want_to_revoke_moderator# <strong>@party_pretty_name@</strong> #chat.from# @pretty_name@?
 <p><input type="submit" value="#chat.Revoke#">
 </form>

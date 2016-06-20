@@ -6,8 +6,8 @@ ad_page_contract {
     @creation-date November 28, 2000
     @cvs-id $Id$
 } {
-    transcript_id:integer,notnull
-    room_id:integer,notnull
+    transcript_id:naturalnum,notnull
+    room_id:naturalnum,notnull
 } 
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_edit

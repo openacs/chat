@@ -6,7 +6,7 @@
     @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar;noquote@</property>
-<property name="title">#chat.Unauthorized#</property>
+<property name="context">@context_bar;literal@</property>
+<property name="doc(title)">#chat.Unauthorized#</property>
 
 #chat.You_dont_have_permission_room#. 

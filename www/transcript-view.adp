@@ -6,13 +6,13 @@
      @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar;noquote@</property>
-<property name="title">#chat.Transcript_preview#</property>
+<property name="context">@context_bar;literal@</property>
+<property name="doc(title)">#chat.Transcript_preview#</property>
 
 [<a href="transcript-edit?transcript_id=@transcript_id@&amp;room_id=@room_id@">#chat.Edit#</a>]
 <ul>
-<li>#chat.Name#: <b>@transcript_name@</b>
-<li>#chat.Description#: <b><i>@description@</i></b>
+<li>#chat.Name#: <strong>@transcript_name@</strong>
+<li>#chat.Description#: <strong><em>@description@</em></strong>
 
 
 <ul>

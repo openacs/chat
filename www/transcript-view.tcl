@@ -6,7 +6,7 @@ ad_page_contract {
     @creation-date November 28, 2000
     @cvs-id $Id$
 } {
-    transcript_id:integer,notnull
+    transcript_id:naturalnum,notnull
 } -properties {
     context_bar:onevalue
     transcript_name:onevalue
@@ -16,7 +16,7 @@ ad_page_contract {
     contents:onevalue
 }
 
-ad_require_permission $transcript_id chat_transcript_view
+permission::require_permission -object_id $transcript_id -privilege chat_transcript_view
 
 set context_bar [list "[_ chat.View_transcript]"]
 db_1row get_transcript {

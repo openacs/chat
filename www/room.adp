@@ -6,8 +6,8 @@
      @cvs-id $Id$
 -->
 <master>
-<property name="context">@context_bar;noquote@</property>
-<property name="title">#chat.Room_Information#</property>
+<property name="context">@context_bar;literal@</property>
+<property name="doc(title)">#chat.Room_Information#</property>
 
 <h1>#chat.Room_Information#</h1>
 <if @room_view_p@ eq "1">
@@ -51,7 +51,7 @@
 </if>
 </if>
 <else>
-  <p><i>#chat.No_information_available#</i></p>
+  <p><em>#chat.No_information_available#</em></p>
 </else>
 
 <h2>#chat.Users_ban#</h2>

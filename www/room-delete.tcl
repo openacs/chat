@@ -6,14 +6,14 @@ ad_page_contract {
     @creation-date November 15, 2000
     @cvs-id $Id$
 } {
-    room_id:notnull,integer
+    room_id:notnull,naturalnum
 } -properties {
     room_id:onevalue
     pretty_name:onevalue
     context_bar:onevalue
 }
 
-ad_require_permission $room_id chat_room_delete
+permission::require_permission -object_id $room_id -privilege chat_room_delete
 
 set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Delete_room]"]
 

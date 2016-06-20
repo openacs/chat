@@ -6,8 +6,8 @@ ad_page_contract {
     @creation-date November 28, 2000
     @cvs-id $Id$
 } {
-    room_id:integer,notnull
-    transcript_id:integer,notnull
+    room_id:naturalnum,notnull
+    transcript_id:naturalnum,notnull
 } -properties {
     context_bar:onevalue
     room_id:onevalue

@@ -6,10 +6,10 @@ ad_page_contract {
     @creation-date November 28, 2000
     @cvs-id $Id$
 } {
-    transcript_id:notnull,integer
+    transcript_id:notnull,naturalnum
     transcript_name:trim,notnull
     contents:html,notnull
-    room_id:notnull,integer
+    room_id:notnull,naturalnum
     {description:trim ""}
 }
 
