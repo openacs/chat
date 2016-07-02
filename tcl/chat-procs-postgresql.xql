@@ -49,13 +49,6 @@
 </fullquery>
 
 
- <fullquery name="chat_user_name.get_chat_user_name">
-      <querytext>
-          select person__name(:user_id);
-      </querytext>
-</fullquery>
-
-
  <fullquery name="chat_user_grant.grant_user">
       <querytext>
          begin

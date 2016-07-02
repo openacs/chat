@@ -51,15 +51,6 @@
       </querytext>
 </fullquery>
 
- <fullquery name="chat_user_name.get_chat_user_name">
-      <querytext>
-       begin
-	    :1 := person.name(:user_id);
-	end;
-      </querytext>
-</fullquery>
-
-
 <fullquery name="chat_user_grant.grant_user">
       <querytext>
        begin
