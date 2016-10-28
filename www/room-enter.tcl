@@ -34,7 +34,11 @@ if {$default_client eq "java"} {
 switch $client {
     "html" - "ajax" - "html-chat-script" {
         ns_log Notice "YY room-enter: has_entered_the room"
-        chat_message_post $room_id $user_id "[_ chat.has_entered_the_room]." "1"
+	# apisano: I don't think this code should be here anymore, as
+	# message about user entering the room is already issued by
+	# the parent chat class in xotcl-core when we issue the login
+	# method	
+        # chat_message_post $room_id $user_id "[_ chat.has_entered_the_room]." "1"
     }
 }
 

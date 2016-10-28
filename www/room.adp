@@ -35,7 +35,15 @@
     <tr class="form-element">
         <td class="form-label">#chat.AutoTranscript#</td>
         <td>@auto_transcript_p@</td>
-    </tr>      
+    </tr>
+    <tr class="form-element">
+        <td class="form-label">#chat.LoginMessages#</td>
+        <td>@login_messages_p@</td>
+    </tr>          
+    <tr class="form-element">
+        <td class="form-label">#chat.LogoutMessages#</td>
+        <td>@logout_messages_p@</td>
+    </tr>          
     <tr class="form-element">
         <td class="form-label">#chat.message_count#</td>
         <td>@message_count@</td>

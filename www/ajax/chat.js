@@ -102,14 +102,19 @@ function updateReceiver(content) {
                 var messagesNode = body[0].childNodes[i];
                 if (messagesNode.hasChildNodes()) {
                     var messagesDoc = frames['ichat'].document;
-                    var messagesDiv = frames['ichat'].document.getElementById('messages');
+                    var messagesDiv = messagesDoc.getElementById('messages');
+		    if (messagesDiv == null) {
+			messagesDiv = messagesDoc.createElement('div');
+			messagesDiv.id = 'messages';
+			messagesDoc.body.appendChild(messagesDiv);
+		    }
                     messagesReceiver(messagesNode,messagesDoc,messagesDiv);
                 }                
                 break;
             case "users":
                 var usersNode = body[0].childNodes[i].childNodes[0];
                 var usersDoc = frames['ichat-users'].document;
-                var usersTbody = frames['ichat-users'].document.getElementById('users').tBodies[0];
+                var usersTbody = usersDoc.getElementById('users').tBodies[0];
                 usersReceiver(usersNode,usersDoc,usersTbody);                
                 break;
         }

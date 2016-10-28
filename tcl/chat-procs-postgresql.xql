@@ -12,6 +12,8 @@
              :archive_p,
              :auto_flush_p,
              :auto_transcript_p,
+             :login_messages_p,
+             :logout_messages_p,	     
              :context_id,
              now(),
              :creation_user,
@@ -117,12 +119,14 @@
 	        :description,
 	        :moderated_p,
 	        :active_p,
-            :archive_p,
-            :auto_flush_p,
-            :auto_transcript_p
+		:archive_p,
+		:auto_flush_p,
+		:auto_transcript_p,
+		:login_messages_p,
+		:logout_messages_p		
 	    );
             return 0;
-	end;
+	 end;
      </querytext>
 </fullquery>
 

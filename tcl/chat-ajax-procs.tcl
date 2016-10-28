@@ -8,7 +8,17 @@ ad_library {
 }
 
 namespace eval ::chat {
-  ::xo::ChatClass Chat -superclass ::xo::Chat
+    ::xo::ChatClass Chat -superclass ::xo::Chat
+
+    Chat instproc init {} {
+	my instvar chat_id login_messages_p logout_messages_p
+	xo::dc 1row get_options "
+            select login_messages_p,
+                   logout_messages_p
+              from chat_rooms
+             where room_id = :chat_id"
+	next
+    }
 
   Chat instproc render {} {
     my orderby time
@@ -57,8 +67,6 @@ namespace eval ::chat {
       // register the data sources (for sending messages, receiving updates)
       var pushMessage = registerDataConnection(pushReceiver, '$path/ajax/chat?m=get_new&$context', false);
       var pullUpdates = registerDataConnection(updateReceiver, '$path/ajax/chat?m=get_updates&$context', true);
-      // register an update function to refresh the data sources every 5 seconds
-      var updateInterval = setInterval(updateDataConnections,5000);
       </script>
       <form id='ichat_form' name='ichat_form' action='#' onsubmit='pushMessage.chatSendMsg(\"$send_url\"); return false;'>
       <iframe name='ichat' id='ichat' title='#chat.Conversation_area#' 
@@ -78,6 +86,14 @@ namespace eval ::chat {
       <input type='submit' value='#chat.Send_Refresh#'>
       </div>
       </form> 
+
+      <script type='text/javascript'>
+      // Get a first update of users when the iframe is ready, then register a 5s interval to get new ones
+      document.getElementById('ichat-users').addEventListener('load', function (event) {
+          updateDataConnections();
+      }, false);
+      var updateInterval = setInterval(updateDataConnections,5000);
+      </script>
     "
   }
 }

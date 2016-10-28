@@ -107,14 +107,22 @@ ad_proc -private chat_receive_from_server {host port} { Receive messages from Ja
                 switch $msg {
                     "/enter" {
                         c1 login
-                        set msg [_ xotcl-core.has_entered_the_room]
+			# apisano: I think we don't need explicit
+			# message about entering the room, as this is
+			# already issued by the login method of parent
+			# chat class in xotcl-core.			
+                        # set msg [_ xotcl-core.has_entered_the_room]
                     }
                     "/leave" {
                         c1 logout
-                        set msg [_ xotcl-core.has_left_the_room]
+			# apisano: I think we don't need explicit
+			# message about leaving the room, as this is
+			# already issued by the logout method of parent
+			# chat class in xotcl-core.			
+                        # set msg [_ xotcl-core.has_left_the_room]
                     }
                     default {
-                c1 add_msg -uid $user_id $msg
+			c1 add_msg -uid $user_id $msg
                     }
                 }
 
@@ -146,6 +154,7 @@ ad_proc -private chat_post_message_to_db {
     db_exec_plsql post_message {}
 
 }
+
 ad_proc -public chat_room_new {
     {-description ""}
     {-moderated_p f}
@@ -153,6 +162,8 @@ ad_proc -public chat_room_new {
     {-archive_p f}
     {-auto_flush_p t}
     {-auto_transcript_p f}
+    {-login_messages_p t}
+    {-logout_messages_p t}
     {-context_id ""}
     {-creation_user ""}
     {-creation_ip ""}
@@ -160,13 +171,12 @@ ad_proc -public chat_room_new {
 
 } {
     Create new chat room. Return room_id if successful else raise error.
-} {
-
+} {    
     db_transaction {
-        set room_id [db_exec_plsql create_room {}]
+        set room_id [db_string create_room {}]
     }
 
-    db_exec_plsql grant_permission {}
+    db_exec_plsql grant_permission {}	
 
     return $room_id
 }
@@ -180,6 +190,8 @@ ad_proc -public chat_room_edit {
     archive_p
     auto_flush_p
     auto_transcript_p
+    login_messages_p
+    logout_messages_p
 } {
     Edit information on chat room. All information require.
 } {
@@ -334,10 +346,9 @@ ad_proc -public chat_user_name {
 } {
     Return display name of this user to use in chat.
 } {
-	acs_user::get -user_id $user_id -array user
-	set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]
+    acs_user::get -user_id $user_id -array user
+    set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]
     return $name
-
 }
 
 ad_proc -public chat_message_post {
@@ -354,24 +365,24 @@ ad_proc -public chat_message_post {
         set status "pending"
     }
 
-	set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
+    set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 
-	if {$default_client eq "java"} {
-		set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
-		# Add message to queue. Notify thread responsible for 
-		# broadcast message to applets.
-		nsv_set chat html_message $chat_msg
-		ns_mutex unlock [nsv_get chat new_message]  
-	}
+    if {$default_client eq "java"} {
+	set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
+	# Add message to queue. Notify thread responsible for 
+	# broadcast message to applets.
+	nsv_set chat html_message $chat_msg
+	ns_mutex unlock [nsv_get chat new_message]  
+    }
     
-        # do not write messages to the database if the room should not be archived
-        chat_room_get -room_id $room_id -array room_info
-        if { $room_info(archive_p) == "f" } { return }
-        
-        # write message to the database
-        if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
-            ns_log error "chat_post_message_to_db: error: $errmsg"
-        }
+    # do not write messages to the database if the room should not be archived
+    chat_room_get -room_id $room_id -array room_info
+    if { $room_info(archive_p) == "f" } { return }
+    
+    # write message to the database
+    if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
+	ns_log error "chat_post_message_to_db: error: $errmsg"
+    }
 }
 
 
@@ -399,10 +410,21 @@ ad_proc -public chat_message_retrieve {
 
     ns_log debug "chat_message_retrieve: starting message retrieve"
 
-    # The first time html client enter chat room, chat_room variable is not initialize correctly.
-    # Therefore I just hard code the variable.
+    # The first time html client enter chat room, chat_room variable
+    # is not initialize correctly.  Therefore I just hard code the
+    # variable.    
+    # apisano: I don't think hardcoded message should be here anymore,
+    # as message about user entering the room is already issued by the
+    # parent chat class in xotcl-core when we issue the login method    
     if {![nsv_exists chat_room $room_id]} {
-        nsv_set chat_room $room_id [list "<message><from>[chat_user_name $user_id]</from><room_id>$room_id</room_id><body>[_ chat.has_entered_the_room]</body><status>approved</status></message>"]
+	nsv_set chat_room $room_id {}
+        # nsv_set chat_room $room_id [list "
+        #     <message>
+        #         <from>[chat_user_name $user_id]</from>
+        #         <room_id>$room_id</room_id>
+        #         <body>[_ chat.has_entered_the_room]</body>
+        #         <status>approved</status>
+        #     </message>"]
     }
 
     set user_name [chat_user_name $user_id]

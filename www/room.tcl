@@ -50,11 +50,18 @@ set transcript_create_p [permission::permission_p -object_id $room_id -privilege
 ###
 # Get room basic information.
 ###
-db_1row room_info {
-    select pretty_name, description, moderated_p, active_p, archive_p, auto_flush_p, auto_transcript_p
+db_1row room_info "
+    select pretty_name,
+           description,
+           moderated_p, 
+           active_p, 
+           archive_p, 
+           auto_flush_p, 
+           auto_transcript_p,
+           login_messages_p,
+           logout_messages_p
     from chat_rooms
-    where room_id = :room_id
-}
+    where room_id = :room_id"
 
 # get db-message count
 set message_count [db_string message_count "select count(*) from chat_msgs where room_id = :room_id" -default 0]

@@ -206,7 +206,10 @@ create table chat_rooms (
     -- flush the rooms messages every night at 00:05                    
     auto_flush_p        boolean default 't',
     -- automatically create a transcript after flushing the room
-    auto_transcript_p   boolean default 'f'
+    auto_transcript_p   boolean default 'f',
+    -- allow to set wether we want login/logout messages or not
+    login_messages_p    boolean default 't',
+    logout_messages_p   boolean default 't'
 );
 
 
@@ -341,12 +344,13 @@ create table chat_msgs (
 ---------------------------------
 
 
-
 -- added
-select define_function_args('chat_room__new','room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p,context_id,creation_date,creation_user,creation_ip,object_type');
+select define_function_args(
+       'chat_room__new',
+       'room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p,login_messages_p,logout_messages_p,context_id,creation_date,creation_user,creation_ip,object_type');
 
 --
--- procedure chat_room__new/13
+-- procedure chat_room__new/15
 --
 CREATE OR REPLACE FUNCTION chat_room__new(
    p_room_id integer,
@@ -357,6 +361,8 @@ CREATE OR REPLACE FUNCTION chat_room__new(
    p_archive_p boolean,
    p_auto_flush_p boolean,
    p_auto_transcript_p boolean,
+   p_login_messages_p boolean,
+   p_logout_messages_p boolean,   
    p_context_id integer,
    p_creation_date timestamptz,
    p_creation_user integer,
@@ -375,17 +381,34 @@ BEGIN
      p_context_id
    );
 
-   insert into chat_rooms
-       (room_id, pretty_name, description, moderated_p, active_p, archive_p, auto_flush_p, auto_transcript_p)
-   values
-       (v_room_id, p_pretty_name, p_description, p_moderated_p, p_active_p, p_archive_p, p_auto_flush_p, p_auto_transcript_p);
+   insert into chat_rooms (
+   	    room_id,
+	    pretty_name,
+	    description,
+	    moderated_p,
+	    active_p,
+	    archive_p,
+	    auto_flush_p,
+	    auto_transcript_p,
+	    login_messages_p,
+	    logout_messages_p
+	) values (
+	    v_room_id,
+	    p_pretty_name,
+	    p_description,
+	    p_moderated_p,
+	    p_active_p,
+	    p_archive_p,
+	    p_auto_flush_p,
+	    p_auto_transcript_p,
+	    p_login_messages_p,
+	    p_logout_messages_p
+	);
 
 return v_room_id;
 
 END;
 $$ LANGUAGE plpgsql;
-
-
 
 
 
@@ -576,7 +599,7 @@ $$ LANGUAGE plpgsql;
 select define_function_args('chat_room__edit','room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p');
 
 --
--- procedure chat_room__edit/8
+-- procedure chat_room__edit/10
 --
 CREATE OR REPLACE FUNCTION chat_room__edit(
    p_room_id integer,
@@ -586,21 +609,25 @@ CREATE OR REPLACE FUNCTION chat_room__edit(
    p_active_p boolean,
    p_archive_p boolean,
    p_auto_flush_p boolean,
-   p_auto_transcript_p boolean
+   p_auto_transcript_p boolean,
+   p_login_messages_p boolean,
+   p_logout_messages_p boolean   
 ) RETURNS integer AS $$
 DECLARE
 BEGIN
 
         update chat_rooms set
-            pretty_name = p_pretty_name,
-            description = p_description,
-            moderated_p = p_moderated_p,
-            active_p    = p_active_p,
-            archive_p   = p_archive_p,
-            auto_flush_p   = p_auto_flush_p,
-            auto_transcript_p   = p_auto_transcript_p
+            pretty_name       = p_pretty_name,
+            description       = p_description,
+            moderated_p       = p_moderated_p,
+            active_p          = p_active_p,
+            archive_p         = p_archive_p,
+            auto_flush_p      = p_auto_flush_p,
+            login_messages_p  = p_login_messages_p,
+            logout_messages_p = p_logout_messages_p	    
         where
             room_id = p_room_id;
+	    
         return 0;
 END;
 $$ LANGUAGE plpgsql;
