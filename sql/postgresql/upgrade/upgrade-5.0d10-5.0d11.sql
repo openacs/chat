@@ -96,6 +96,7 @@ BEGIN
             active_p          = p_active_p,
             archive_p         = p_archive_p,
             auto_flush_p      = p_auto_flush_p,
+	    auto_transcript_p = p_auto_transcript_p,	    
             login_messages_p  = p_login_messages_p,
             logout_messages_p = p_logout_messages_p	    
         where
