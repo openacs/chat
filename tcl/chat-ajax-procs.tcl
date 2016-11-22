@@ -4,19 +4,19 @@ ad_library {
     @creation-date 2006-02-02
     @author Gustaf Neumann
     @author Peter Alberer
-    @cvs-id $Id$  
+    @cvs-id $Id$
 }
 
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xo::Chat
 
     Chat instproc init {} {
-	my instvar chat_id login_messages_p logout_messages_p
-	xo::dc 1row get_options "
-            select login_messages_p,
-                   logout_messages_p
-              from chat_rooms
-             where room_id = :chat_id"
+	:instvar chat_id
+	if {[chat_room_exists_p $chat_id]} {
+	    chat_room_get -room_id $chat_id -array c
+	    :set login_messages_p  $c(login_messages_p)
+	    :set logout_messages_p $c(logout_messages_p)
+	}
 	next
     }
 
@@ -30,20 +30,23 @@ namespace eval ::chat {
       set timelong  [clock format [$child time]]
       set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
       set userlink  [my user_link -user_id $user_id -color $color]
-      append result "<p class='line'><span class='timestamp'>$timeshort</span>" \
-	  "<span class='user'>$userlink:</span>" \
-	  "<span class='message'>[my encode $msg]</span></p>\n"
+      append result "
+        <p class='line'>
+          <span class='timestamp'>$timeshort</span>
+	  <span class='user'>$userlink:</span>
+	  <span class='message'>[my encode $msg]</span>
+        </p>\n"
     }
     return $result
   }
 
   Chat proc login {-chat_id -package_id} {
-    auth::require_login
+      auth::require_login
       if {![info exists package_id]} {
-          set package_id [ad_conn package_id] 
+          set package_id [ad_conn package_id]
       }
       if {![info exists chat_id]} {
-          set chat_id $package_id 
+          set chat_id $package_id
       }
 
       set context "id=$chat_id&s=[ad_conn session_id].[clock seconds]"
@@ -60,20 +63,20 @@ namespace eval ::chat {
       set users_url [ns_quotehtml "${path}ajax/chat?m=get_users&$context"]
       set html_url [ns_quotehtml [ad_conn url]?[ad_conn query]]
       regsub {client=ajax} $html_url {client=html} html_url
-      
+
       return "\
-      <script type='text/javascript'>
+      <script type='text/javascript' nonce='$::__csp_nonce'>
       $js
       // register the data sources (for sending messages, receiving updates)
       var pushMessage = registerDataConnection(pushReceiver, '$path/ajax/chat?m=get_new&$context', false);
       var pullUpdates = registerDataConnection(updateReceiver, '$path/ajax/chat?m=get_updates&$context', true);
       </script>
       <form id='ichat_form' name='ichat_form' action='#' onsubmit='pushMessage.chatSendMsg(\"$send_url\"); return false;'>
-      <iframe name='ichat' id='ichat' title='#chat.Conversation_area#' 
+      <iframe name='ichat' id='ichat' title='#chat.Conversation_area#'
           frameborder='0' src='$login_url'
           style='width:70%; border:1px solid black; margin-right:15px;' height='257'>
       </iframe>
-      <iframe name='ichat-users' id='ichat-users' title='#chat.Participants_list#' 
+      <iframe name='ichat-users' id='ichat-users' title='#chat.Participants_list#'
           frameborder='0' src='$users_url'
           style='width:25%; border:1px solid black;' height='257'>
       </iframe>
@@ -85,9 +88,9 @@ namespace eval ::chat {
       #chat.message# <input tabindex='1' type='text' size='80' name='msg' id='chatMsg'>
       <input type='submit' value='#chat.Send_Refresh#'>
       </div>
-      </form> 
+      </form>
 
-      <script type='text/javascript'>
+      <script type='text/javascript' nonce='$::__csp_nonce'>
       // Get a first update of users when the iframe is ready, then register a 5s interval to get new ones
       document.getElementById('ichat-users').addEventListener('load', function (event) {
           updateDataConnections();
@@ -96,5 +99,40 @@ namespace eval ::chat {
       </script>
     "
   }
-}
 
+    # if chat doesn't exist anymore, send a message that will inform
+    # the user of being looking at an invalid chat
+    Chat instproc check_valid_room {} {
+	if {![chat_room_exists_p [:chat_id]]} {
+	    ns_return 500 text/plain [_ chat.Room_not_found]
+	    ad_script_abort
+	}
+    }
+
+    Chat instproc get_new {} {
+	:check_valid_room
+	next
+    }
+
+    Chat instproc add_msg {
+	{-get_new:boolean true}
+	{-uid ""}
+	msg
+    } {
+	:check_valid_room
+
+	# ignore empty messages
+	if {$msg eq ""} return
+
+	# code around expects the return value of the original method
+	set retval [next]
+
+	# This way messages can be persisted immediately everytime a
+	# message is sent
+	if {[:current_message_valid]} {
+	    chat_message_post [:chat_id] [:user_id] $msg 1
+	}
+
+	return $retval
+    }
+}

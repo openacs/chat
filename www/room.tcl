@@ -63,8 +63,21 @@ db_1row room_info "
     from chat_rooms
     where room_id = :room_id"
 
+# prettify flags
+foreach property {
+    moderated_p
+    active_p
+    archive_p
+    auto_flush_p
+    auto_transcript_p
+    login_messages_p
+    logout_messages_p
+} {
+    set $property [expr {[set $property] eq t?"[_ acs-kernel.common_yes]":"[_ acs-kernel.common_no]"}]
+}
+
 # get db-message count
-set message_count [db_string message_count "select count(*) from chat_msgs where room_id = :room_id" -default 0]
+set message_count [chat_message_count $room_id]
 
 # List user ban from chat
 db_multirow -extend {unban_url unban_text} banned_users list_user_ban {} {

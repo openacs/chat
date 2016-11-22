@@ -203,7 +203,7 @@ create table chat_rooms (
                         default 't'
                        constraint chat_rooms_archive_p_ck
                         check (archive_p in ('t', 'f')),
-    -- flush the rooms messages every night at 00:05                    
+    -- flush the rooms messages every night at 00:05
     auto_flush_p        boolean default 't',
     -- automatically create a transcript after flushing the room
     auto_transcript_p   boolean default 'f',
@@ -362,7 +362,7 @@ CREATE OR REPLACE FUNCTION chat_room__new(
    p_auto_flush_p boolean,
    p_auto_transcript_p boolean,
    p_login_messages_p boolean,
-   p_logout_messages_p boolean,   
+   p_logout_messages_p boolean,
    p_context_id integer,
    p_creation_date timestamptz,
    p_creation_user integer,
@@ -611,7 +611,7 @@ CREATE OR REPLACE FUNCTION chat_room__edit(
    p_auto_flush_p boolean,
    p_auto_transcript_p boolean,
    p_login_messages_p boolean,
-   p_logout_messages_p boolean   
+   p_logout_messages_p boolean
 ) RETURNS integer AS $$
 DECLARE
 BEGIN
@@ -625,10 +625,10 @@ BEGIN
             auto_flush_p      = p_auto_flush_p,
 	    auto_transcript_p = p_auto_transcript_p,
             login_messages_p  = p_login_messages_p,
-            logout_messages_p = p_logout_messages_p	    
+            logout_messages_p = p_logout_messages_p
         where
             room_id = p_room_id;
-	    
+
         return 0;
 END;
 $$ LANGUAGE plpgsql;
@@ -639,7 +639,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- added
-select define_function_args('chat_room__message_post','room_id,msg,html_p,approved_p');
+select define_function_args('chat_room__message_post','room_id,msg,creation_user,creation_ip');
 
 --
 -- procedure chat_room__message_post/4
@@ -647,8 +647,8 @@ select define_function_args('chat_room__message_post','room_id,msg,html_p,approv
 CREATE OR REPLACE FUNCTION chat_room__message_post(
    p_room_id integer,
    p_msg varchar,
-   p_html_p integer,
-   p_approved_p varchar
+   p_creation_user integer,
+   p_creation_ip varchar
 ) RETURNS integer AS $$
 DECLARE
    v_msg_id chat_msgs.msg_id%TYPE;
@@ -658,7 +658,6 @@ BEGIN
     -- Get msg id from the global acs_object sequence.
     select nextval('t_acs_object_id_seq') into v_msg_id from dual;
 
-
     select archive_p into v_msg_archive_p from chat_rooms where room_id = p_room_id;
 
     if v_msg_archive_p = 't' then
@@ -667,9 +666,8 @@ BEGIN
             v_msg := null;
         end if;
 
-    -- TO DO: aproved_p, Hhtml_p and lengh
-    -- Insert into chat_msgs table.
-        insert into chat_msgs (
+     -- Insert into chat_msgs table.
+     insert into chat_msgs (
             msg_id,
             room_id,
             msg,
@@ -720,100 +718,3 @@ BEGIN
 return 0;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

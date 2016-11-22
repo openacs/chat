@@ -57,13 +57,13 @@ function messagesReceiver(node,doc,div) {
         p.className = 'line';
         e = node.childNodes[i].getElementsByTagName('span');
         span = doc.createElement('span');
-        span.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue);
+	span.innerHTML = e[0].innerHTML;
         span.className = 'timestamp';
         p.appendChild(span);
         
         span = doc.createElement('span');
         s = e[1].firstChild.nodeValue;
-        span.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
+	span.innerHTML = e[1].innerHTML;
         span.className = 'user';
         p.appendChild(span);
         
@@ -133,12 +133,12 @@ function usersReceiver(node,doc,tbody) {
         e = node.childNodes[i].getElementsByTagName('TD');
         
         td = doc.createElement('td');
-        td.innerHTML = decodeURIComponent(e[0].firstChild.nodeValue.replace(/\+/g,' '));
+	td.innerHTML = e[0].innerHTML;
         td.className = 'user';
         tr.appendChild(td);
         
         td = doc.createElement('td');
-        td.innerHTML = decodeURIComponent(e[1].firstChild.nodeValue.replace(/\+/g,' '));
+	td.innerHTML = e[1].innerHTML;
         td.className = 'timestamp';
         tr.appendChild(td);   
         
@@ -176,7 +176,8 @@ DataConnection.prototype = {
                 obj.busy = false;
             } else {
                 clearInterval(updateInterval);
-                alert('Something wrong in HTTP request, status code = ' + obj.connection.status);
+//                alert('Something wrong in HTTP request, status code = ' + obj.connection.status);
+		alert(obj.connection.responseText);
             }
         }       
     }, 
