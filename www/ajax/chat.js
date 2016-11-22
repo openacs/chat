@@ -176,8 +176,13 @@ DataConnection.prototype = {
                 obj.busy = false;
             } else {
                 clearInterval(updateInterval);
-//                alert('Something wrong in HTTP request, status code = ' + obj.connection.status);
-		alert(obj.connection.responseText);
+		var errmsg = obj.connection.responseText.trim();		
+		if (!errmsg.match("^chat-errmsg: .*")) {
+		    errmsg = 'Something wrong in HTTP request, status code = ' + obj.connection.status;
+		} else {
+		    errmsg = errmsg.substr(13);
+		}
+		alert(errmsg);
             }
         }       
     }, 
