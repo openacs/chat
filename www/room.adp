@@ -45,6 +45,10 @@
         <td>@logout_messages_p@</td>
     </tr>          
     <tr class="form-element">
+        <td class="form-label">#chat.MessagesTimeWindow#</td>
+        <td>@messages_time_window@</td>
+    </tr>
+    <tr class="form-element">
         <td class="form-label">#chat.message_count#</td>
         <td>@message_count@</td>
     </tr>

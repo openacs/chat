@@ -15,7 +15,8 @@ namespace eval ::chat {
 	if {[chat_room_exists_p $chat_id]} {
 	    chat_room_get -room_id $chat_id -array c
 	    set :login_messages_p  $c(login_messages_p)
-	    set :logout_messages_p $c(logout_messages_p) 
+	    set :logout_messages_p $c(logout_messages_p)
+	    set :timewindow        $c(messages_time_window)
 	}
 	next
     }

@@ -209,7 +209,11 @@ create table chat_rooms (
     auto_transcript_p   boolean default 'f',
     -- allow to set wether we want login/logout messages or not
     login_messages_p    boolean default 't',
-    logout_messages_p   boolean default 't'
+    logout_messages_p   boolean default 't',
+    -- set how much in the past users will see when entering a chat in
+    -- seconds this is needed to specify, for example, that users will
+    -- see only the previous 10 minutes of the conversation
+    messages_time_window integer default 600
 );
 
 
@@ -345,130 +349,6 @@ create table chat_msgs (
 
 
 -- added
-select define_function_args(
-       'chat_room__new',
-       'room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p,login_messages_p,logout_messages_p,context_id,creation_date,creation_user,creation_ip,object_type');
-
---
--- procedure chat_room__new/15
---
-CREATE OR REPLACE FUNCTION chat_room__new(
-   p_room_id integer,
-   p_pretty_name varchar,
-   p_description varchar,
-   p_moderated_p boolean,
-   p_active_p boolean,
-   p_archive_p boolean,
-   p_auto_flush_p boolean,
-   p_auto_transcript_p boolean,
-   p_login_messages_p boolean,
-   p_logout_messages_p boolean,
-   p_context_id integer,
-   p_creation_date timestamptz,
-   p_creation_user integer,
-   p_creation_ip varchar,
-   p_object_type varchar
-) RETURNS integer AS $$
-DECLARE
-   v_room_id        chat_rooms.room_id%TYPE;
-BEGIN
-   v_room_id := acs_object__new (
-     null,
-     'chat_room',
-     now(),
-     p_creation_user,
-     p_creation_ip,
-     p_context_id
-   );
-
-   insert into chat_rooms (
-   	    room_id,
-	    pretty_name,
-	    description,
-	    moderated_p,
-	    active_p,
-	    archive_p,
-	    auto_flush_p,
-	    auto_transcript_p,
-	    login_messages_p,
-	    logout_messages_p
-	) values (
-	    v_room_id,
-	    p_pretty_name,
-	    p_description,
-	    p_moderated_p,
-	    p_active_p,
-	    p_archive_p,
-	    p_auto_flush_p,
-	    p_auto_transcript_p,
-	    p_login_messages_p,
-	    p_logout_messages_p
-	);
-
-return v_room_id;
-
-END;
-$$ LANGUAGE plpgsql;
-
-
-
----------------------------------
-
-
-
--- added
-select define_function_args('chat_room__name','room_id');
-
---
--- procedure chat_room__name/1
---
-CREATE OR REPLACE FUNCTION chat_room__name(
-   p_room_id integer
-) RETURNS varchar AS $$
-DECLARE
-   v_pretty_name     chat_rooms.pretty_name%TYPE;
-BEGIN
-     select into v_pretty_name pretty_name from chat_rooms where room_id =  p_room_id;
-     return v_pretty_name;
-END;
-$$ LANGUAGE plpgsql;
-
-
-
-
--------------------------------
-
-
-
-
-
--- added
-select define_function_args('chat_room__message_count','room_id');
-
---
--- procedure chat_room__message_count/1
---
-CREATE OR REPLACE FUNCTION chat_room__message_count(
-   p_room_id integer
-) RETURNS integer AS $$
-DECLARE
-   v_count integer;
-BEGIN
-   select count(*) as total into v_count
-   from chat_msgs
-   where room_id = p_room_id;
-   return v_count;
-
-END;
-$$ LANGUAGE plpgsql;
-
----------------------------------
-
-
-
-
-
--- added
 select define_function_args('chat_room__delete_all_msgs','room_id');
 
 --
@@ -485,9 +365,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 ---------------------------------
-
-
-
 
 
 -- added
@@ -524,50 +401,6 @@ $$ LANGUAGE plpgsql;
 ---------------------------------
 
 
-
-
--- added
-select define_function_args('chat_transcript__new','pretty_name,contents,description,room_id,context_id,creation_date,creation_user,creation_ip,object_type');
-
---
--- procedure chat_transcript__new/9
---
-CREATE OR REPLACE FUNCTION chat_transcript__new(
-   p_pretty_name varchar,
-   p_contents varchar,
-   p_description varchar,
-   p_room_id integer,
-   p_context_id integer,
-   p_creation_date timestamptz,
-   p_creation_user integer,
-   p_creation_ip varchar,
-   p_object_type varchar
-) RETURNS integer AS $$
-DECLARE
-
-   v_transcript_id    chat_transcripts.transcript_id%TYPE;
-BEGIN
-   v_transcript_id := acs_object__new (
-     null,
-     'chat_transcript',
-     now(),
-     p_creation_user,
-     p_creation_ip,
-     p_context_id
-   );
-
-   insert into chat_transcripts (transcript_id,   pretty_name,   contents,   description,   room_id)
-                        values  (v_transcript_id, p_pretty_name, p_contents, p_description, p_room_id);
-
-   return v_transcript_id;
-END;
-$$ LANGUAGE plpgsql;
-
-
-
------------------------------
-
-
 -- added
 select define_function_args('chat_transcript__del','transcript_id');
 
@@ -591,51 +424,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ----------------------------
-
-
-
-
--- added
-select define_function_args('chat_room__edit','room_id,pretty_name,description,moderated_p,active_p,archive_p,auto_flush_p,auto_transcript_p');
-
---
--- procedure chat_room__edit/10
---
-CREATE OR REPLACE FUNCTION chat_room__edit(
-   p_room_id integer,
-   p_pretty_name varchar,
-   p_description varchar,
-   p_moderated_p boolean,
-   p_active_p boolean,
-   p_archive_p boolean,
-   p_auto_flush_p boolean,
-   p_auto_transcript_p boolean,
-   p_login_messages_p boolean,
-   p_logout_messages_p boolean
-) RETURNS integer AS $$
-DECLARE
-BEGIN
-
-        update chat_rooms set
-            pretty_name       = p_pretty_name,
-            description       = p_description,
-            moderated_p       = p_moderated_p,
-            active_p          = p_active_p,
-            archive_p         = p_archive_p,
-            auto_flush_p      = p_auto_flush_p,
-	    auto_transcript_p = p_auto_transcript_p,
-            login_messages_p  = p_login_messages_p,
-            logout_messages_p = p_logout_messages_p
-        where
-            room_id = p_room_id;
-
-        return 0;
-END;
-$$ LANGUAGE plpgsql;
-
-
----------------------------
-
 
 
 -- added
@@ -689,32 +477,3 @@ END;
 $$ LANGUAGE plpgsql;
 
 ---------------------------
-
-
-
-
--- added
-select define_function_args('chat_transcript__edit','transcript_id,pretty_name,contents,description');
-
---
--- procedure chat_transcript__edit/4
---
-CREATE OR REPLACE FUNCTION chat_transcript__edit(
-   p_transcript_id integer,
-   p_pretty_name varchar,
-   p_contents varchar,
-   p_description varchar
-) RETURNS integer AS $$
-DECLARE
-BEGIN
-    update chat_transcripts
-        set pretty_name = p_pretty_name,
-            contents    = p_contents,
-            description = p_description
-        where
-            transcript_id = p_transcript_id;
-
-
-return 0;
-END;
-$$ LANGUAGE plpgsql;

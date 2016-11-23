@@ -7,6 +7,10 @@ ad_library {
     @cvs-id $Id$
 }
 
+# TODO: all the remaining Java stuff should fade away at some point,
+# its status is unknown and we won't be allowed to have binaries into
+# the core by distros.
+
 ad_proc -private chat_start_server {
 } {
     Start Java chat server.
@@ -135,8 +139,11 @@ ad_proc -private chat_receive_from_server {
 
 		chat_room_get -room_id $room_id -array room_info
 		if { $room_info(archive_p) == "t" } {
-		    if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $msg} errmsg]} {
-			ns_log error "chat_post_message_to_db: error: $errmsg"
+		    if {[catch {
+			chat_post_message_to_db \
+			    -creation_user $user_id $room_id $msg
+		    } errmsg]} {
+			ad_log error "chat_post_message_to_db: error: $errmsg"
 		    }
 		}
 
@@ -196,6 +203,7 @@ ad_proc -public chat_room_new {
     {-auto_transcript_p f}
     {-login_messages_p t}
     {-logout_messages_p t}
+    {-messages_time_window 600}
     {-context_id ""}
     {-creation_user ""}
     {-creation_ip ""}
@@ -203,8 +211,19 @@ ad_proc -public chat_room_new {
 } {
     Create new chat room. Return room_id if successful else raise error.
 } {
+    if {[ad_conn isconnected] && $creation_user eq ""} {
+	set creation_user [ad_conn user_id]
+    }
+
     db_transaction {
-        set room_id [db_string create_room {}]
+	set room_id [::xo::db::sql::acs_object new \
+			 -object_type   "chat_room" \
+			 -creation_user $creation_user \
+			 -creation_ip   $creation_ip \
+			 -context_id    $context_id]
+
+	db_dml insert_room {}
+
 	if {$creation_user ne ""} {
 	    foreach privilege {edit view delete} {
 		permission::grant \
@@ -246,10 +265,11 @@ ad_proc -public chat_room_edit {
     auto_transcript_p
     login_messages_p
     logout_messages_p
+    messages_time_window
 } {
     Edit information on chat room. All information require.
 } {
-    db_string edit_room {}
+    db_dml update_room {}
     ns_cache_flush -- chat_room_get_not_cached $room_id
 }
 
@@ -425,14 +445,6 @@ ad_proc -public chat_message_post {
 
     set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 
-    if {$default_client eq "java"} {
-	set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>$status</status></message>"
-	# Add message to queue. Notify thread responsible for
-	# broadcast message to applets.
-	nsv_set chat html_message $chat_msg
-	ns_mutex unlock [nsv_get chat new_message]
-    }
-
     # do not write messages to the database if the room should not be archived
     chat_room_get -room_id $room_id -array room_info
     if { $room_info(archive_p) == "f" } { return }
@@ -450,7 +462,14 @@ ad_proc -public chat_moderate_message_post {
 } {
     Post moderate message to the chat room and broadcast to all applet clients. Only use by HTML client.
 } {
-    set chat_msg "<message><from>[chat_user_name $user_id]</from><from_user_id>$user_id</from_user_id><room_id>$room_id</room_id><body>$message</body><status>pending</status></message>"
+    set chat_msg "
+      <message>
+        <from>[chat_user_name $user_id]</from>
+        <from_user_id>$user_id</from_user_id>
+        <room_id>$room_id</room_id>
+        <body>$message</body>
+        <status>pending</status>
+      </message>"
 
     # Add message to queue. Notify thread responsible for broadcast message to applets.
     nsv_set chat html_message $chat_msg
@@ -520,16 +539,24 @@ ad_proc -public chat_transcript_new {
 } {
     Create chat transcript.
 } {
+    if {[ad_conn isconnected] && $creation_user eq ""} {
+	set creation_user [ad_conn user_id]
+    }
+
     db_transaction {
-        set transcript_id [db_string create_transcript {}]
-	if { $transcript_id != 0 } {
-	    db_dml update_contents {}
-	    foreach privilege {edit view delete} {
-		permission::grant \
-		    -party_id  $creation_user \
-		    -object_id $transcript_id \
-		    -privilege chat_transcript_${privilege}
-	    }
+	set transcript_id [::xo::db::sql::acs_object new \
+			 -object_type   "chat_transcript" \
+			 -creation_user $creation_user \
+			 -creation_ip   $creation_ip \
+			 -context_id    $context_id]
+
+	db_dml insert_transcript {}
+
+	foreach privilege {edit view delete} {
+	    permission::grant \
+		-party_id  $creation_user \
+		-object_id $transcript_id \
+		-privilege chat_transcript_${privilege}
 	}
     }
 
@@ -552,10 +579,7 @@ ad_proc -public chat_transcript_edit {
 } {
     Edit chat transcript.
 } {
-    db_transaction {
-	db_string edit_transcript {}
-	db_dml update_contents {}
-    }
+    db_dml update_transcript {}
 }
 
 ad_proc -private chat_flush_rooms {} {

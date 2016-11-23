@@ -49,22 +49,10 @@ drop function inline_0 ();
 select acs_object_type__drop_type('chat_room','t');
 select acs_object_type__drop_type('chat_transcript','t');
 
-drop   function chat_transcript__new (varchar, varchar, varchar, integer, integer, timestamptz, integer,  varchar, varchar);
 drop   function chat_transcript__del (integer);
-drop   function chat_transcript__edit (integer, varchar, varchar, varchar );
-
-
-drop   function chat_room__new (integer, varchar, varchar, boolean, boolean, boolean, integer, timestamptz, integer, varchar, varchar);
-drop   function chat_room__name (integer);
 
 drop   function chat_room__message_post (integer, varchar, integer, varchar);
-
-
-
-drop   function chat_room__edit (integer, varchar, varchar, boolean, boolean, boolean);
-drop   function chat_room__message_count (integer);
 drop   function chat_room__delete_all_msgs (integer);
-
 drop   function chat_room__del (integer);
 
 drop table chat_msgs;
@@ -138,28 +126,3 @@ $$ LANGUAGE plpgsql;
 
 select inline_0 ();
 drop function inline_0 ();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

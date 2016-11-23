@@ -50,18 +50,17 @@ set transcript_create_p [permission::permission_p -object_id $room_id -privilege
 ###
 # Get room basic information.
 ###
-db_1row room_info "
-    select pretty_name,
-           description,
-           moderated_p, 
-           active_p, 
-           archive_p, 
-           auto_flush_p, 
-           auto_transcript_p,
-           login_messages_p,
-           logout_messages_p
-    from chat_rooms
-    where room_id = :room_id"
+chat_room_get -room_id $room_id -array r
+set pretty_name          $r(pretty_name)
+set description          $r(description)
+set moderated_p          $r(moderated_p)
+set active_p             $r(active_p)
+set archive_p            $r(archive_p)
+set auto_flush_p         $r(auto_flush_p)
+set auto_transcript_p    $r(auto_transcript_p)
+set login_messages_p     $r(login_messages_p)
+set logout_messages_p    $r(logout_messages_p)
+set messages_time_window $r(messages_time_window)
 
 # prettify flags
 foreach property {

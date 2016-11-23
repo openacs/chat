@@ -14,6 +14,6 @@
 <input type="hidden" name="transcript_id" value="@transcript_id@">
 <input type="hidden" name="room_id" value="@room_id@">
 </div>
-<p>#chat.Are_you_sure_you_want_to_delete# <strong>Replace with transcript name</strong>?</p>
+<p>#chat.Are_you_sure_you_want_to_delete# <strong>@transcript_name@</strong>?</p>
 <p><input type="submit" value="#acs-kernel.common_Yes#"></p>
 </form>
