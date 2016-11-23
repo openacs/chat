@@ -73,7 +73,7 @@ foreach property {
     login_messages_p
     logout_messages_p
 } {
-    set $property [expr {[set $property] eq t?"[_ acs-kernel.common_yes]":"[_ acs-kernel.common_no]"}]
+    set $property [expr {[set $property] eq "t" ? [_ acs-kernel.common_yes] : [_ acs-kernel.common_no] }]
 }
 
 # get db-message count

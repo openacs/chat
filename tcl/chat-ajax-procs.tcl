@@ -14,8 +14,8 @@ namespace eval ::chat {
 	:instvar chat_id
 	if {[chat_room_exists_p $chat_id]} {
 	    chat_room_get -room_id $chat_id -array c
-	    :set login_messages_p  $c(login_messages_p)
-	    :set logout_messages_p $c(logout_messages_p)
+	    set :login_messages_p  $c(login_messages_p)
+	    set :logout_messages_p $c(logout_messages_p) 
 	}
 	next
     }
@@ -104,7 +104,7 @@ namespace eval ::chat {
     # the user of being looking at an invalid chat
     Chat instproc check_valid_room {} {
 	if {![chat_room_exists_p [:chat_id]]} {
-	    ns_return 500 text/plain [_ chat.Room_not_found]
+	    ns_return 500 text/plain "chat-errmsg: [_ chat.Room_not_found]"
 	    ad_script_abort
 	}
     }
