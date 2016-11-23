@@ -84,6 +84,8 @@
   <msg key="message">Message</msg>
   <msg key="message_count">Message count</msg>
   <msg key="messages_in">messages in</msg>
+  <msg key="MessagesTimeWindow">Messages time window (s)</msg>
+  <msg key="MessagesTimeWindowHelp">This value in seconds will decide how far in the past the users will see when entering this chat room</msg>
   <msg key="Moderated">Moderated</msg>
   <msg key="msg">Message</msg>
   <msg key="Name">Name</msg>
