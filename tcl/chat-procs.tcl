@@ -597,7 +597,7 @@ ad_proc -private chat_room_flush {
     Flush the messages a single chat room
 } {
     db_transaction {
-        chat_room_get $room_id -array room_info
+        chat_room_get -room_id $room_id -array room_info
         # do we have to create a transcript for the room
         if { $room_info(auto_transcript_p) == "t" } {
             # build a list of all messages
