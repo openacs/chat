@@ -68,7 +68,7 @@ function messagesReceiver(node,doc,div) {
         p.appendChild(span);
         
         span = doc.createElement('span');
-        span.innerHTML = decodeURIComponent(e[2].firstChild.nodeValue.replace(/\+/g,' '));
+        span.innerHTML = e[2].innerHTML;
         span.className = 'message';
         p.appendChild(span);
         
@@ -200,11 +200,12 @@ DataConnection.prototype = {
             alert("chatSendMsg conflict! Maybe banned?");
         }
         var msgField = document.getElementById('chatMsg');
-        if (msgField.value == '') {
+	msg = encodeURIComponent(msgField.value);	
+        if (msg == '') {
             return;
         }
-        msgField.disabled = true;
-        this.httpSendCmd(send_url + escape(msgField.value));
+        msgField.disabled = true;	
+        this.httpSendCmd(send_url + msg);
         msgField.value = '#chat.sending_message#';
         // alert("Reseting inactivityTimeout");
         // inactivityTimeout = setTimeout(stopUpdates,300000);
