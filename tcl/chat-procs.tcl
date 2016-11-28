@@ -168,8 +168,9 @@ ad_proc -private chat_post_message_to_db {
 }
 
 # create a cache for the chat package
-if {"chat_room_get_not_cached" ni [ns_cache_names]} {
-    ns_cache_create chat_room_get_not_cached 1000
+if {"chat_room_cache" ni [ns_cache_names]} {
+    # these should be around 1000 entries
+    ns_cache_create chat_room_cache 350000
 }
 
 ad_proc -public chat_room_get {
@@ -179,7 +180,7 @@ ad_proc -public chat_room_get {
     Get all the information about a chat room into an array
 } {
     upvar $array row
-    array set row [ns_cache_eval -- chat_room_get_not_cached $room_id {
+    array set row [ns_cache_eval -- chat_room_cache $room_id {
 	chat_room_get_not_cached $room_id
     }]
 }
@@ -270,7 +271,7 @@ ad_proc -public chat_room_edit {
     Edit information on chat room. All information require.
 } {
     db_dml update_room {}
-    ns_cache_flush -- chat_room_get_not_cached $room_id
+    ns_cache_flush -- chat_room_cache $room_id
 }
 
 ad_proc -public chat_room_delete {
@@ -279,7 +280,7 @@ ad_proc -public chat_room_delete {
     Delete chat room.
 } {
     db_string delete_room {}
-    ns_cache_flush -- chat_room_get_not_cached $room_id
+    ns_cache_flush -- chat_room_cache $room_id
 }
 
 ad_proc -public chat_room_message_delete {
