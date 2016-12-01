@@ -60,7 +60,7 @@ namespace eval ::chat {
 
       set path      [lindex [site_node::get_url_from_object_id -object_id $package_id] 0]
       set login_url [ns_quotehtml "${path}ajax/chat?m=login&$context"]
-      set send_url  [ns_quotehtml "${path}ajax/chat?m=add_msg&$context&msg="]
+      set send_url  "${path}ajax/chat?m=add_msg&$context&msg="
       set users_url [ns_quotehtml "${path}ajax/chat?m=get_users&$context"]
       set html_url [ns_quotehtml [ad_conn url]?[ad_conn query]]
       regsub {client=ajax} $html_url {client=html} html_url
@@ -72,7 +72,7 @@ namespace eval ::chat {
       var pushMessage = registerDataConnection(pushReceiver, '$path/ajax/chat?m=get_new&$context', false);
       var pullUpdates = registerDataConnection(updateReceiver, '$path/ajax/chat?m=get_updates&$context', true);
       </script>
-      <form id='ichat_form' name='ichat_form' action='#' onsubmit='pushMessage.chatSendMsg(\"$send_url\"); return false;'>
+      <form id='ichat_form' name='ichat_form' action='#'>
       <iframe name='ichat' id='ichat' title='#chat.Conversation_area#'
           frameborder='0' src='$login_url'
           style='width:70%; border:1px solid black; margin-right:15px;' height='257'>
@@ -95,6 +95,10 @@ namespace eval ::chat {
       // Get a first update of users when the iframe is ready, then register a 5s interval to get new ones
       document.getElementById('ichat-users').addEventListener('load', function (event) {
           updateDataConnections();
+      }, false);
+      document.getElementById('ichat_form').addEventListener('submit', function (event) {
+          event.preventDefault();
+          pushMessage.chatSendMsg(\"$send_url\");
       }, false);
       var updateInterval = setInterval(updateDataConnections,5000);
       </script>
