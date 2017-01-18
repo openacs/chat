@@ -35,7 +35,7 @@
             #chat.delete_messages_after_transcript#
         </div>
       </div>
-      <if @active_p@ eq "t">
+      <if @active_p;literal@ true>
         <div class="form-item-wrapper">
           <div class="form-label">
             <label for="deactivate_room">#chat.Room_deactivate#</label>
