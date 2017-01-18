@@ -30,7 +30,7 @@ ad_proc -private chat_start_server {
 
     # Wait until chat server started before spawning new threads connecting to the server.
     while { $done == 0} {
-        if [catch {set fds [ns_sockopen -nonblock $host_location $port]} errmsg] {
+        if {[catch {set fds [ns_sockopen -nonblock $host_location $port]} errmsg]} {
             set done 0
         } else {
             set done 1
