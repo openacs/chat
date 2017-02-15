@@ -78,9 +78,9 @@
   <msg key="last_activity">last activity</msg>
   <msg key="Log_off">Log off</msg>
   <msg key="LoginMessages">Show login messages?</msg>
-  <msg key="LoginMessagesHelp">If set, a message will be broadcasted everytime a user connects to the room.</msg>
+  <msg key="LoginMessagesHelp">If set, a message will be broadcasted every time a user connects to the room.</msg>
   <msg key="LogoutMessages">Show logout messages?</msg>
-  <msg key="LogoutMessagesHelp">If set, a message will be broadcasted everytime a user connects to this room.</msg>
+  <msg key="LogoutMessagesHelp">If set, a message will be broadcasted every time a user disconnects from this room.</msg>
   <msg key="message">Message</msg>
   <msg key="message_count">Message count</msg>
   <msg key="messages_in">messages in</msg>
