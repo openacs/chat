@@ -124,7 +124,9 @@ namespace eval ::chat {
 	{-uid ""}
 	msg
     } {
-	:check_valid_room
+	if {![chat_room_exists_p [:chat_id]]} {
+	    return
+	}
 
 	# ignore empty messages
 	if {$msg eq ""} return
