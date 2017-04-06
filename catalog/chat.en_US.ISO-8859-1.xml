@@ -8,6 +8,8 @@
   <msg key="Add_user_to_room">Add user to room</msg>
   <msg key="Ajax">Ajax</msg>
   <msg key="ajax_client_msg">Ajax client</msg>
+  <msg key="AllowUserTranscript">Allow user transcripts</msg>
+  <msg key="AllowUserTranscriptHelp">Allow users to create transcripts of this chat room</msg>
   <msg key="Archive">Archive</msg>
   <msg key="Are_you_sure_you_want_to_delete">Are you sure you want to delete</msg>
   <msg key="Are_you_sure_you_want_to_revoke">Are you sure you want to revoke chat user privilege of</msg>
