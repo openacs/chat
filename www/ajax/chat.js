@@ -133,12 +133,24 @@ function usersReceiver(node,doc,tbody) {
         e = node.childNodes[i].getElementsByTagName('TD');
         
         td = doc.createElement('td');
-	td.innerHTML = e[0].innerHTML;
+	// 2017-04-06:	
+	// - td.innerHTML = e[0].innerHTML: Explorer 11 will show
+	//   undefined instead of username	
+	// - td.appendChild(e[0].firstChild): Chrome loses href and
+	//   style
+	// copying by hand is currently the only solution I have found
+	ea = e[0].firstChild;
+	a = doc.createElement('a');
+	a.setAttribute('target', ea.getAttribute('target'));
+	a.setAttribute('href', ea.getAttribute('href'));
+	a.setAttribute('style', ea.getAttribute('style'));
+	a.textContent = ea.textContent;
+	td.appendChild(a);
         td.className = 'user';
         tr.appendChild(td);
         
-        td = doc.createElement('td');
-	td.innerHTML = e[1].innerHTML;
+        td = doc.createElement('td');	
+	td.appendChild(e[1].firstChild);
         td.className = 'timestamp';
         tr.appendChild(td);   
         
