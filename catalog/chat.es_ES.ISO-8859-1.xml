@@ -8,6 +8,8 @@
   <msg key="Add_user_to_room">Añadir un usuario a la sala</msg>
   <msg key="Ajax">Ajax</msg>
   <msg key="ajax_client_msg">Cliente Ajax</msg>
+  <msg key="AllowUserTranscript">Permitir transcripciones a usuarios</msg>
+  <msg key="AllowUserTranscriptHelp">Permitis a usuarios crear transcripciones de la sala de chat</msg>
   <msg key="Archive">Archivar</msg>
   <msg key="Are_you_sure_you_want_to_delete">Seguro que quieres borrar</msg>
   <msg key="Are_you_sure_you_want_to_revoke">Seguro que quieres revocar el permiso de usuario de chat de</msg>
