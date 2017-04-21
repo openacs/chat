@@ -134,7 +134,7 @@ namespace eval ::chat {
 	# code around expects the return value of the original method
 	set retval [next]
 
-	# This way messages can be persisted immediately everytime a
+	# This way messages can be persisted immediately every time a
 	# message is sent
 	if {[:current_message_valid]} {
 	    chat_message_post [:chat_id] [:user_id] $msg 1

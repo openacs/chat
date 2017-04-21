@@ -245,7 +245,7 @@ ad_proc -public chat_room_new {
 ad_proc -public chat_room_exists_p {
     room_id
 } {
-    Return wether a chat room exists
+    Return whether a chat room exists
 
     @return a boolean
 } {

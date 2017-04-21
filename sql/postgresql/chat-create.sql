@@ -207,7 +207,7 @@ create table chat_rooms (
     auto_flush_p        boolean default 't',
     -- automatically create a transcript after flushing the room
     auto_transcript_p   boolean default 'f',
-    -- allow to set wether we want login/logout messages or not
+    -- allow to set whether we want login/logout messages or not
     login_messages_p    boolean default 't',
     logout_messages_p   boolean default 't',
     -- set how much in the past users will see when entering a chat in
