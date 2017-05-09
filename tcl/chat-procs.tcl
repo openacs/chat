@@ -605,7 +605,8 @@ ad_proc -private chat_room_flush {
 	    set contents [list]
             foreach message [db_list_of_lists get_archives_messages {}] {
 		lassign $message msg creation_user creation_date
-                lappend contents "\[$creation_date\] <b>[chat_user_name $creation_user]</b>: $msg"
+                set user_name [expr {$creation_user > 0 ? [chat_user_name $creation_user] : "system"}]
+                lappend contents "\[$creation_date\] <b>${user_name}</b>: $msg"
             }
             if { $contents ne "" } {
 		set today [clock format [clock seconds] -format "%d.%m.%Y"]
