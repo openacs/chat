@@ -188,10 +188,23 @@ ad_proc -public chat_room_get {
 ad_proc -private chat_room_get_not_cached {
     room_id
 } {
-    db_1row select_user_info {
-	select * from chat_rooms
-	 where room_id = :room_id
-    } -column_array row
+    if {![db_0or1row select_room_info {
+        select * from chat_rooms
+        where room_id = :room_id
+    } -column_array row]} {
+        set msg "Cannot find data for chatroom $room_id"
+        ad_log error $msg
+        error $msg
+    }
+    acs_object::get \
+        -object_id $room_id \
+        -array obj
+    set row(creation_user)  $obj(creation_user)
+    set row(creation_date)  $obj(creation_date_ansi)
+    set row(creation_ip)    $obj(creation_ip)
+    set row(modifying_user) $obj(modifying_user)
+    set row(last_modified)  $obj(last_modified_ansi)
+    set row(modifying_ip)   $obj(modifying_ip)
     return [array get row]
 }
 
@@ -249,10 +262,25 @@ ad_proc -public chat_room_exists_p {
 
     @return a boolean
 } {
-    return [db_0or1row query {
-	select 1 from chat_rooms
-	where room_id = :room_id
-    }]
+    if {[ns_cache_keys -exact -- chat_room_cache $room_id] ne ""} {
+        # chat room is in cache: it exists "for sure"
+        return 1
+    } elseif {[info exists ::chat_room_deleted_p($room_id)]} {
+        # chat room deletion has been recorded in threaded cache: as
+        # object id comes from a sequence, unless somebody puts an id
+        # by hand, the same will never be used again system wide, so
+        # it is safe to cache this
+        return 0
+    } elseif {[db_0or1row room_exists {
+        select 1 from chat_rooms
+        where room_id = :room_id}]} {
+        # chat room existance has been confirmed by query
+        return 1
+    } else {
+        # chat room is not there: take note of this in threaded cache
+        set ::chat_room_deleted_p($room_id) 1
+        return 0
+    }
 }
 
 ad_proc -public chat_room_edit {
@@ -304,8 +332,12 @@ ad_proc -public room_active_status {
 } {
     Get room active status.
 } {
-    chat_room_get -room_id $room_id -array c
-    return $c(active_p)
+    if {[chat_room_exists_p $room_id]} {
+        chat_room_get -room_id $room_id -array c
+        return [expr {$c(active_p) ne "" ? $c(active_p) : "f"}]
+    } else {
+        return "f"
+    }
 }
 
 ad_proc -public chat_room_name {
