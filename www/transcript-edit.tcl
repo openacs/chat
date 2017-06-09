@@ -46,6 +46,7 @@ ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]
 } -on_submit {
     if { [catch {chat_transcript_edit $transcript_id $pretty_name $description $contents} errmsg] } {
         ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
+        ad_script_abort
     }
     ad_returnredirect "chat-transcript?transcript_id=$transcript_id&room_id=$room_id"    
 }
