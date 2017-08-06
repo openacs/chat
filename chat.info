@@ -9,17 +9,17 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>t</inherit-templates-p>
     
-    <version name="5.0d13" url="http://openacs.org/repository/download/apm/chat-5.0d13.apm">
+    <version name="5.0" url="http://openacs.org/repository/download/apm/chat-5.0.apm">
         <owner url="http://www.openacs.org">Peter Alberer</owner>
         <summary>Server based chat with an html and ajax client.</summary>
-        <release-date>2016-11-22</release-date>
+        <release-date>2017-08-06</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
         <description format="text/html">Adapted by Peter Alberer 2006/03/25 to allow java and ajax to coexist. 
 Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of generalized chat class from xotcl-core.</description>
         <maturity>0</maturity>
 
-        <provides url="chat" version="5.0d13"/>
-        <requires url="acs-kernel" version="5.5.0"/>
+        <provides url="chat" version="5.0"/>
+        <requires url="acs-kernel" version="5.9.1"/>
         <requires url="xotcl-core" version="0.83"/>
 
         <callbacks>
