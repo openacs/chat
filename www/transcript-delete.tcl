@@ -16,5 +16,10 @@ ad_page_contract {
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_delete
 
+set transcript_name [db_string query {
+    select pretty_name from chat_transcripts
+    where transcript_id = :transcript_id
+}]
+
 set context [list "[_ chat.Delete_transcript]"]
 ad_return_template

@@ -25,6 +25,7 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) || ($active == "f") } {
 
 if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
+    ad_script_abort
 }
 
 ::chat::Chat c1 -volatile -encoder noencode -chat_id $room_id

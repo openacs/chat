@@ -50,14 +50,33 @@ set transcript_create_p [permission::permission_p -object_id $room_id -privilege
 ###
 # Get room basic information.
 ###
-db_1row room_info {
-    select pretty_name, description, moderated_p, active_p, archive_p, auto_flush_p, auto_transcript_p
-    from chat_rooms
-    where room_id = :room_id
+chat_room_get -room_id $room_id -array r
+set pretty_name          $r(pretty_name)
+set description          $r(description)
+set moderated_p          $r(moderated_p)
+set active_p             $r(active_p)
+set archive_p            $r(archive_p)
+set auto_flush_p         $r(auto_flush_p)
+set auto_transcript_p    $r(auto_transcript_p)
+set login_messages_p     $r(login_messages_p)
+set logout_messages_p    $r(logout_messages_p)
+set messages_time_window $r(messages_time_window)
+
+# prettify flags
+foreach property {
+    moderated_p
+    active_p
+    archive_p
+    auto_flush_p
+    auto_transcript_p
+    login_messages_p
+    logout_messages_p
+} {
+    set $property [expr {[set $property] eq "t" ? [_ acs-kernel.common_yes] : [_ acs-kernel.common_no] }]
 }
 
 # get db-message count
-set message_count [db_string message_count "select count(*) from chat_msgs where room_id = :room_id" -default 0]
+set message_count [chat_message_count $room_id]
 
 # List user ban from chat
 db_multirow -extend {unban_url unban_text} banned_users list_user_ban {} {
