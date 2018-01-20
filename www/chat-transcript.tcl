@@ -21,6 +21,7 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
 
 if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
+    ad_script_abort
 }
 
 template::head::add_style -style "#messages { 
@@ -37,3 +38,4 @@ template::head::add_style -style "#messages {
 #messages .line {margin:0px;}"
 
 ad_return_template
+

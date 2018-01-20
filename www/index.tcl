@@ -55,7 +55,7 @@ list::create \
             label "#chat.Active#"
             html { style "text-align: center" }
             display_template {
-                <if @rooms.active_p@ eq t>
+                <if @rooms.active_p;literal@ true>
                 <img src="/resources/chat/active.png" alt="#chat.Room_active#">
                 </if>
                 <else>
@@ -66,7 +66,7 @@ list::create \
         pretty_name {
             label "#chat.Room_name#"
             display_template {
-                <if @rooms.active_p@ eq t>
+                <if @rooms.active_p;literal@ true>
                 <a href="@rooms.room_url;noquote@">@rooms.pretty_name@</a>&nbsp;\[<a href="@rooms.room_html_url;noquote@">#chat.HTML_chat#</a>\]
                 </if>
                 <else>
@@ -89,7 +89,7 @@ list::create \
             label "#chat.actions#"
             display_template {
                 <a href="chat-transcripts?room_id=@rooms.room_id@" class=button>#chat.Transcripts#</a>
-                <if @room_create_p@ eq 1>
+                <if @room_create_p;literal@ true>
                 <a href="@rooms.base_url@room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
                 </if>
             }

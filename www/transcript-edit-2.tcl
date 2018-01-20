@@ -17,6 +17,8 @@ permission::require_permission -object_id $transcript_id -privilege chat_transcr
 
 if { [catch {chat_transcript_edit $transcript_id $transcript_name $description $contents} errmsg] } {
     ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
+    ad_script_abort
 }
 
 ad_returnredirect "transcript-view?transcript_id=$transcript_id&room_id=$room_id"
+ad_script_abort

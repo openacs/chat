@@ -89,7 +89,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
 			 -creation_ip          [ad_conn peeraddr] $pretty_name]
     } errmsg]} {
         ad_return_complaint 1 "[_ chat.Create_new_room_failed]: $errmsg"
-        break
+        ad_script_abort
     }
     set comm_id ""
     if {[info commands dotlrn_community::get_community_id] ne ""} {
@@ -119,7 +119,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
 	set messages_time_window $r(messages_time_window)
     } errmsg]} {
 	ad_return_complaint 1 "[_ chat.Room_not_found]."
-        break
+        ad_script_abort
     }
 } -edit_data {
     if {[catch {
@@ -137,7 +137,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
 	    $messages_time_window
     } errmsg]} {
         ad_return_complaint 1 "[_ chat.Could_not_update_room]: $errmsg"
-        break
+        ad_script_abort
     }
 } -after_submit {
     ad_returnredirect "room?room_id=$room_id"
