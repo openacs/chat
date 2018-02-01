@@ -274,7 +274,7 @@ ad_proc -public chat_room_exists_p {
     } elseif {[db_0or1row room_exists {
         select 1 from chat_rooms
         where room_id = :room_id}]} {
-        # chat room existance has been confirmed by query
+        # chat room existence has been confirmed by query
         return 1
     } else {
         # chat room is not there: take note of this in threaded cache
