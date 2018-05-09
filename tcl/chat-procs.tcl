@@ -631,7 +631,7 @@ ad_proc -private chat_room_flush {
         # do we have to create a transcript for the room
         if { $room_info(auto_transcript_p) == "t" } {
         # build a list of all messages
-        set contents {}
+        set contents [list]
             foreach message [db_list_of_lists get_archives_messages {}] {
                 lassign $message msg creation_user creation_date
                 set user_name [expr {$creation_user > 0 ? [chat_user_name $creation_user] : "system"}]
