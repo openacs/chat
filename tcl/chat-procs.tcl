@@ -164,12 +164,6 @@ ad_proc -private chat_post_message_to_db {
     db_string post_message {}
 }
 
-# create a cache for the chat package
-if {"chat_room_cache" ni [ns_cache_names]} {
-# these should be around 1000 entries
-    ns_cache_create chat_room_cache 350000
-}
-
 ad_proc -public chat_room_get {
     {-room_id {}}
     {-array:required}
