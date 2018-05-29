@@ -79,7 +79,9 @@ foreach property {
 set message_count [chat_message_count $room_id]
 
 # List user ban from chat
-db_multirow -extend {unban_url unban_text} banned_users list_user_ban {} {
+db_multirow -extend {name email unban_url unban_text} banned_users list_user_ban {} {
+    set name "$last_name, $first_names"
+    set email [acs_user::get_element -user_id $party_id -element email]
     if { $user_unban_p } {
         set unban_url [export_vars -base "user-unban" {room_id party_id}]
         set unban_text [_ chat.Unban_user]
