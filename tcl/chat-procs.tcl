@@ -171,7 +171,7 @@ ad_proc -public chat_room_get {
     Get all the information about a chat room into an array
 } {
     upvar $array row
-    array set row [ns_cache_eval -- chat_room_cache $room_id {
+    array set row [ns_cache eval chat_room_cache $room_id {
         chat_room_get_not_cached $room_id
     }]
 }
@@ -253,7 +253,7 @@ ad_proc -public chat_room_exists_p {
 
     @return a boolean
 } {
-    if {[ns_cache_keys -exact -- chat_room_cache $room_id] ne ""} {
+    if {[ns_cache names chat_room_cache $room_id] ne ""} {
     # chat room is in cache: it exists "for sure"
         return 1
     } elseif {[info exists ::chat_room_deleted_p($room_id)]} {
@@ -290,7 +290,7 @@ ad_proc -public chat_room_edit {
     Edit information on chat room. All information require.
 } {
     db_dml update_room {}
-    ns_cache_flush -- chat_room_cache $room_id
+    ns_cache flush chat_room_cache $room_id
 }
 
 ad_proc -public chat_room_delete {
@@ -299,7 +299,7 @@ ad_proc -public chat_room_delete {
     Delete chat room.
 } {
     db_string delete_room {}
-    ns_cache_flush -- chat_room_cache $room_id
+    ns_cache flush -- chat_room_cache $room_id
 }
 
 ad_proc -public chat_room_message_delete {
