@@ -15,9 +15,8 @@ permission::require_permission -object_id $room_id -privilege chat_user_unban
 
 set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Unban_user]"]
 
-set party_pretty_name [db_string get_party_name {}]
+set party_pretty_name [acs_object_name $party_id]
 
 
 set pretty_name [chat_room_name $room_id]
 
-ad_return_template
