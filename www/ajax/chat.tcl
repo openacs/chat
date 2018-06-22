@@ -13,12 +13,7 @@ ad_page_contract {
 
 set ban_p [permission::permission_p -object_id $id -privilege "chat_ban"]
 if {$ban_p} {
-  ns_return 200 text/html "
-   <HTML>
-     <BODY>\
-       <div id='messages'>[_ chat.You_dont_have_permission_room]</div>\
-     </BODY>
-   </HTML>"
+  ad_return_forbidden
   ad_script_abort
 }
 
