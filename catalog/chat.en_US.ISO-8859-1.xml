@@ -11,6 +11,7 @@
   <msg key="AllowUserTranscript">Allow user transcripts</msg>
   <msg key="AllowUserTranscriptHelp">Allow users to create transcripts of this chat room</msg>
   <msg key="Archive">Archive</msg>
+  <msg key="ArchiveHelp">Save messages in this chat? &#39;No&#39;, means no transcripts can be created.</msg>
   <msg key="Are_you_sure_you_want_to_delete">Are you sure you want to delete</msg>
   <msg key="Are_you_sure_you_want_to_revoke">Are you sure you want to revoke chat user privilege of</msg>
   <msg key="Are_you_sure_you_want_to_revoke_moderator">Are you sure you want to revoke moderator privilege of</msg>

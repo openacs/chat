@@ -41,6 +41,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         {label "#chat.Archive#" }
         {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
         {value "t"}
+        {help_text "[_ chat.ArchiveHelp]"}
     }
     {auto_flush_p:boolean(radio)
         {label "#chat.AutoFlush#" }

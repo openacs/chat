@@ -11,6 +11,7 @@
   <msg key="AllowUserTranscript">Benutzerprotokoll erlauben</msg>
   <msg key="AllowUserTranscriptHelp">Reguläre Benutzer sollen Protokolle dieses Chatrooms anlegen können.</msg>
   <msg key="Archive">Archivieren</msg>
+  <msg key="ArchiveHelp">Nachrichten in diesem Chat speichern? &#39;Nein&#39; bedeutet, dass keine Protokolle erstellt werden können.</msg>
   <msg key="Are_you_sure_you_want_to_delete">Wirklich löschen</msg>
   <msg key="Are_you_sure_you_want_to_revoke">Wirklich Rechte am Chat entziehen?</msg>
   <msg key="Are_you_sure_you_want_to_revoke_moderator">Wirklich Administratorrechte entziehen?</msg>

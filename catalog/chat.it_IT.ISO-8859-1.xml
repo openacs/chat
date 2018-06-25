@@ -11,6 +11,7 @@
   <msg key="AllowUserTranscript">Permetti trascrizioni utente</msg>
   <msg key="AllowUserTranscriptHelp">Permetti agli utenti normali di creare trascrizioni di questa chat room</msg>
   <msg key="Archive">Archivia</msg>
+  <msg key="ArchiveHelp">Salvare i messaggi nella chat? &#39;No&#39; impedirà la creazione di trascrizioni.</msg>
   <msg key="Are_you_sure_you_want_to_delete">Sei sicuro/a di voler eliminare</msg>
   <msg key="Are_you_sure_you_want_to_revoke">Sei sicuro/a di voler revocare il privilegio utente di</msg>
   <msg key="Are_you_sure_you_want_to_revoke_moderator">Sei sicuro/a di voler revocare il privilegio moderatore di</msg>
