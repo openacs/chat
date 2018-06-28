@@ -448,8 +448,10 @@ ad_proc -public chat_user_name {
 } {
     Return display name of this user to use in chat.
 } {
-    acs_user::get -user_id $user_id -array user
-    set name [expr {$user(screen_name) ne "" ? $user(screen_name) : $user(name)}]
+    set name [acs_user::get_user_info -user_id $user_id -element screen_name]
+    if {$name eq ""} {
+        set name [person::name -person_id $user_id]
+    }
     return $name
 }
 
