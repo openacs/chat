@@ -76,8 +76,8 @@ AS 'declare
           ''Chat Room'',  -- pretty_name
           ''Chat Rooms'', -- pretty_plural
           ''acs_object'', -- supertype
-          ''CHAT_ROOMS'', -- table_name
-          ''ROOM_ID'',    -- id_column
+          ''chat_rooms'', -- table_name
+          ''room_id'',    -- id_column
           null,           -- package_name
           ''f'',          -- abstract_p
           null,           -- type_extension_table
@@ -229,8 +229,8 @@ AS 'declare
           ''Chat Transcript'',  -- pretty_name
           ''Chat Transcripts'', -- pretty_plural
           ''acs_object'',       -- supertype
-          ''CHAT_TRANSCRIPTS'', -- table_name
-          ''TRANSCRIPT_ID'',    -- id_column
+          ''chat_transcripts'', -- table_name
+          ''transcript_id'',    -- id_column
           null,           -- package_name
           ''f'',          -- abstract_p
           null,           -- type_extension_table
