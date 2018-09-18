@@ -41,11 +41,3 @@ switch -- $m {
       ns_log error "--c unknown method $m called."
   }
 }
-
-set output ""
-if { $message_output ne "" } {
-    append output "<div id='messages'>$message_output</div>"
-}
-if { $user_output ne "" } {
-    append output "<table id='users'><tbody>$user_output</tbody></table>"
-}

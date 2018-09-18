@@ -43,6 +43,11 @@
       }
   </style>
   <body style='margin:0px; padding:5px;'>
-    @output;literal@
+    <if @message_output@ ne "">
+      <div id='messages'>@message_output;literal@</div>
+    </if>
+    <if @user_output@ ne "">
+      <table id='users'><tbody>@user_output;literal@</tbody></table>
+    </if>
   </body>
 </html>
