@@ -22,20 +22,20 @@ namespace eval ::chat {
     }
 
   Chat instproc render {} {
-    my orderby time
+    :orderby time
     set result ""
-    foreach child [my children] {
+    foreach child [:children] {
       set msg       [$child msg]
       set user_id   [$child user_id]
       set color     [$child color]
       set timelong  [clock format [$child time]]
       set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
-      set userlink  [my user_link -user_id $user_id -color $color]
+      set userlink  [:user_link -user_id $user_id -color $color]
       append result "
         <p class='line'>
           <span class='timestamp'>$timeshort</span>
 	  <span class='user'>$userlink:</span>
-	  <span class='message'>[my encode $msg]</span>
+	  <span class='message'>[:encode $msg]</span>
         </p>\n"
     }
     return $result
