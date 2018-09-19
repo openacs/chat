@@ -11,14 +11,14 @@ namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xo::Chat
 
     Chat instproc init {} {
-	:instvar chat_id
-	if {[chat_room_exists_p $chat_id]} {
-	    chat_room_get -room_id $chat_id -array c
-	    set :login_messages_p  $c(login_messages_p)
-	    set :logout_messages_p $c(logout_messages_p)
-	    set :timewindow        $c(messages_time_window)
-	}
-	next
+        :instvar chat_id
+        if {[chat_room_exists_p $chat_id]} {
+            chat_room_get -room_id $chat_id -array c
+            set :login_messages_p  $c(login_messages_p)
+            set :logout_messages_p $c(logout_messages_p)
+            set :timewindow        $c(messages_time_window)
+        }
+        next
     }
 
     Chat instproc render {} {
@@ -103,38 +103,44 @@ namespace eval ::chat {
     # if chat doesn't exist anymore, send a message that will inform
     # the user of being looking at an invalid chat
     Chat instproc check_valid_room {} {
-	if {![chat_room_exists_p [:chat_id]]} {
-	    ns_return 500 text/plain "chat-errmsg: [_ chat.Room_not_found]"
-	    ad_script_abort
-	}
+        if {![chat_room_exists_p [:chat_id]]} {
+            ns_return 500 text/plain "chat-errmsg: [_ chat.Room_not_found]"
+            ad_script_abort
+        }
     }
 
     Chat instproc get_new {} {
-	:check_valid_room
-	next
+        :check_valid_room
+        next
     }
 
     Chat instproc add_msg {
-	{-get_new:boolean true}
-	{-uid ""}
-	msg
+        {-get_new:boolean true}
+        {-uid ""}
+        msg
     } {
-	if {![chat_room_exists_p [:chat_id]]} {
-	    return
-	}
+        if {![chat_room_exists_p [:chat_id]]} {
+            return
+        }
 
-	# ignore empty messages
-	if {$msg eq ""} return
+        # ignore empty messages
+        if {$msg eq ""} return
 
-	# code around expects the return value of the original method
-	set retval [next]
+        # code around expects the return value of the original method
+        set retval [next]
 
-	# This way messages can be persisted immediately every time a
-	# message is sent
-	if {[:current_message_valid]} {
-	    chat_message_post [:chat_id] [:user_id] $msg 1
-	}
+        # This way messages can be persisted immediately every time a
+        # message is sent
+        if {[:current_message_valid]} {
+            chat_message_post [:chat_id] [:user_id] $msg 1
+        }
 
-	return $retval
+        return $retval
     }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

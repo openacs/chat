@@ -645,3 +645,9 @@ ad_proc -private chat_room_flush {
         chat_room_message_delete $room_id
     }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

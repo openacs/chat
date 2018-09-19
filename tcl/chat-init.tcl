@@ -16,3 +16,9 @@ ad_schedule_proc -thread t -schedule_proc ns_schedule_daily [list 0 5] chat_flus
 ns_cache create chat_room_cache \
     -size 350000 \
     -timeout [expr {3600 * 24}]
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
