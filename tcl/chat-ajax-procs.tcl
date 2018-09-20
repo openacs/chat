@@ -21,26 +21,6 @@ namespace eval ::chat {
         next
     }
 
-    Chat instproc render {} {
-        :orderby time
-        set result ""
-        foreach child [:children] {
-            set msg       [$child msg]
-            set user_id   [$child user_id]
-            set color     [$child color]
-            set timelong  [clock format [$child time]]
-            set timeshort [clock format [$child time] -format {[%H:%M:%S]}]
-            set userlink  [:user_link -user_id $user_id -color $color]
-            append result "
-               <p class='line'>
-                 <span class='timestamp'>$timeshort</span>
-                 <span class='user'>$userlink:</span>
-                 <span class='message'>[:encode $msg]</span>
-               </p>"
-        }
-        return $result
-    }
-
     Chat proc login {-chat_id -package_id} {
         auth::require_login
         if {![info exists package_id]} {
