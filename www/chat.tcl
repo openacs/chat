@@ -8,8 +8,6 @@ ad_page_contract {
     @cvs-id $Id$
 } {
     room_id:naturalnum,notnull
-    {client "ajax"}
-    {message:html ""}
 } -properties {
     context:onevalue
     user_id:onevalue
@@ -55,24 +53,8 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     ad_script_abort
 }
 
-# Get chat screen name.
-set user_name [chat_user_name $user_id]
+template::head::add_css -href resources/chat.css
 
-# Determine which template to use for html or ajax client
-switch $client {
-    "html" {
-        set template_use "html-chat"
-        # forward to ajax if necessary
-        if { $message ne "" } {
-            set session_id [ad_conn session_id]
-            ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
-            c1 add_msg $message
-        }
-    }
-    "ajax" {
-        set template_use "ajax-chat-script"
-    }
-}
-
-ad_return_template $template_use
-
+set chat_frame [::chat::Chat login \
+                    -package_id [ad_conn package_id] \
+                    -chat_id    $room_id]

@@ -20,16 +20,9 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     ad_script_abort
 }
 
-# apisano: I don't think this code should be here anymore, as
-# message about user leaving the room is already issued by
-# the parent chat class in xotcl-core when we issue the logout
-# method	
-# chat_message_post $room_id $user_id "[_ chat.has_left_the_room]." "1"
-
 # send to AJAX
 set session_id [ad_conn session_id]
 ::chat::Chat c1 -volatile -chat_id $room_id -session_id $session_id
 c1 logout
 
 ad_returnredirect index
-#ad_returnredirect [dotlrn::get_url]

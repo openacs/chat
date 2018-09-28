@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+}
+
+#xowiki-chat-messages {
+    width: 74%;
+    height:100%;
+    overflow: auto;
+    float: left;
+    padding: 10px;
+    border: 1px black solid;
+    margin-right:1%;
+}
+
+#xowiki-chat-users {
+    width: 25%;
+    height:100%;
+    overflow: auto;
+    float: left;
+    padding: 10px;
+    border: 1px black solid;
+}
+
+/* Clear floats after the columns */
+#xowiki-chat {
+    height:257px;
+    margin-bottom: 1%;
+}
+
+/* Clear floats after the columns */
+#xowiki-chat:after {
+    content: "";
+    display: table;
+    clear: both;
+}

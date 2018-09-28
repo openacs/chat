@@ -18,27 +18,20 @@ set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 set actions [list]
 set room_create_p [permission::permission_p -object_id $package_id -privilege chat_room_create]
-set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 set warning ""
-
-if { $default_client eq "ajax" && ![apm_package_installed_p xotcl-core] } {
-    set warning "[_ chat.xotcl_missing]"
-}
 
 if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
-db_multirow -extend { active_users last_activity room_url room_html_url} rooms rooms_list {} {
+db_multirow -extend { active_users last_activity room_url} rooms rooms_list {} {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
 
     if { $active_p } {
-        set room_url [export_vars -base "room-enter" {room_id {client $default_client}}]
+        set room_url [export_vars -base "room-enter" {room_id}]
         set room_url [ns_quotehtml $room_url]
-        set room_html_url [export_vars -base "room-enter" {room_id {client html}}]
-        set room_html_url [ns_quotehtml $room_html_url]
     }
 }
 
@@ -67,7 +60,7 @@ list::create \
             label "#chat.Room_name#"
             display_template {
                 <if @rooms.active_p;literal@ true>
-                <a href="@rooms.room_url;noquote@">@rooms.pretty_name@</a>&nbsp;\[<a href="@rooms.room_html_url;noquote@">#chat.HTML_chat#</a>\]
+                <a href="@rooms.room_url;noquote@">@rooms.pretty_name@</a>
                 </if>
                 <else>
                 @rooms.pretty_name@
