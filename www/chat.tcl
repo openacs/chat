@@ -14,7 +14,7 @@ ad_page_contract {
     user_name:onevalue
     message:onevalue
     room_id:onevalue
-    room_name:onevalue 
+    room_name:onevalue
     width:onevalue
     height:onevalue
     host:onevalue
@@ -58,3 +58,9 @@ template::head::add_css -href resources/chat.css
 set chat_frame [::chat::Chat login \
                     -package_id [ad_conn package_id] \
                     -chat_id    $room_id]
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

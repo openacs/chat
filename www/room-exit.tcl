@@ -26,3 +26,9 @@ set session_id [ad_conn session_id]
 c1 logout
 
 ad_returnredirect index
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

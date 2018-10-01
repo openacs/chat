@@ -94,3 +94,9 @@ list::create \
 set doc(title) [_ chat.Chat_main_page]
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

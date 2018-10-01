@@ -18,7 +18,7 @@ if {$ban_p} {
   ad_script_abort
 }
 
-#ns_log notice "--chat m=$m session_id=$s [clock format [lindex [split $s .] 1] -format %H:%M:%S] mode=$mode" 
+#ns_log notice "--chat m=$m session_id=$s [clock format [lindex [split $s .] 1] -format %H:%M:%S] mode=$mode"
 ::chat::Chat create c1 -destroy_on_cleanup -chat_id $id -session_id $s -mode $mode
 switch -- $m {
   add_msg {
@@ -40,3 +40,9 @@ switch -- $m {
 #ns_log notice "--chat.tcl $m: returns '$_'"
 
 ns_return 200 text/html [subst {<HTML><body>$_</body></HTML>}]
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

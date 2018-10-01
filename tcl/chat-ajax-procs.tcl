@@ -12,7 +12,7 @@ namespace eval ::chat {
 
     Chat instproc initialize_nsvs {} {
         next
-        
+
         # read the last_activity information at server start into a nsv array
         ::xo::dc foreach get_rooms {
             select room_id, to_char(max(creation_date),'HH24:MI:SS YYYY-MM-DD') as last_activity

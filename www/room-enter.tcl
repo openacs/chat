@@ -25,3 +25,9 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) || ($active == "f") } {
 }
 
 ad_returnredirect "chat?room_id=$room_id"
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
