@@ -24,7 +24,7 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) || ($active == "f") } {
     ad_script_abort
 }
 
-ad_returnredirect "chat?room_id=$room_id"
+ad_returnredirect [export_vars -base "chat" {room_id}]
 
 # Local variables:
 #    mode: tcl
