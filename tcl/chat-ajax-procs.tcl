@@ -59,7 +59,7 @@ namespace eval ::chat {
         {-uid ""}
         msg
     } {
-        if {![chat_room_exists_p [:chat_id]]} {
+        if {![chat_room_exists_p ${:chat_id}]} {
             return
         }
 
@@ -72,7 +72,8 @@ namespace eval ::chat {
         # This way messages can be persisted immediately every time a
         # message is sent
         if {[:current_message_valid]} {
-            chat_message_post [:chat_id] [:user_id] $msg 1
+            set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
+            chat_message_post ${:chat_id} $uid $msg 1
         }
 
         return $retval
