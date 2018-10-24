@@ -7,151 +7,225 @@ ad_library {
     @cvs-id $Id$
 }
 
-# TODO: all the remaining Java stuff should fade away at some point,
-# its status is unknown and we won't be allowed to have binaries into
-# the core by distros.
+# All the remaining Java-related code is being faded out, as its
+# status is unknown (as in not working) and we won't be allowed to
+# have binaries into the core by distros.
 
-ad_proc -private chat_start_server {
-} {
-    Start Java chat server.
-} {
+# ad_proc -private chat_start_server {
+# } {
+#     Start Java chat server.
+# } {
 
-    if {[nsv_get chat server_started]} {
-        return
-    }
-    ns_log notice "chat_start_server: Starting chat server"
-    set port [parameter::get -parameter ServerPort]
-    set path "ns/server/[ns_info server]/module/nssock"
-    set host_location "[ns_config $path Address]"
+#     if {[nsv_get chat server_started]} {
+#         return
+#     }
+#     ns_log notice "chat_start_server: Starting chat server"
+#     set port [parameter::get -parameter ServerPort]
+#     set path "ns/server/[ns_info server]/module/nssock"
+#     set host_location "[ns_config $path Address]"
 
-    exec java -classpath [acs_root_dir]/packages/chat/java adChatServer start $port &
+#     exec java -classpath [acs_root_dir]/packages/chat/java adChatServer start $port &
 
-    set done 0
+#     set done 0
 
-    # Wait until chat server started before spawning new threads connecting to the server.
-    while { $done == 0} {
-        if {[catch {set fds [ns_sockopen -nonblock $host_location $port]} errmsg]} {
-            set done 0
-        } else {
-            set done 1
-        }
-    }
+#     # Wait until chat server started before spawning new threads connecting to the server.
+#     while { $done == 0} {
+#         if {[catch {set fds [ns_sockopen -nonblock $host_location $port]} errmsg]} {
+#             set done 0
+#         } else {
+#             set done 1
+#         }
+#     }
 
-    # Free up resources.
-    lassign $fds r w
+#     # Free up resources.
+#     lassign $fds r w
 
-    close $r
-    close $w
-    ns_thread begindetached "chat_broadcast_to_applets $host_location $port"
-    ns_thread begindetached "chat_receive_from_server $host_location $port"
+#     close $r
+#     close $w
+#     ns_thread begindetached "chat_broadcast_to_applets $host_location $port"
+#     ns_thread begindetached "chat_receive_from_server $host_location $port"
 
-    ns_log notice "chat_start_server: Chat server started."
-    nsv_set chat server_started 1
-}
+#     ns_log notice "chat_start_server: Chat server started."
+#     nsv_set chat server_started 1
+# }
 
-ad_proc -private chat_broadcast_to_applets {
-    host
-    port
-} {
-    Broadcast chat message from HTML client to Java server.
-} {
+# ad_proc -private chat_broadcast_to_applets {
+#     host
+#     port
+# } {
+#     Broadcast chat message from HTML client to Java server.
+# } {
 
-    # Chat server must already started otherwise error will occur.
-    set fds [ns_sockopen -nonblock $host $port]
+#     # Chat server must already started otherwise error will occur.
+#     set fds [ns_sockopen -nonblock $host $port]
 
-    lassign $fds r w
+#     lassign $fds r w
 
-    ns_log Notice "chat_broadcast_to_applets: Ready to broadcast message to applets."
-    ns_log Notice $host
-    ns_log Notice $port
+#     ns_log Notice "chat_broadcast_to_applets: Ready to broadcast message to applets."
+#     ns_log Notice $host
+#     ns_log Notice $port
 
-    # Register to java chat server.
-    puts $w "<login><user_id>-1</user_id><user_name>AOL_WRITER</user_name><pw>T</pw><room_id>-1</room_id></login>"
-    flush $w
+#     # Register to java chat server.
+#     puts $w "<login><user_id>-1</user_id><user_name>AOL_WRITER</user_name><pw>T</pw><room_id>-1</room_id></login>"
+#     flush $w
 
-    while { 1 } {
-    # Wait until there is new message in queue.
-        ns_mutex lock [nsv_get chat new_message]
-        if {[nsv_exists chat html_message]} {
-        # Get message from queue.
-            puts $w [nsv_get chat html_message]
-            flush $w
-        }
-    }
-}
+#     while { 1 } {
+#     # Wait until there is new message in queue.
+#         ns_mutex lock [nsv_get chat new_message]
+#         if {[nsv_exists chat html_message]} {
+#         # Get message from queue.
+#             puts $w [nsv_get chat html_message]
+#             flush $w
+#         }
+#     }
+# }
 
-ad_proc -private chat_receive_from_server {
-    host
-    port
-} {
-    Receive messages from Java clients.
-} {
+# ad_proc -private chat_receive_from_server {
+#     host
+#     port
+# } {
+#     Receive messages from Java clients.
+# } {
 
-    set fds [ns_sockopen -nonblock $host $port]
+#     set fds [ns_sockopen -nonblock $host $port]
 
-    lassign $fds r w
-    set r_fd [list $r]
+#     lassign $fds r w
+#     set r_fd [list $r]
 
-    ns_log Notice "chat_receive_from_server: Listening for messages from applets."
+#     ns_log Notice "chat_receive_from_server: Listening for messages from applets."
 
-    puts $w "
-    <login>
-    <user_id>-1</user_id>
-    <user_name>AOL_READER</user_name>
-    <pw>T</pw>
-    <room_id>-1</room_id>
-    </login>"
-    flush $w
+#     puts $w "
+#     <login>
+#     <user_id>-1</user_id>
+#     <user_name>AOL_READER</user_name>
+#     <pw>T</pw>
+#     <room_id>-1</room_id>
+#     </login>"
+#     flush $w
 
-    set running 1
+#     set running 1
 
-    while { $running } {
-        set sel [ns_sockselect $r_fd {} {}]
-        set rfds [lindex $sel 0]
+#     while { $running } {
+#         set sel [ns_sockselect $r_fd {} {}]
+#         set rfds [lindex $sel 0]
 
-        foreach r $rfds {
+#         foreach r $rfds {
 
-            if {[ns_sockcheck $r] && [set line [string trim [gets $r]]] != ""} {
+#             if {[ns_sockcheck $r] && [set line [string trim [gets $r]]] != ""} {
 
-                regexp "<room_id>(.*)</room_id>" $line match room_id
-                regexp "<from>(.*)</from>" $line match screen_name
-                regexp "<body>(.*)</body>" $line match msg
-                regexp "<from_user_id>(.*)</from_user_id>" $line match user_id
-                if {![nsv_exists chat_room $room_id]} {
-                    nsv_set chat_room $room_id {}
-                }
+#                 regexp "<room_id>(.*)</room_id>" $line match room_id
+#                 regexp "<from>(.*)</from>" $line match screen_name
+#                 regexp "<body>(.*)</body>" $line match msg
+#                 regexp "<from_user_id>(.*)</from_user_id>" $line match user_id
+#                 if {![nsv_exists chat_room $room_id]} {
+#                     nsv_set chat_room $room_id {}
+#                 }
 
-                ::chat::Chat c1 -volatile -chat_id $room_id -user_id $user_id -session_id 0
-                switch $msg {
-                    "/enter" {
-                        c1 login
-                    }
-                    "/leave" {
-                        c1 logout
-                    }
-                    default {
-                        c1 add_msg -uid $user_id $msg
-                    }
-                }
+#                 ::chat::Chat c1 -volatile -chat_id $room_id -user_id $user_id -session_id 0
+#                 switch $msg {
+#                     "/enter" {
+#                         c1 login
+#                     }
+#                     "/leave" {
+#                         c1 logout
+#                     }
+#                     default {
+#                         c1 add_msg -uid $user_id $msg
+#                     }
+#                 }
 
-                chat_room_get -room_id $room_id -array room_info
-                if { $room_info(archive_p) == "t" } {
-                    if {[catch {
-                        chat_post_message_to_db \
-                            -creation_user $user_id $room_id $msg
-                    } errmsg]} {
-                        ad_log error "chat_post_message_to_db: error: $errmsg"
-                    }
-                }
+#                 chat_room_get -room_id $room_id -array room_info
+#                 if { $room_info(archive_p) == "t" } {
+#                     if {[catch {
+#                         chat_post_message_to_db \
+#                             -creation_user $user_id $room_id $msg
+#                     } errmsg]} {
+#                         ad_log error "chat_post_message_to_db: error: $errmsg"
+#                     }
+#                 }
 
-                nsv_lappend chat_room $room_id $line
+#                 nsv_lappend chat_room $room_id $line
 
-            } else {
-                set running 0
-            }
-        }
-    }
-}
+#             } else {
+#                 set running 0
+#             }
+#         }
+#     }
+# }
+
+
+# ad_proc -public chat_moderate_message_post {
+#     room_id
+#     user_id
+#     message
+# } {
+#     Post moderate message to the chat room and broadcast to all applet clients. Only use by HTML client.
+# } {
+#     set chat_msg "
+#     <message>
+#     <from>[chat_user_name $user_id]</from>
+#     <from_user_id>$user_id</from_user_id>
+#     <room_id>$room_id</room_id>
+#     <body>$message</body>
+#     <status>pending</status>
+#     </message>"
+
+#     # Add message to queue. Notify thread responsible for broadcast message to applets.
+#     nsv_set chat html_message $chat_msg
+#     ns_mutex unlock [nsv_get chat new_message]
+# }
+
+# ad_proc -public chat_message_retrieve {
+#     msgs
+#     room_id
+#     user_id
+# } {
+#     Retrieve all messages from the chat room starting from
+#     first_msg_id. Return messages are store in multirow format.
+# } {
+#     ns_log debug "chat_message_retrieve: starting message retrieve"
+
+#     # The first time html client enter chat room, chat_room variable
+#     # is not initialize correctly.  Therefore I just hard code the
+#     # variable.
+#     if {![nsv_exists chat_room $room_id]} {
+#         nsv_set chat_room $room_id {}
+#     }
+
+#     set user_name [chat_user_name $user_id]
+
+#     upvar "$msgs:rowcount" counter
+
+#     set chat_messages [nsv_get chat_room $room_id]
+
+#     set count [llength $chat_messages]
+
+#     set cnt $count
+#     set counter 0
+
+#     #foreach msg $chat_messages
+#     for { set i [expr {$cnt - 1}] } { $i >= 0 } { incr i -1 } {
+#         set msg [lindex $chat_messages $i]
+#         regexp "<from>(.*)</from>" $msg match screen_name
+#         regexp "<body>(.*)</body>" $msg match chat_msg
+#         regexp "<status>(.*)</status>" $msg match status
+
+#         if {$status in {"pending" "rejected"}} {
+#             continue
+#         }
+
+#         upvar "$msgs:[expr {$counter + 1}]" array_val
+
+#         set array_val(screen_name) $screen_name
+#         set array_val(chat_msg) $chat_msg
+#         incr counter
+#         set array_val(rownum) $counter
+
+#         if {$screen_name == $user_name && $chat_msg eq "has entered the room."} {
+#             return
+#         }
+#     }
+# }
 
 ad_proc -private chat_post_message_to_db {
     {-creation_user ""}
@@ -478,79 +552,6 @@ ad_proc -public chat_message_post {
     # write message to the database
     if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
         ns_log error "chat_post_message_to_db: error: $errmsg"
-    }
-}
-
-ad_proc -public chat_moderate_message_post {
-    room_id
-    user_id
-    message
-} {
-    Post moderate message to the chat room and broadcast to all applet clients. Only use by HTML client.
-} {
-    set chat_msg "
-    <message>
-    <from>[chat_user_name $user_id]</from>
-    <from_user_id>$user_id</from_user_id>
-    <room_id>$room_id</room_id>
-    <body>$message</body>
-    <status>pending</status>
-    </message>"
-
-    # Add message to queue. Notify thread responsible for broadcast message to applets.
-    nsv_set chat html_message $chat_msg
-    ns_mutex unlock [nsv_get chat new_message]
-}
-
-ad_proc -public chat_message_retrieve {
-    msgs
-    room_id
-    user_id
-} {
-    Retrieve all messages from the chat room starting from
-    first_msg_id. Return messages are store in multirow format.
-} {
-    ns_log debug "chat_message_retrieve: starting message retrieve"
-
-    # The first time html client enter chat room, chat_room variable
-    # is not initialize correctly.  Therefore I just hard code the
-    # variable.
-    if {![nsv_exists chat_room $room_id]} {
-        nsv_set chat_room $room_id {}
-    }
-
-    set user_name [chat_user_name $user_id]
-
-    upvar "$msgs:rowcount" counter
-
-    set chat_messages [nsv_get chat_room $room_id]
-
-    set count [llength $chat_messages]
-
-    set cnt $count
-    set counter 0
-
-    #foreach msg $chat_messages
-    for { set i [expr {$cnt - 1}] } { $i >= 0 } { incr i -1 } {
-        set msg [lindex $chat_messages $i]
-        regexp "<from>(.*)</from>" $msg match screen_name
-        regexp "<body>(.*)</body>" $msg match chat_msg
-        regexp "<status>(.*)</status>" $msg match status
-
-        if {$status in {"pending" "rejected"}} {
-            continue
-        }
-
-        upvar "$msgs:[expr {$counter + 1}]" array_val
-
-        set array_val(screen_name) $screen_name
-        set array_val(chat_msg) $chat_msg
-        incr counter
-        set array_val(rownum) $counter
-
-        if {$screen_name == $user_name && $chat_msg eq "has entered the room."} {
-            return
-        }
     }
 }
 
