@@ -10,6 +10,14 @@ ad_library {
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
+    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
+        if {$package_id eq "" && [chat_room_exists_p $chat_id]} {
+            chat_room_get -room_id $chat_id -array c
+            set package_id $c(context_id)
+        }
+        next -chat_id $chat_id -package_id $package_id -mode $mode -path $path
+    }
+
     Chat instproc initialize_nsvs {} {
         next
 

@@ -264,6 +264,7 @@ ad_proc -private chat_room_get_not_cached {
     acs_object::get \
         -object_id $room_id \
         -array obj
+    set row(context_id)     $obj(context_id)
     set row(creation_user)  $obj(creation_user)
     set row(creation_date)  $obj(creation_date_ansi)
     set row(creation_ip)    $obj(creation_ip)

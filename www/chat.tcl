@@ -56,7 +56,6 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
 template::head::add_css -href resources/chat.css
 
 set chat_frame [::chat::Chat login \
-                    -package_id [ad_conn package_id] \
                     -chat_id    $room_id]
 
 # Local variables:
