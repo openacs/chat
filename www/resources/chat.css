@@ -9,6 +9,7 @@
     padding: 10px;
     border: 1px black solid;
     margin-right:1%;
+    overflow: auto;
 }
 
 #xowiki-chat-users {
@@ -17,6 +18,7 @@
     float: left;
     padding: 10px;
     border: 1px black solid;
+    overflow: auto;
 }
 
 /* Clear floats after the columns */
@@ -24,7 +26,7 @@
     height:257px;
     margin-bottom: 1%;
     resize: both;
-    overflow: auto;
+    overflow: hidden;
 }
 
 /* Clear floats after the columns */
@@ -33,5 +35,5 @@
     display: table;
     clear: both;
     resize: both;
-    overflow: auto;
+    overflow: hidden;
 }
