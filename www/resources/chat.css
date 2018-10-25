@@ -25,6 +25,8 @@
 #xowiki-chat {
     height:257px;
     margin-bottom: 1%;
+    resize: both;
+    overflow: auto;
 }
 
 /* Clear floats after the columns */
@@ -32,4 +34,6 @@
     content: "";
     display: table;
     clear: both;
+    resize: both;
+    overflow: auto;
 }
