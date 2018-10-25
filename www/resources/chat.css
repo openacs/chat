@@ -5,7 +5,6 @@
 #xowiki-chat-messages {
     width: 74%;
     height:100%;
-    overflow: auto;
     float: left;
     padding: 10px;
     border: 1px black solid;
@@ -15,7 +14,6 @@
 #xowiki-chat-users {
     width: 25%;
     height:100%;
-    overflow: auto;
     float: left;
     padding: 10px;
     border: 1px black solid;
