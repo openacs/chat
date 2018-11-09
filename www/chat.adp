@@ -3,10 +3,14 @@
 <property name="&doc">doc</property>
 <property name="focus">ichat_form.msg</property>
 
+<span id="my-user-id" hidden>@user_id@</span>
+
 <h1>@doc.title@</h1>
 <p>
-<a href="room-exit?room_id=@room_id@" class="button" title="#chat.exit_msg#">#chat.Log_off#</a> 
-<a href="chat-transcript?room_id=@room_id@" class="button" title="#chat.transcription_msg#">#chat.Transcript#</a>
+    <a href="room-exit?room_id=@room_id@" class="button" title="#chat.exit_msg#">#chat.Log_off#</a> 
+    <a href="chat-transcript?room_id=@room_id@" class="button" title="#chat.transcription_msg#">#chat.Transcript#</a>
 </p>
 
-@chat_frame;noquote@
+<div id="xowiki-chat-container">
+    @chat_frame;noquote@
+</div>

@@ -2,58 +2,151 @@
     box-sizing: border-box;
 }
 
-#xowiki-chat-messages {
-    width: 74%;
-    height:100%;
-    float: left;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-right:1%;
-    overflow: auto;
-}
-
-#xowiki-chat-users {
-    width: 25%;
-    height:100%;
-    float: left;
-    padding: 10px;
-    border: 1px solid #ddd;
-    overflow: auto;
-}
-
-/* Clear floats after the columns */
-#xowiki-chat {
+/* Chat container */
+#xowiki-chat-container {
     height: 70vh;
+    width: 100%;
+}
+
+/* Users and messages container */
+#xowiki-chat {
+    height: 100%;
     width: 100%;
     margin-bottom: 1%;
     overflow: hidden;
+    display: flex;
+    background-color: white;
 }
 
-/* Clear floats after the columns */
-#xowiki-chat:after {
-    content: "";
-    display: table;
-    clear: both;
-    overflow: hidden;
+/* Users block */
+#xowiki-chat-users {
+    border: 1px solid #ddd;
+    border-left: none;
+    overflow: auto;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    min-width: 240px;
 }
 
-#xowiki-chat-send {
+#xowiki-chat-users .xowiki-chat-user-link {
+    text-decoration: none;
+}
+
+#xowiki-chat-users .xowiki-chat-user-block {
+    padding: 18px 10px 18px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+#xowiki-chat-users .xowiki-chat-user-block:hover {
+    background-color: rgb(235,235,235);
+}
+
+#xowiki-chat-users .xowiki-chat-user {
+    font-weight: bold;
+}
+
+#xowiki-chat-users .xowiki-chat-timestamp {
+    color: rgb(152,152,152);
+    float: right;
+    padding-left: 4px;
+}
+
+/* Messages block */
+#xowiki-chat-messages-and-form {
+    width: 100%;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    order: 1;
+    justify-content: flex-end;
+}
+
+#xowiki-chat-messages {
+    padding: 10px;
+    height: 100%;
+    overflow: auto;
+    order: 1;
+}
+
+#xowiki-chat-messages .xowiki-chat-user-block {
+    float: left;
+}
+
+#xowiki-chat-messages .xowiki-chat-user-block-me {
+    float: left;
+}
+
+#xowiki-chat-messages .xowiki-chat-user {
+    white-space: nowrap;
+}
+
+#xowiki-chat-messages .xowiki-chat-message {
+    padding: 10px;
+}
+
+#xowiki-chat-messages .xowiki-chat-message-me {
+    padding: 10px;
+}
+
+#xowiki-chat-messages .xowiki-chat-timestamp {
+    color: rgb(152,152,152);
+    float: right;
+}
+
+#xowiki-chat-messages .xowiki-chat-timestamp-me {
+    /* color: yellow; */
+    color: rgb(152,152,152);
+    float: right;
+    /* font-size: 65%; */
+}
+
+/* Send form */
+#xowiki-chat-messages-form-block {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 5px;
+    border-top: 1px solid #ddd;
+    padding: 10px 10px 10px 10px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    order: 2;
+}
+
+#xowiki-chat-messages-form {
     width: 100%;
 }
 
+#xowiki-chat-send {
+    /* font-size: 24px; */
+    height: 48px;
+    width: 100%;
+    padding-left: 10px;
+    border: 0;
+    outline: none;
+    background-color: #eceff1;
+    border-radius: 8px;
+}
+
 /* Responsive design */
-@media (max-width: 780px) {
+@media (max-width: 1000px) {
     #xowiki-chat {
-        display: flex;
         flex-direction: column;
     }
     #xowiki-chat-users {
-        width: 100%;
-        height: 20%;
         order: 1;
-        margin-bottom: 1%;
+        border-left: 1px solid #ddd;
+        border-bottom: none;
+        flex-direction: row;
+        overflow-x: auto;
     }
-    #xowiki-chat-messages {
+    #xowiki-chat-users .xowiki-chat-user-block {
+        border-right: 1px solid #ddd;
+        border-bottom: none;
+        min-width: 240px;
+    }
+    #xowiki-chat-messages-and-form {
         width: 100%;
         height: 80%;
         order: 2;
