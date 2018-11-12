@@ -6,6 +6,7 @@
 #xowiki-chat-container {
     height: 70vh;
     width: 100%;
+    position: relative;
 }
 
 /* Users and messages container */
@@ -16,6 +17,21 @@
     overflow: hidden;
     display: flex;
     background-color: white;
+}
+
+#xowiki-chat-fs {
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    background-color: white;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    zIndex: 999;
 }
 
 /* Users block */
@@ -129,9 +145,30 @@
     border-radius: 8px;
 }
 
+/* Full screen trigger */
+.xowiki-chat-trigger-fs-block {
+    padding: 10px;
+}
+
+.xowiki-chat-trigger-fs-link {
+    text-decoration: none;
+}
+
+.xowiki-chat-trigger-fs-link:hover {
+    text-decoration: none !important;
+}
+
+.xowiki-chat-trigger-fs-pic:hover {
+    background-color: white;
+    border: 1px solid white;
+}
+
 /* Responsive design */
 @media (max-width: 1000px) {
     #xowiki-chat {
+        flex-direction: column;
+    }
+    #xowiki-chat-fs {
         flex-direction: column;
     }
     #xowiki-chat-users {
