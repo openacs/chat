@@ -57,14 +57,25 @@
     background-color: rgb(235,235,235);
 }
 
+#xowiki-chat-users .xowiki-chat-user-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid;
+    padding: 3px;
+    margin-right: 15px;
+}
+
+#xowiki-chat-users .xowiki-chat-user-pic-wrap {
+    float: left;
+}
+
 #xowiki-chat-users .xowiki-chat-user {
     font-weight: bold;
 }
 
 #xowiki-chat-users .xowiki-chat-timestamp {
     color: rgb(152,152,152);
-    float: right;
-    padding-left: 4px;
 }
 
 /* Messages block */
