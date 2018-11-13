@@ -25,7 +25,6 @@
     overflow: hidden;
     display: flex;
     background-color: white;
-
     position: fixed;
     top: 0;
     right: 0;
@@ -170,6 +169,7 @@
     }
     #xowiki-chat-fs {
         flex-direction: column;
+        height: 100%;
     }
     #xowiki-chat-users {
         order: 1;
@@ -185,7 +185,7 @@
     }
     #xowiki-chat-messages-and-form {
         width: 100%;
-        height: 80%;
         order: 2;
+        flex: 1 1 auto;
     }
 }
