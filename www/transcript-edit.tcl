@@ -49,4 +49,5 @@ ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]
         ad_script_abort
     }
     ad_returnredirect "chat-transcript?transcript_id=$transcript_id&room_id=$room_id"    
+    ad_script_abort
 }
