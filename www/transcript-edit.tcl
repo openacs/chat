@@ -8,7 +8,7 @@ ad_page_contract {
 } {
     transcript_id:naturalnum,notnull
     room_id:naturalnum,notnull
-} 
+}
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_edit
 set context_bar [list "[_ chat.Edit_transcript]"]
@@ -25,10 +25,10 @@ db_1row get_transcript_info {
 ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]] -has_edit 1 -form {
     {room_id:integer(hidden)
         {value $room_id}
-    }    
+    }
     {transcript_id:integer(hidden)
         {value $transcript_id}
-    }    
+    }
     {pretty_name:text(text)
         {label "#chat.Transcript_name#" }
         {value $pretty_name}
@@ -48,6 +48,6 @@ ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]
         ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
         ad_script_abort
     }
-    ad_returnredirect "chat-transcript?transcript_id=$transcript_id&room_id=$room_id"    
+    ad_returnredirect "chat-transcript?transcript_id=$transcript_id&room_id=$room_id"
     ad_script_abort
 }
