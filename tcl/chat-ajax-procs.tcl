@@ -21,7 +21,6 @@ namespace eval ::xowiki::includelet {
 
   chat_room instproc render {} {
       :get_parameters
-      template::head::add_css -href /chat/resources/chat.css
       return [::chat::Chat login \
                   -chat_id $chat_id \
                   -mode    $mode \
