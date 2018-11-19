@@ -7,11 +7,36 @@ ad_library {
     @cvs-id $Id$
 }
 
+namespace eval ::xowiki::includelet {
+
+  ::xowiki::IncludeletClass create chat_room \
+      -superclass ::xowiki::Includelet \
+      -parameter {
+        {parameter_declaration {
+          {-chat_id}
+          {-mode:optional ""}
+          {-path:optional ""}
+        }}
+      }
+
+  chat_room instproc render {} {
+      :get_parameters
+      template::head::add_css -href /chat/resources/chat.css
+      return [::chat::Chat login \
+                  -chat_id $chat_id \
+                  -mode    $mode \
+                  -path    $path]
+  }
+
+}
+
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
     Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
-        if {$package_id eq "" && [chat_room_exists_p $chat_id]} {
+        if {![chat_room_exists_p $chat_id]} {
+            return [_ chat.Room_not_found]
+        } else {
             chat_room_get -room_id $chat_id -array c
             set package_id $c(context_id)
         }
