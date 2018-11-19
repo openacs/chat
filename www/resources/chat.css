@@ -173,6 +173,14 @@
     border: 1px solid white;
 }
 
+.xowiki-chat-trigger-fs-pic-on {
+    fill: #b3b3b3;
+}
+
+.xowiki-chat-trigger-fs-pic-off {
+    fill: #b3b3b3;
+}
+
 /* Responsive design */
 @media (max-width: 1000px) {
     #xowiki-chat {
