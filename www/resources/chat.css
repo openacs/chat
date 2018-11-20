@@ -155,18 +155,17 @@
     outline: none;
     background-color: #eceff1;
     border-radius: 8px;
-    padding-right: 50px;
+    padding-right: 45px;
 }
 
 #xowiki-chat-send-button {
     cursor: pointer;
-    height: 38px;
-    width: 38px;
+    height: 35px;
+    width: 35px;
     border-radius: 50%;
-    padding-left: 3px;
     border: 0;
-    margin-left: -50px;
-    margin-right: 20px;
+    margin-left: -40px;
+    margin-right: 15px;
     background: #05728f none repeat scroll 0 0;
 }
 
@@ -174,12 +173,9 @@
     background: #05958f none repeat scroll 0 0;
 }
 
-#xowiki-chat-messages-form-send-pic-in {
-    fill-rule: "evenodd";
-    fill: white;
-}
-
-#xowiki-chat-messages-form-send-pic-out {
+#xowiki-chat-messages-send-pic {
+    display: block;
+    margin: auto;
     stroke: white;
     fill: none;
 }
