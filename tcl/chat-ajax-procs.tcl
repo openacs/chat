@@ -55,6 +55,11 @@ namespace eval ::chat {
     }
 
     Chat instproc init {} {
+        set ban_p [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]
+        if {$ban_p} {
+            ad_return_forbidden
+            ad_script_abort
+        }
         if {[chat_room_exists_p ${:chat_id}]} {
             chat_room_get -room_id ${:chat_id} -array c
             set :login_messages_p  $c(login_messages_p)
