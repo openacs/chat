@@ -181,29 +181,15 @@
 }
 
 /* Full screen trigger */
-.xowiki-chat-trigger-fs-block {
-    padding: 10px;
-}
-
-.xowiki-chat-trigger-fs-link {
-    text-decoration: none;
-}
-
-.xowiki-chat-trigger-fs-link:hover {
-    text-decoration: none !important;
+.xowiki-chat-trigger-fs-pic {
+    width: 40px;
+    height: 40px;
+    fill: #b3b3b3;
 }
 
 .xowiki-chat-trigger-fs-pic:hover {
     background-color: white;
     border: 1px solid white;
-}
-
-.xowiki-chat-trigger-fs-pic-on {
-    fill: #b3b3b3;
-}
-
-.xowiki-chat-trigger-fs-pic-off {
-    fill: #b3b3b3;
 }
 
 /* Responsive design */
