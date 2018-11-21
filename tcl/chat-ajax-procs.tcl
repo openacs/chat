@@ -37,9 +37,15 @@ namespace eval ::chat {
             return [_ chat.Room_not_found]
         } else {
             chat_room_get -room_id $chat_id -array c
-            set package_id $c(context_id)
+            next \
+                -chat_id $chat_id \
+                -package_id $c(context_id) \
+                -mode $mode \
+                -path $path \
+                -login_messages_p $c(login_messages_p) \
+                -logout_messages_p $c(logout_messages_p) \
+                -timewindow $c(messages_time_window)
         }
-        next -chat_id $chat_id -package_id $package_id -mode $mode -path $path
     }
 
     Chat instproc initialize_nsvs {} {
@@ -59,12 +65,6 @@ namespace eval ::chat {
         if {$ban_p} {
             ad_return_forbidden
             ad_script_abort
-        }
-        if {[chat_room_exists_p ${:chat_id}]} {
-            chat_room_get -room_id ${:chat_id} -array c
-            set :login_messages_p  $c(login_messages_p)
-            set :logout_messages_p $c(logout_messages_p)
-            set :timewindow        $c(messages_time_window)
         }
         next
     }
