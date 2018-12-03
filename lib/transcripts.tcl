@@ -9,7 +9,12 @@ db_multirow -extend {
     viewer
     transcript_url
     delete_url
-} chat_transcripts list_transcripts {} {
+} chat_transcripts list_transcripts {
+   select ct.transcript_id, ct.pretty_name, ao.creation_date
+    from chat_transcripts ct, acs_objects ao
+    where ct.transcript_id = ao.object_id and ct.room_id = :room_id
+    order by ao.creation_date desc
+} {
     set creation_date_pretty [lc_time_fmt $creation_date "%q %X"]
     set transcript_url [export_vars -base "chat-transcript" {room_id transcript_id}]
     set delete_url [export_vars -base "transcript-delete" {room_id transcript_id}]
