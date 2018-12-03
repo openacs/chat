@@ -12,7 +12,8 @@ set sql {
 }
 
 db_multirow -extend { person_name } messages select_msg_itens $sql {
-    if { [catch { set person_name [chat_user_name $creation_user] }] } {
+    set person_name [chat_user_name $creation_user]
+    if {$person_name eq ""} {
         set person_name "Unknown"
     }
 }
