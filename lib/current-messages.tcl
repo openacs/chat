@@ -1,3 +1,8 @@
+ad_include_contract {
+    This include displays currently persisted chat room messages
+} {
+    room_id:naturalnum
+}
 
 set sql {
     select to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date, creation_user, msg 
