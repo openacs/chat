@@ -21,10 +21,14 @@ namespace eval ::xowiki::includelet {
 
   chat_room instproc render {} {
       :get_parameters
-      return [::chat::Chat login \
+      set html [subst {
+        <div id='xowiki-chat-includelet'>
+            [::chat::Chat login \
                   -chat_id $chat_id \
                   -mode    $mode \
                   -path    $path]
+        </div>
+      }]
   }
 
 }
@@ -32,14 +36,16 @@ namespace eval ::xowiki::includelet {
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
-    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""} {-skin ""}} {
+    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
         if {![chat_room_exists_p $chat_id]} {
             return [_ chat.Room_not_found]
         } else {
             chat_room_get -room_id $chat_id -array c
+            set package_id $c(context_id)
+            set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
             next -chat_id $chat_id \
-                -skin $skin \
-                -package_id $c(context_id) \
+                -skin $chat_skin \
+                -package_id $package_id \
                 -mode $mode \
                 -path $path \
                 -logout_messages_p $c(logout_messages_p) \
