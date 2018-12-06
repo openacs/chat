@@ -32,12 +32,13 @@ namespace eval ::xowiki::includelet {
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
-    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
+    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""} {-skin ""}} {
         if {![chat_room_exists_p $chat_id]} {
             return [_ chat.Room_not_found]
         } else {
             chat_room_get -room_id $chat_id -array c
             next -chat_id $chat_id \
+                -skin $skin \
                 -package_id $c(context_id) \
                 -mode $mode \
                 -path $path \

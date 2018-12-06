@@ -53,7 +53,10 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     ad_script_abort
 }
 
+set chat_skin [parameter::get -parameter ChatSkin]
+
 set chat_frame [::chat::Chat login \
+                    -skin $chat_skin \
                     -chat_id $room_id]
 
 # Local variables:
