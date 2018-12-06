@@ -25,11 +25,6 @@ Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of genera
         <callbacks>
         </callbacks>
         <parameters>
-            <parameter scope="instance" datatype="number"  min_n_values="1"  max_n_values="1"  name="AppletHeight"  default="500" description="Height of the applet"/>
-            <parameter scope="instance" datatype="number"  min_n_values="1"  max_n_values="1"  name="AppletWidth"  default="700" description="width of the applet"/>
-            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="DefaultClient"  default="ajax" description="Default client interface to use"/>
-            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ServerHost"  description="Chat server host"/>
-            <parameter scope="instance" datatype="number"  min_n_values="1"  max_n_values="1"  name="ServerPort"  default="8200" description="Listening for chat connection on this port"/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to user names in the chat"/>
             <parameter scope="global" datatype="string"  min_n_values="1"  max_n_values="1"  name="LinkRegex"  default="(https?:\\/\\/[^\\s]+)" description="Regular expression to detect URLs in chat messages, creating html links accordingly. By default, it matches any string starting with http:// or https://. Please notice the backslash double escaping."/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ChatSkin"  default="bubbles" description="Chat skin. Current options are 'classic' and 'bubbles'."/>
