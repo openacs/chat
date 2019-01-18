@@ -1,6 +1,6 @@
 #/chat/www/user-unban.tcl
 ad_page_contract {
-    
+
     Display confirmation before unban user.
 
     @author David Dao (ddao@arsdigita.com)
@@ -20,3 +20,8 @@ set party_pretty_name [acs_object_name $party_id]
 
 set pretty_name [chat_room_name $room_id]
 
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 2
+#    indent-tabs-mode: nil
+# End:

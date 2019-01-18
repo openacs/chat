@@ -8,7 +8,7 @@ ad_page_contract {
     {delete_messages:optional "off"}
     {deactivate_room:optional "off"}
     contents:trim,notnull,html
-} 
+}
 
 permission::require_permission -object_id $room_id -privilege chat_transcript_create
 
@@ -36,3 +36,8 @@ if { $deactivate_room eq "on" } {
 
 ad_returnredirect "chat-transcript?room_id=$room_id&transcript_id=$transcript_id"
 
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

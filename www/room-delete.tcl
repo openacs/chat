@@ -20,3 +20,9 @@ set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"]
 set pretty_name [chat_room_name $room_id]
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -28,3 +28,8 @@ db_multirow parties list_parties {}
 
 ad_return_template grant-entry
 
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

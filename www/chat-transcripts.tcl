@@ -6,7 +6,7 @@ ad_page_contract {
     @creation-date March 26, 2006
 } {
     room_id:naturalnum,notnull
-} 
+}
 
 if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
@@ -15,3 +15,8 @@ if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
 
 set active [room_active_status $room_id]
 
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 2
+#    indent-tabs-mode: nil
+# End:

@@ -22,3 +22,9 @@ if { [catch {chat_transcript_edit $transcript_id $transcript_name $description $
 
 ad_returnredirect "transcript-view?transcript_id=$transcript_id&room_id=$room_id"
 ad_script_abort
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

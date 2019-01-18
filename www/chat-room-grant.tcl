@@ -1,5 +1,5 @@
 ad_page_contract {
-    
+
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 16, 2000
     @cvs-id $Id$
@@ -39,3 +39,8 @@ doc_body_append "
 
 [ad_footer]
 "
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 2
+#    indent-tabs-mode: nil
+# End:

@@ -24,30 +24,36 @@ db_1row get_transcript_info {
 
 ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]] -has_edit 1 -form {
     {room_id:integer(hidden)
-	{value $room_id}
+        {value $room_id}
     }
     {transcript_id:integer(hidden)
-	{value $transcript_id}
+        {value $transcript_id}
     }
     {pretty_name:text(text)
-	{label "#chat.Transcript_name#" }
-	{value $pretty_name}
+        {label "#chat.Transcript_name#" }
+        {value $pretty_name}
     }
     {description:text(textarea),optional
-	{label "#chat.Description#" }
-	{html {rows 6 cols 65}}
-	{value $description}
+        {label "#chat.Description#" }
+        {html {rows 6 cols 65}}
+        {value $description}
     }
     {contents:text(textarea)
-	{label "#chat.Transcript#" }
-	{html {rows 6 cols 65}}
-	{value $contents}
+        {label "#chat.Transcript#" }
+        {html {rows 6 cols 65}}
+        {value $contents}
     }
 } -on_submit {
     if { [catch {chat_transcript_edit $transcript_id $pretty_name $description $contents} errmsg] } {
-	ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
+        ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
     } else {
-	ad_returnredirect [export_vars -base "chat-transcript" {transcript_id room_id}]
+        ad_returnredirect [export_vars -base "chat-transcript" {transcript_id room_id}]
     }
     ad_script_abort
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
