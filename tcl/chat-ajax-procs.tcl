@@ -43,8 +43,10 @@ namespace eval ::chat {
             chat_room_get -room_id $chat_id -array c
             set package_id $c(context_id)
             set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
+            set chat_avatar_p [parameter::get -package_id $package_id -parameter ShowAvatarP]
             next -chat_id $chat_id \
                 -skin $chat_skin \
+                -show_avatar $chat_avatar_p \
                 -package_id $package_id \
                 -mode $mode \
                 -path $path \
