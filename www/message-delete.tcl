@@ -23,3 +23,9 @@ set pretty_name [chat_room_name $room_id]
 set message_count [chat_message_count $room_id]
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -88,6 +88,9 @@ db_multirow -extend {name email unban_url unban_text} banned_users list_user_ban
     }
 }
 
+set xowiki_includelet_code "\{\{chat_room -chat_id $room_id\}\}"
+set xowiki_includelet_size [string length $xowiki_includelet_code]
+
 set actions ""
 if { $user_ban_p } {
     set actions [list [_ chat.Ban_user] [export_vars -base "search" {room_id {type ban}}]]
@@ -117,3 +120,9 @@ list::create \
     }
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 2
+#    indent-tabs-mode: nil
+# End:

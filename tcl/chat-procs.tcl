@@ -544,8 +544,6 @@ ad_proc -public chat_message_post {
         set status "pending"
     }
 
-    set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
-
     # do not write messages to the database if the room should not be archived
     chat_room_get -room_id $room_id -array room_info
     if { $room_info(archive_p) == "f" } { return }

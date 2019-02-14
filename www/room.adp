@@ -73,3 +73,26 @@
 <if @transcript_create_p;literal@ true>
 <include src="/packages/chat/lib/transcripts" room_id=@room_id@>
 </if>
+
+<if @room_edit_p;literal@ true>
+  <h2>XoWiki Includelet</h2>
+  <span id="xowiki-includelet">
+    <input id="xowiki-includelet-code"
+           type="text"
+           size="@xowiki_includelet_size;literal@"
+           readonly="true"
+           value="@xowiki_includelet_code@">
+  </span>
+  <script nonce="@::__csp_nonce;literal@">
+    if (document.execCommand != undefined) {
+        var button = document.createElement("button");
+        button.textContent = "#xowiki.menu-Clipboard-Copy#";
+        button.addEventListener("click", function () {
+           document.getElementById("xowiki-includelet-code").select();
+           document.execCommand("copy");
+           this.textContent = "#acs-admin.Success#!";
+        });
+        document.getElementById("xowiki-includelet").appendChild(button);
+    }
+  </script>
+</if>

@@ -53,10 +53,7 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     ad_script_abort
 }
 
-template::head::add_css -href resources/chat.css
-
-set chat_frame [::chat::Chat login \
-                    -chat_id    $room_id]
+set chat_frame [::chat::Chat login -chat_id $room_id]
 
 # Local variables:
 #    mode: tcl

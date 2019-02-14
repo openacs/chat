@@ -12,3 +12,9 @@ ad_page_contract {
 set context_bar [list "[_ chat.Unauthorized_privilege]"]
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

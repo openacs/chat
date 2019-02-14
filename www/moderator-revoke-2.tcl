@@ -16,3 +16,9 @@ permission::require_permission -object_id $room_id -privilege chat_moderator_rev
 chat_moderator_revoke $room_id $party_id
 
 ad_returnredirect "room?room_id=$room_id"
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

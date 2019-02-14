@@ -19,3 +19,9 @@ if { [catch {chat_room_message_delete $room_id} errmsg] } {
 ::chat::Chat flush_messages -chat_id $room_id
 
 ad_returnredirect .
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -15,3 +15,8 @@ if {$type eq "user"} {
 }
 ad_returnredirect "room?room_id=$room_id"
 
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -7,15 +7,53 @@ ad_library {
     @cvs-id $Id$
 }
 
+namespace eval ::xowiki::includelet {
+
+  ::xowiki::IncludeletClass create chat_room \
+      -superclass ::xowiki::Includelet \
+      -parameter {
+        {parameter_declaration {
+          {-chat_id}
+          {-mode:optional ""}
+          {-path:optional ""}
+        }}
+      }
+
+  chat_room instproc render {} {
+      :get_parameters
+      set html [subst {
+        <div id='xowiki-chat-includelet'>
+            [::chat::Chat login \
+                  -chat_id $chat_id \
+                  -mode    $mode \
+                  -path    $path]
+        </div>
+      }]
+  }
+
+}
+
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
     Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
-        if {$package_id eq "" && [chat_room_exists_p $chat_id]} {
+        if {![chat_room_exists_p $chat_id]} {
+            return [_ chat.Room_not_found]
+        } else {
             chat_room_get -room_id $chat_id -array c
             set package_id $c(context_id)
+            set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
+            set chat_avatar_p [parameter::get -package_id $package_id -parameter ShowAvatarP]
+            next -chat_id $chat_id \
+                -skin $chat_skin \
+                -show_avatar $chat_avatar_p \
+                -package_id $package_id \
+                -mode $mode \
+                -path $path \
+                -logout_messages_p $c(logout_messages_p) \
+                -login_messages_p $c(login_messages_p) \
+                -timewindow $c(messages_time_window)
         }
-        next -chat_id $chat_id -package_id $package_id -mode $mode -path $path
     }
 
     Chat instproc initialize_nsvs {} {
@@ -31,11 +69,10 @@ namespace eval ::chat {
     }
 
     Chat instproc init {} {
-        if {[chat_room_exists_p ${:chat_id}]} {
-            chat_room_get -room_id ${:chat_id} -array c
-            set :login_messages_p  $c(login_messages_p)
-            set :logout_messages_p $c(logout_messages_p)
-            set :timewindow        $c(messages_time_window)
+        set ban_p [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]
+        if {$ban_p} {
+            ad_return_forbidden
+            ad_script_abort
         }
         next
     }

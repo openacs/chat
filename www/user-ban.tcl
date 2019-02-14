@@ -1,6 +1,6 @@
 #/chat/www/user-ban.tcl
 ad_page_contract {
-    
+
     Explicit ban user from the chat room.
 
     @author David Dao (ddao@arsdigita.com)
@@ -28,3 +28,9 @@ set description "[_ chat.Ban_chat_read_write] <b>[chat_room_name $room_id]</b> [
 db_multirow parties list_parties {}
 
 ad_return_template grant-entry
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

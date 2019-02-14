@@ -1,3 +1,9 @@
+ad_include_contract {
+    This include displays and manages specified chat transcript
+} {
+    room_id:naturalnum
+    transcript_id:naturalnum
+}
 
 db_1row get_transcript {
     select pretty_name as transcript_name,

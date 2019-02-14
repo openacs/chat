@@ -16,8 +16,10 @@ if { [catch {chat_room_delete $room_id} errmsg] } {
     ad_script_abort
 }
 
-ad_returnredirect . 
+ad_returnredirect .
 
-
-
-
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
