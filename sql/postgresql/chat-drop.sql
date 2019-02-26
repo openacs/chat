@@ -17,20 +17,17 @@ CREATE OR REPLACE FUNCTION inline_0(
 
 ) RETURNS integer AS $$
 DECLARE
-	object_rec		record;
+    object_rec      record;
 BEGIN
+    for object_rec in select object_id from acs_objects where object_type='chat_transcript'
+    loop
+        PERFORM acs_object__delete( object_rec.object_id );
+    end loop;
 
-        for object_rec in select object_id from acs_objects where object_type='chat_transcript'
-	loop
-		PERFORM acs_object__delete( object_rec.object_id );
-	end loop;
-
-	for object_rec in select object_id from acs_objects where object_type='chat_room'
-	loop
-		PERFORM acs_object__delete( object_rec.object_id );
-	end loop;
-
-
+    for object_rec in select object_id from acs_objects where object_type='chat_room'
+    loop
+        PERFORM acs_object__delete( object_rec.object_id );
+    end loop;
   return 0;
 END;
 $$ LANGUAGE plpgsql;
@@ -42,10 +39,6 @@ drop function inline_0 ();
 --
 -- Drop chat_room object type
 --
-
-
-
-
 select acs_object_type__drop_type('chat_room','t');
 select acs_object_type__drop_type('chat_transcript','t');
 
@@ -63,7 +56,6 @@ drop table chat_rooms;
 --
 -- Drop all chat privileges
 --
-
 CREATE OR REPLACE FUNCTION inline_0 () RETURNS integer AS $$
 BEGIN
 
@@ -96,8 +88,6 @@ BEGIN
  -- remove Site wite admin also administrator of the chat room
  PERFORM acs_privilege__remove_child('admin', 'chat_room_admin');
 
-
-
  PERFORM acs_privilege__drop_privilege('chat_room_create');
  PERFORM acs_privilege__drop_privilege('chat_room_view');
  PERFORM acs_privilege__drop_privilege('chat_room_edit');
@@ -120,7 +110,6 @@ BEGIN
  PERFORM acs_privilege__drop_privilege('chat_moderator');
  PERFORM acs_privilege__drop_privilege('chat_user');
  PERFORM acs_privilege__drop_privilege('chat_avatar_allow');
-
 
   return 0;
 END;

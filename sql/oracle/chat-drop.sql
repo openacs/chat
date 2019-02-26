@@ -1,4 +1,4 @@
---      
+--
 -- packages/chat/sql/chat-drop.sql
 --
 -- @author ddao@arsdigita.com
@@ -24,7 +24,7 @@ drop table chat_msgs;
 drop table chat_transcripts;
 drop table chat_rooms;
 
--- 
+--
 -- Drop all chat privileges
 --
 begin
@@ -40,7 +40,7 @@ begin
     acs_privilege.remove_child('chat_moderator', 'chat_user_grant');
     acs_privilege.remove_child('chat_moderator', 'chat_user_revoke');
     acs_privilege.remove_child('chat_moderator', 'chat_transcript_create');
-    acs_privilege.remove_child('chat_moderator', 'chat_transcript_view');    
+    acs_privilege.remove_child('chat_moderator', 'chat_transcript_view');
     acs_privilege.remove_child('chat_moderator', 'chat_transcript_edit');
     acs_privilege.remove_child('chat_moderator', 'chat_transcript_delete');
     acs_privilege.remove_child('chat_moderator', 'chat_user');
@@ -55,7 +55,7 @@ begin
     acs_privilege.remove_child('chat_room_admin', 'chat_moderator');
     acs_privilege.remove_child('chat_room_admin', 'chat_avatar_allow');
 
-    acs_privilege.remove_child('admin', 'chat_room_admin');        
+    acs_privilege.remove_child('admin', 'chat_room_admin');
 
     acs_privilege.drop_privilege('chat_room_create');
     acs_privilege.drop_privilege('chat_room_view');
@@ -82,12 +82,3 @@ begin
 end;
 /
 show errors
-
-
-
-
-
-
-
-
-

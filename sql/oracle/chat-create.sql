@@ -1,4 +1,4 @@
---      
+--
 -- packages/chat/sql/chat-create.sql
 --
 -- @author ddao@arsdigita.com
@@ -48,7 +48,7 @@ begin
     acs_privilege.add_child('chat_moderator', 'chat_user_grant');
     acs_privilege.add_child('chat_moderator', 'chat_user_revoke');
     acs_privilege.add_child('chat_moderator', 'chat_transcript_create');
-    acs_privilege.add_child('chat_moderator', 'chat_transcript_view');    
+    acs_privilege.add_child('chat_moderator', 'chat_transcript_view');
     acs_privilege.add_child('chat_moderator', 'chat_transcript_edit');
     acs_privilege.add_child('chat_moderator', 'chat_transcript_delete');
     acs_privilege.add_child('chat_moderator', 'chat_user');
@@ -65,7 +65,7 @@ begin
     acs_privilege.add_child('chat_room_admin', 'chat_avatar_allow');
 
     -- Site wite admin also administrator of the chat room.
-    acs_privilege.add_child('admin', 'chat_room_admin');        
+    acs_privilege.add_child('admin', 'chat_room_admin');
 end;
 /
 show errors
@@ -82,7 +82,7 @@ begin
         pretty_plural  => 'Chat Rooms',
         table_name     => 'CHAT_ROOMS',
         id_column      => 'ROOM_ID'
-    );    
+    );
 
     attr_id := acs_attribute.create_attribute (
         object_type    => 'chat_room',
@@ -135,43 +135,41 @@ end;
 /
 show errors;
 
-create table chat_rooms ( 
-    room_id            integer 
+create table chat_rooms (
+    room_id            integer
                        constraint chat_rooms_room_id_pk primary key
-                       constraint chat_rooms_room_id_fk 
+                       constraint chat_rooms_room_id_fk
                        references acs_objects(object_id),
     -- This is room name.
     pretty_name        varchar2(100)
                        constraint chat_rooms_pretty_name_nn not null,
     description        varchar2(2000),
     moderated_p        char(1) default 'f'
-                       constraint chat_rooms_moderate_p_ck 
-                       check (moderated_p in ('t','f')), 
-    active_p           char(1) default 't' 
-                       constraint chat_rooms_active_p_ck 
+                       constraint chat_rooms_moderate_p_ck
+                       check (moderated_p in ('t','f')),
+    active_p           char(1) default 't'
+                       constraint chat_rooms_active_p_ck
                        check (active_p in ('t','f')),
-    -- if set then log all chat messages in this room. 
+    -- if set then log all chat messages in this room.
     archive_p          char(1) default 'f'
-                       constraint chat_rooms_archive_p_ck 
+                       constraint chat_rooms_archive_p_ck
                        check (archive_p in ('t', 'f')),
-	auto_flush_p	   char(1) default 't'
-					   constraint chat_rooms_auto_flush_ck
-					   check (auto_flush_p in ('t', 'f')),
-	auto_transcript_p  char(1) default 'f'
-					   constraint chat_rooms_auto_transcript_ck
-					   check (auto_transcript_p in ('t', 'f')),
-	login_messages_p  char(1) default 't'
-					   constraint chat_rooms_login_messages_ck
-					   check (login_messages_p in ('t', 'f')),
-
-	logout_messages_p  char(1) default 't'
-					   constraint chat_rooms_logout_messages_ck
-					   check (logout_messages_p in ('t', 'f')),
-
-	avatar_p           char(1) default 't'
-					   constraint chat_rooms_avatar_p_ck
-					   check (avatar_p in ('t', 'f'))
-); 
+    auto_flush_p       char(1) default 't'
+                       constraint chat_rooms_auto_flush_ck
+                       check (auto_flush_p in ('t', 'f')),
+    auto_transcript_p  char(1) default 'f'
+                       constraint chat_rooms_auto_transcript_ck
+                       check (auto_transcript_p in ('t', 'f')),
+    login_messages_p  char(1) default 't'
+                       constraint chat_rooms_login_messages_ck
+                       check (login_messages_p in ('t', 'f')),
+    logout_messages_p  char(1) default 't'
+                       constraint chat_rooms_logout_messages_ck
+                       check (logout_messages_p in ('t', 'f')),
+    avatar_p           char(1) default 't'
+                       constraint chat_rooms_avatar_p_ck
+                       check (avatar_p in ('t', 'f'))
+);
 
 declare
     attr_id acs_attributes.attribute_id%TYPE;
@@ -184,7 +182,7 @@ begin
         pretty_plural  => 'Chat Transcripts',
         table_name     => 'CHAT_TRANSCRIPTS',
         id_column      => 'TRANSCRIPT_ID'
-    ); 
+    );
 
     attr_id := acs_attribute.create_attribute (
         object_type    => 'chat_transcript',
@@ -208,7 +206,7 @@ begin
         pretty_name    => 'Transcript content',
         pretty_plural  => 'Transcript contents',
         datatype       => 'string'
-    );  
+    );
 end;
 /
 show errors
@@ -216,9 +214,9 @@ show errors
 create table chat_transcripts (
     transcript_id      integer
                        constraint chat_trans_transcript_id_pk primary key
-                       constraint chat_trans_transcript_id_fk 
+                       constraint chat_trans_transcript_id_fk
                        references acs_objects(object_id),
-    contents           clob 
+    contents           clob
                        constraint chat_trans_contents_nn not null,
     -- Chat transcript name.
     pretty_name        varchar2(100)
@@ -229,27 +227,27 @@ create table chat_transcripts (
 );
 
 create table chat_msgs (
-    msg_id             integer 
-                       constraint chat_msgs_msg_id_pk primary key, 
+    msg_id             integer
+                       constraint chat_msgs_msg_id_pk primary key,
     msg                varchar2(4000),
-    msg_len            integer 
+    msg_len            integer
                        constraint chat_msgs_msg_len_ck
-                       check (msg_len >= 0), 
-    html_p             char(1) default 'f' 
-                       constraint chat_msgs_html_p_ck 
-                       check (html_p in ('t','f')), 
-    approved_p         char(1) default 't' 
-                       constraint chat_msgs_approve_p_ck 
-                       check(approved_p in ('t','f')), 
-    creation_user      integer 
-                       constraint chat_msgs_creation_user_fk 
+                       check (msg_len >= 0),
+    html_p             char(1) default 'f'
+                       constraint chat_msgs_html_p_ck
+                       check (html_p in ('t','f')),
+    approved_p         char(1) default 't'
+                       constraint chat_msgs_approve_p_ck
+                       check(approved_p in ('t','f')),
+    creation_user      integer
+                       constraint chat_msgs_creation_user_fk
                        references parties(party_id)
                        constraint chat_msgs_creation_user_nn not null,
     creation_ip        varchar2(50) ,
     creation_date      date
                        constraint chat_msgs_creation_date_nn not null,
     room_id            integer
-                       constraint chat_msgs_room_id_fk references chat_rooms 
+                       constraint chat_msgs_room_id_fk references chat_rooms
 );
 
 --
@@ -259,39 +257,39 @@ create table chat_msgs (
 create or replace package chat_room
 as
     function new (
-        room_id        in chat_rooms.room_id%TYPE        default null,
-        pretty_name    in chat_rooms.pretty_name%TYPE,
-        description    in chat_rooms.description%TYPE    default null,
-        moderated_p    in chat_rooms.moderated_p%TYPE    default 'f',
-        active_p       in chat_rooms.active_p%TYPE       default 't',
-        archive_p      in chat_rooms.archive_p%TYPE      default 'f',
-	auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
-	auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
-	login_messages_p  in chat_rooms.login_messages_p%TYPE default  't',
-	logout_messages_p in chat_rooms.logout_messages_p%TYPE default 't',	
-	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't',
-        context_id     in acs_objects.context_id%TYPE    default null,
-        creation_date  in acs_objects.creation_date%TYPE default sysdate,
-        creation_user  in acs_objects.creation_user%TYPE default null,
-        creation_ip    in acs_objects.creation_ip%TYPE   default null,
-        object_type    in acs_objects.object_type%TYPE   default 'chat_room'
+        room_id           in chat_rooms.room_id%TYPE            default null,
+        pretty_name       in chat_rooms.pretty_name%TYPE,
+        description       in chat_rooms.description%TYPE        default null,
+        moderated_p       in chat_rooms.moderated_p%TYPE        default 'f',
+        active_p          in chat_rooms.active_p%TYPE           default 't',
+        archive_p         in chat_rooms.archive_p%TYPE          default 'f',
+        auto_flush_p      in chat_rooms.auto_flush_p%TYPE       default 't',
+        auto_transcript_p in chat_rooms.auto_transcript_p%TYPE  default 'f',
+        login_messages_p  in chat_rooms.login_messages_p%TYPE   default  't',
+        logout_messages_p in chat_rooms.logout_messages_p%TYPE  default 't',
+        avatar_p          in chat_rooms.avatar_p%TYPE           default 't',
+        context_id        in acs_objects.context_id%TYPE        default null,
+        creation_date     in acs_objects.creation_date%TYPE     default sysdate,
+        creation_user     in acs_objects.creation_user%TYPE     default null,
+        creation_ip       in acs_objects.creation_ip%TYPE       default null,
+        object_type       in acs_objects.object_type%TYPE       default 'chat_room'
     ) return acs_objects.object_id%TYPE;
 
     procedure del (
         room_id        in chat_rooms.room_id%TYPE
-    );    
+    );
 
     procedure edit (
-        room_id        in chat_rooms.room_id%TYPE,
-        pretty_name    in chat_rooms.pretty_name%TYPE,
-        description    in chat_rooms.description%TYPE,
-        moderated_p    in chat_rooms.moderated_p%TYPE,
-        active_p       in chat_rooms.active_p%TYPE,
-        archive_p      in chat_rooms.archive_p%TYPE,
-   		auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
-		auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE,
-	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't'
-    );        
+        room_id             in chat_rooms.room_id%TYPE,
+        pretty_name         in chat_rooms.pretty_name%TYPE,
+        description         in chat_rooms.description%TYPE,
+        moderated_p         in chat_rooms.moderated_p%TYPE,
+        active_p            in chat_rooms.active_p%TYPE,
+        archive_p           in chat_rooms.archive_p%TYPE,
+        auto_flush_p        in chat_rooms.auto_flush_p%TYPE,
+        auto_transcript_p   in chat_rooms.auto_transcript_p%TYPE,
+        avatar_p            in chat_rooms.avatar_p%TYPE default 't'
+    );
 
     function name (
         room_id        in chat_rooms.room_id%TYPE
@@ -332,7 +330,7 @@ as
         creation_user  in acs_objects.creation_user%TYPE         default null,
         creation_ip    in acs_objects.creation_ip%TYPE           default null,
         object_type    in acs_objects.object_type%TYPE           default 'chat_transcript'
-    ) return acs_objects.object_id%TYPE;        
+    ) return acs_objects.object_id%TYPE;
 
     procedure del (
         transcript_id  in chat_transcripts.transcript_id%TYPE
@@ -343,7 +341,7 @@ as
         pretty_name    in chat_transcripts.pretty_name%TYPE,
         contents       in chat_transcripts.contents%TYPE,
         description    in chat_transcripts.description%TYPE
-    );    
+    );
 end chat_transcript;
 /
 show errors
@@ -359,22 +357,22 @@ show errors
 create or replace package body chat_room
 as
     function new (
-        room_id        in chat_rooms.room_id%TYPE        default null,
-        pretty_name    in chat_rooms.pretty_name%TYPE,
-        description    in chat_rooms.description%TYPE    default null,
-        moderated_p    in chat_rooms.moderated_p%TYPE    default 'f',
-        active_p       in chat_rooms.active_p%TYPE       default 't',
-        archive_p      in chat_rooms.archive_p%TYPE      default 'f',
-	auto_flush_p   in chat_rooms.auto_flush_p%TYPE	 default 't',
-	auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
-	login_messages_p  in chat_rooms.login_messages_p%TYPE default  't',
-	logout_messages_p in chat_rooms.logout_messages_p%TYPE default 't',	
-	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't',
-        context_id     in acs_objects.context_id%TYPE    default null,
-        creation_date  in acs_objects.creation_date%TYPE default sysdate,
-        creation_user  in acs_objects.creation_user%TYPE default null,
-        creation_ip    in acs_objects.creation_ip%TYPE   default null,
-        object_type    in acs_objects.object_type%TYPE   default 'chat_room'
+        room_id            in chat_rooms.room_id%TYPE           default null,
+        pretty_name        in chat_rooms.pretty_name%TYPE,
+        description        in chat_rooms.description%TYPE       default null,
+        moderated_p        in chat_rooms.moderated_p%TYPE       default 'f',
+        active_p           in chat_rooms.active_p%TYPE          default 't',
+        archive_p          in chat_rooms.archive_p%TYPE         default 'f',
+        auto_flush_p       in chat_rooms.auto_flush_p%TYPE      default 't',
+        auto_transcript_p  in chat_rooms.auto_transcript_p%TYPE default 'f',
+        login_messages_p   in chat_rooms.login_messages_p%TYPE  default  't',
+        logout_messages_p  in chat_rooms.logout_messages_p%TYPE default 't',
+        avatar_p           in chat_rooms.avatar_p%TYPE          default 't',
+        context_id         in acs_objects.context_id%TYPE       default null,
+        creation_date      in acs_objects.creation_date%TYPE    default sysdate,
+        creation_user      in acs_objects.creation_user%TYPE    default null,
+        creation_ip        in acs_objects.creation_ip%TYPE      default null,
+        object_type        in acs_objects.object_type%TYPE      default 'chat_room'
     ) return acs_objects.object_id%TYPE
     is
         v_room_id chat_rooms.room_id%TYPE;
@@ -388,29 +386,29 @@ as
         );
 
         insert into chat_rooms (
-            room_id,   
-            pretty_name, 
-            description, 
-            moderated_p, 
-            active_p, 
+            room_id,
+            pretty_name,
+            description,
+            moderated_p,
+            active_p,
             archive_p,
-	    auto_flush_p,
-	    auto_transcript_p,
-	    login_messages_p,
-	    logout_messages_p,
-	    avatar_p)
-	values (
-            v_room_id, 
-            chat_room.new.pretty_name, 
-            chat_room.new.description, 
-            chat_room.new.moderated_p, 
-            chat_room.new.active_p, 
+            auto_flush_p,
+            auto_transcript_p,
+            login_messages_p,
+            logout_messages_p,
+            avatar_p)
+        values (
+            v_room_id,
+            chat_room.new.pretty_name,
+            chat_room.new.description,
+            chat_room.new.moderated_p,
+            chat_room.new.active_p,
             chat_room.new.archive_p,
-	    chat_room.new.auto_flush_p,
-	    chat_room.new.auto_transcript_p,
-	    chat_room.new.login_messages_p,
-	    chat_room.new.logout_messages_p,
-        chat_room.new.avatar_p);
+            chat_room.new.auto_flush_p,
+            chat_room.new.auto_transcript_p,
+            chat_room.new.login_messages_p,
+            chat_room.new.logout_messages_p,
+            chat_room.new.avatar_p);
 
         return v_room_id;
     end new;
@@ -433,16 +431,16 @@ as
     end del;
 
     procedure edit (
-        room_id        in chat_rooms.room_id%TYPE,
-        pretty_name    in chat_rooms.pretty_name%TYPE,
-        description    in chat_rooms.description%TYPE,
-        moderated_p    in chat_rooms.moderated_p%TYPE,
-        active_p       in chat_rooms.active_p%TYPE,
-        archive_p      in chat_rooms.archive_p%TYPE,
-	auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
-	auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE,
-	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't'
-    ) 
+        room_id             in chat_rooms.room_id%TYPE,
+        pretty_name         in chat_rooms.pretty_name%TYPE,
+        description         in chat_rooms.description%TYPE,
+        moderated_p         in chat_rooms.moderated_p%TYPE,
+        active_p            in chat_rooms.active_p%TYPE,
+        archive_p           in chat_rooms.archive_p%TYPE,
+        auto_flush_p        in chat_rooms.auto_flush_p%TYPE,
+        auto_transcript_p   in chat_rooms.auto_transcript_p%TYPE,
+        avatar_p            in chat_rooms.avatar_p%TYPE default 't'
+    )
     is
     begin
         update chat_rooms set
@@ -454,9 +452,9 @@ as
             auto_flush_p   = chat_room.edit.auto_flush_p,
             auto_transcript_p = chat_room.edit.auto_transcript_p,
             avatar_p       = chat_room.edit.avatar_p
-        where 
+        where
             room_id = chat_room.edit.room_id;
-    end edit;        
+    end edit;
 
     function name (
         room_id        in chat_rooms.room_id%TYPE
@@ -464,7 +462,7 @@ as
     is
         v_room_name chat_rooms.pretty_name%TYPE;
     begin
-        select pretty_name into v_room_name 
+        select pretty_name into v_room_name
         from chat_rooms
         where room_id = chat_room.name.room_id;
 
@@ -487,7 +485,7 @@ as
     begin
         -- Get msg id from the global acs_object sequence.
         select acs_object_id_seq.nextval into v_msg_id from dual;
-        
+
         select archive_p into v_msg_archive_p
         from chat_rooms
         where room_id = chat_room.message_post.room_id;
@@ -500,24 +498,24 @@ as
 
         -- Insert into chat_msgs table.
         insert into chat_msgs (
-            msg_id,   
-            room_id, 
-            msg, 
-            msg_len, 
-            html_p, 
-            approved_p, 
-            creation_user, 
-            creation_ip, 
+            msg_id,
+            room_id,
+            msg,
+            msg_len,
+            html_p,
+            approved_p,
+            creation_user,
+            creation_ip,
             creation_date)
         values (
-            v_msg_id, 
-            room_id, 
-            v_msg, 
+            v_msg_id,
+            room_id,
+            v_msg,
             nvl(length(msg), 0),
-            html_p, 
-            approved_p, 
-            creation_user, 
-            creation_ip, 
+            html_p,
+            approved_p,
+            creation_user,
+            creation_ip,
             creation_date) ;
     end message_post;
 
@@ -528,10 +526,10 @@ as
     is
         v_count integer;
     begin
-        select count(*) into v_count 
+        select count(*) into v_count
         from chat_msgs
         where room_id = chat_room.message_count.room_id;
-         
+
         return v_count;
     end message_count;
 
@@ -571,7 +569,7 @@ as
             creation_ip   => creation_ip,
             context_id    => context_id
             );
-    
+
         insert into chat_transcripts (transcript_id,   pretty_name, contents, description, room_id)
                               values (v_transcript_id, pretty_name, empty_clob(), description, room_id);
 
@@ -587,9 +585,9 @@ as
         -- Delete all privileges associate with this transcript
         delete from acs_permissions where object_id = chat_transcript.del.transcript_id;
 
-        delete from chat_transcripts 
+        delete from chat_transcripts
         where transcript_id = chat_transcript.del.transcript_id;
-        
+
         acs_object.del(transcript_id);
     end del;
 
@@ -598,10 +596,10 @@ as
         pretty_name       in chat_transcripts.pretty_name%TYPE,
         contents          in chat_transcripts.contents%TYPE,
         description       in chat_transcripts.description%TYPE
-    ) 
+    )
     is
     begin
-        update chat_transcripts    
+        update chat_transcripts
         set pretty_name = chat_transcript.edit.pretty_name,
             contents    = chat_transcript.edit.contents,
             description = chat_transcript.edit.description

@@ -14,7 +14,7 @@
             auto_transcript_p,
             login_messages_p,
             logout_messages_p,
-	    messages_time_window,
+            messages_time_window,
             avatar_p
         ) values (
             :room_id,
@@ -27,7 +27,7 @@
             :auto_transcript_p,
             :login_messages_p,
             :logout_messages_p,
-	    :messages_time_window,	    
+            :messages_time_window,
             :avatar_p
         )
     </querytext>
@@ -45,7 +45,7 @@
          auto_transcript_p    = :auto_transcript_p,
          login_messages_p     = :login_messages_p,
          logout_messages_p    = :logout_messages_p,
-	 messages_time_window = :messages_time_window,
+         messages_time_window = :messages_time_window,
          avatar_p             = :avatar_p
       where room_id = :room_id
     </querytext>
@@ -56,16 +56,16 @@
       insert into chat_transcripts (
               transcript_id
              ,pretty_name
-	     ,contents
-	     ,description
-	     ,room_id
-	   ) values (
-	      :transcript_id
-	     ,:pretty_name
-	     ,:contents
-	     ,:description
-	     ,:room_id
-	   )
+             ,contents
+             ,description
+             ,room_id
+           ) values (
+              :transcript_id
+             ,:pretty_name
+             ,:contents
+             ,:description
+             ,:room_id
+           )
     </querytext>
   </fullquery>
 

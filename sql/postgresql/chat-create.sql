@@ -478,9 +478,6 @@ BEGIN
             p_creation_user,
             p_creation_ip,
             now()) ;
-
-
-
 return 0;
 END;
 $$ LANGUAGE plpgsql;
