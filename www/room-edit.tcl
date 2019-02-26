@@ -72,7 +72,12 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         {help_text "[_ chat.MessagesTimeWindowHelp]"}
         {value "$four_hours"}
     }
-
+    {avatar_p:boolean(radio)
+        {label "#chat.ShowAvatar#" }
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {value "t"}
+        {help_text "[_ chat.ShowAvatarHelp]"}
+    }
 } -new_data {
     if {[catch {
         set room_id [chat_room_new \
@@ -85,6 +90,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
             -login_messages_p     $login_messages_p \
             -logout_messages_p    $logout_messages_p \
             -messages_time_window $messages_time_window \
+            -avatar_p             $avatar_p \
             -context_id           [ad_conn package_id] \
             -creation_user        [ad_conn user_id] \
             -creation_ip          [ad_conn peeraddr] $pretty_name]
@@ -118,6 +124,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         set login_messages_p     $r(login_messages_p)
         set logout_messages_p    $r(logout_messages_p)
         set messages_time_window $r(messages_time_window)
+        set avatar_p             $r(avatar_p)
     } errmsg]} {
         ad_return_complaint 1 "[_ chat.Room_not_found]."
         ad_script_abort
@@ -135,7 +142,8 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
             $auto_transcript_p \
             $login_messages_p \
             $logout_messages_p \
-            $messages_time_window
+            $messages_time_window \
+            $avatar_p
     } errmsg]} {
         ad_return_complaint 1 "[_ chat.Could_not_update_room]: $errmsg"
         ad_script_abort

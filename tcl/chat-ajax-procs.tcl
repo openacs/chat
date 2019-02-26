@@ -43,16 +43,15 @@ namespace eval ::chat {
             chat_room_get -room_id $chat_id -array c
             set package_id $c(context_id)
             set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
-            set chat_avatar_p [parameter::get -package_id $package_id -parameter ShowAvatarP]
-            next -chat_id $chat_id \
-                -skin $chat_skin \
-                -show_avatar $chat_avatar_p \
-                -package_id $package_id \
-                -mode $mode \
-                -path $path \
-                -logout_messages_p $c(logout_messages_p) \
-                -login_messages_p $c(login_messages_p) \
-                -timewindow $c(messages_time_window)
+            next -chat_id           $chat_id \
+                 -skin              $chat_skin \
+                 -package_id        $package_id \
+                 -mode              $mode \
+                 -path              $path \
+                 -logout_messages_p $c(logout_messages_p) \
+                 -login_messages_p  $c(login_messages_p) \
+                 -timewindow        $c(messages_time_window) \
+                 -avatar_p          $c(avatar_p)
         }
     }
 

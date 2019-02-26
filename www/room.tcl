@@ -25,6 +25,7 @@ ad_page_contract {
     transcript_create_p:onevalue
     transcript_edit_p:onevalue
     transcript_view_p:onevalue
+    avatar_p:onevalue
     moderators:multirow
     users_allow:multirow
     users_ban:multirow
@@ -36,16 +37,17 @@ set context_bar [list "[_ chat.Room_Information]"]
 ###
 # Get all available permission of this user on this room.
 ###
-set room_view_p [permission::permission_p -object_id $room_id -privilege chat_room_view]
-set room_edit_p [permission::permission_p -object_id $room_id -privilege chat_room_edit]
-set room_delete_p [permission::permission_p -object_id $room_id -privilege chat_room_delete]
-set user_ban_p [permission::permission_p -object_id $room_id -privilege chat_user_ban]
-set user_unban_p [permission::permission_p -object_id $room_id -privilege chat_user_unban]
-set user_grant_p [permission::permission_p -object_id $room_id -privilege chat_user_grant]
-set user_revoke_p [permission::permission_p -object_id $room_id -privilege chat_user_revoke]
-set moderator_grant_p [permission::permission_p -object_id $room_id -privilege chat_moderator_grant]
-set moderator_revoke_p [permission::permission_p -object_id $room_id -privilege chat_moderator_revoke]
+set room_view_p         [permission::permission_p -object_id $room_id -privilege chat_room_view]
+set room_edit_p         [permission::permission_p -object_id $room_id -privilege chat_room_edit]
+set room_delete_p       [permission::permission_p -object_id $room_id -privilege chat_room_delete]
+set user_ban_p          [permission::permission_p -object_id $room_id -privilege chat_user_ban]
+set user_unban_p        [permission::permission_p -object_id $room_id -privilege chat_user_unban]
+set user_grant_p        [permission::permission_p -object_id $room_id -privilege chat_user_grant]
+set user_revoke_p       [permission::permission_p -object_id $room_id -privilege chat_user_revoke]
+set moderator_grant_p   [permission::permission_p -object_id $room_id -privilege chat_moderator_grant]
+set moderator_revoke_p  [permission::permission_p -object_id $room_id -privilege chat_moderator_revoke]
 set transcript_create_p [permission::permission_p -object_id $room_id -privilege chat_transcript_create]
+set avatar_allow_p      [permission::permission_p -object_id $room_id -privilege chat_avatar_allow]
 
 ###
 # Get room basic information.
@@ -61,6 +63,7 @@ set auto_transcript_p    $r(auto_transcript_p)
 set login_messages_p     $r(login_messages_p)
 set logout_messages_p    $r(logout_messages_p)
 set messages_time_window $r(messages_time_window)
+set avatar_p             $r(avatar_p)
 
 # prettify flags
 foreach property {
@@ -71,6 +74,7 @@ foreach property {
     auto_transcript_p
     login_messages_p
     logout_messages_p
+    avatar_p
 } {
     set $property [expr {[set $property] eq "t" ? [_ acs-kernel.common_yes] : [_ acs-kernel.common_no] }]
 }

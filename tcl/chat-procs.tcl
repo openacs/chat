@@ -287,6 +287,7 @@ ad_proc -public chat_room_new {
     {-context_id ""}
     {-creation_user ""}
     {-creation_ip ""}
+    {-avatar_p t}
     pretty_name
 } {
     Create new chat room. Return room_id if successful else raise error.
@@ -361,6 +362,7 @@ ad_proc -public chat_room_edit {
     login_messages_p
     logout_messages_p
     messages_time_window
+    avatar_p
 } {
     Edit information on chat room. All information require.
 } {

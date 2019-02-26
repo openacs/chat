@@ -17,6 +17,7 @@
                     archive_p         => :archive_p,
 	            context_id        => :context_id,
 	            creation_user     => :creation_user,
+	            avatar_p          => :avatar_p,
 	            creation_ip       => :creation_ip
 	        );
 	    end;
@@ -35,6 +36,7 @@
 	            acs_permission.grant_permission(:room_id, :creation_user, 'chat_room_view');
 	            acs_permission.grant_permission(:room_id, :creation_user, 'chat_room_delete');
 	            acs_permission.grant_permission(:room_id, :creation_user, 'chat_transcript_create');
+	            acs_permission.grant_permission(:room_id, :creation_user, 'chat_avatar_allow');
                 end if;
 
         end;
@@ -117,7 +119,8 @@
 		auto_flush_p      => :auto_flush_p,
             	auto_transcript_p => :auto_transcript_p,
 	        login_messages_p  => :login_messages_p,
-	        logout_messages_p => :logout_messages_p
+	        logout_messages_p => :logout_messages_p,
+            avatar_p          => :avatar_p
 	    );
 	end;
      </querytext>

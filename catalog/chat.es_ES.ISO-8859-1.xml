@@ -111,6 +111,8 @@
   <msg key="rooms">salas</msg>
   <msg key="Send_Refresh">Enviar/Actualizar</msg>
   <msg key="sending_message">Enviando mensaje...</msg>
+  <msg key="ShowAvatar">Mostrar avatars</msg>
+  <msg key="ShowAvatarHelp">Mostrar avatars (imágenes de perfil de usuario) en el chat.</msg>
   <msg key="There_are_no_rooms_available">No hay salas disponibles</msg>
   <msg key="to">a</msg>
   <msg key="Transcript">Transcripción</msg>

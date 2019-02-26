@@ -9,7 +9,7 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>t</inherit-templates-p>
 
-    <version name="5.0.1d5" url="http://openacs.org/repository/download/apm/chat-5.0.1d5.apm">
+    <version name="5.0.1d6" url="http://openacs.org/repository/download/apm/chat-5.0.1d6.apm">
         <owner url="http://www.openacs.org">Peter Alberer</owner>
         <summary>Server based chat with an html and ajax client.</summary>
         <release-date>2019-01-18</release-date>
@@ -18,7 +18,7 @@
 Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of generalized chat class from xotcl-core.</description>
         <maturity>0</maturity>
 
-        <provides url="chat" version="5.0.1d5"/>
+        <provides url="chat" version="5.0.1d6"/>
         <requires url="acs-kernel" version="5.9.1"/>
         <requires url="xowiki" version="5.10.0d17"/>
 
@@ -28,7 +28,6 @@ Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of genera
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to user names in the chat"/>
             <parameter scope="global" datatype="string"  min_n_values="1"  max_n_values="1"  name="LinkRegex"  default="(https?:\\/\\/[^\\s]+)" description="Regular expression to detect URLs in chat messages, creating html links accordingly. By default, it matches any string starting with http:// or https://. Please notice the backslash double escaping."/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ChatSkin"  default="bubbles" description="Chat skin. Current options are 'classic' and 'bubbles'."/>
-            <parameter scope="instance" datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowAvatarP"  default="1" description="Boolean parameter to enable/disable avatar images in the chat. Default is 1 (true)."/>
         </parameters>
 
     </version>

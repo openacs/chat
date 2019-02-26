@@ -32,6 +32,8 @@ select acs_privilege__create_privilege('chat_ban', 'Ban from a chat room', null)
 select acs_privilege__create_privilege('chat_read', 'View chat message', null);
 select acs_privilege__create_privilege('chat_write', 'Write chat message', null);
 
+select acs_privilege__create_privilege('chat_avatar_allow', 'Enable/disable user avatars in a chat room', null);
+
 -- Set of privileges for regular chat user.
 select acs_privilege__create_privilege('chat_user', 'Regular chat user', null);
 select acs_privilege__add_child('chat_user', 'chat_read');
@@ -59,6 +61,7 @@ select acs_privilege__add_child('chat_room_admin', 'chat_room_view');
 select acs_privilege__add_child('chat_room_admin', 'chat_moderator_grant');
 select acs_privilege__add_child('chat_room_admin', 'chat_moderator_revoke');
 select acs_privilege__add_child('chat_room_admin', 'chat_moderator');
+select acs_privilege__add_child('chat_room_admin', 'chat_avatar_allow');
 
 -- Site wite admin also administrator of the chat room.
 select acs_privilege__add_child('admin', 'chat_room_admin');
@@ -72,18 +75,17 @@ AS 'declare
        PERFORM
 
        acs_object_type__create_type(
-          ''chat_room'',  -- object_type
-          ''Chat Room'',  -- pretty_name
-          ''Chat Rooms'', -- pretty_plural
-          ''acs_object'', -- supertype
-          ''chat_rooms'', -- table_name
-          ''room_id'',    -- id_column
-          null,           -- package_name
-          ''f'',          -- abstract_p
-          null,           -- type_extension_table
-          null            -- name_method
+          ''chat_room'',       -- object_type
+          ''Chat Room'',       -- pretty_name
+          ''Chat Rooms'',      -- pretty_plural
+          ''acs_object'',      -- supertype
+          ''chat_rooms'',      -- table_name
+          ''room_id'',         -- id_column
+          null,                -- package_name
+          ''f'',               -- abstract_p
+          null,                -- type_extension_table
+          null                 -- name_method
        );
-
 
        attr_id := acs_attribute__create_attribute (
           ''chat_room'',       -- object_type
@@ -101,8 +103,6 @@ AS 'declare
           ''f''                -- static_p (default)
         );
 
-
-
         attr_id := acs_attribute__create_attribute (
           ''chat_room'',       -- object_type
           ''description'',     -- attribute_name
@@ -118,7 +118,6 @@ AS 'declare
           ''type_specific'',   -- storage (default)
           ''f''                -- static_p (default)
         );
-
 
         attr_id := acs_attribute__create_attribute (
           ''chat_room'',       -- object_type
@@ -136,7 +135,6 @@ AS 'declare
           ''f''                -- static_p (default)
         );
 
-
         attr_id := acs_attribute__create_attribute (
           ''chat_room'',       -- object_type
           ''active_p'',        -- attribute_name
@@ -152,7 +150,6 @@ AS 'declare
           ''type_specific'',   -- storage (default)
           ''f''                -- static_p (default)
         );
-
 
         attr_id := acs_attribute__create_attribute (
           ''chat_room'',       -- object_type
@@ -170,8 +167,23 @@ AS 'declare
           ''f''                -- static_p (default)
         );
 
+        attr_id := acs_attribute__create_attribute (
+          ''chat_room'',       -- object_type
+          ''avatar_p'',        -- attribute_name
+          ''boolean'',         -- datatype
+          ''Avatar'',          -- pretty_name
+          ''Avatars'',         -- pretty_plural
+          null,                -- table_name (default)
+          null,                -- column_name (default)
+          ''t'',                -- default_value (default)
+          1,                   -- min_n_values (default)
+          1,                   -- max_n_values (default)
+          null,                -- sort_order (default)
+          ''type_specific'',   -- storage (default)
+          ''f''                -- static_p (default)
+        );
 
-         return 0;
+        return 0;
 
     end;'
 
@@ -213,7 +225,9 @@ create table chat_rooms (
     -- set how much in the past users will see when entering a chat in
     -- seconds this is needed to specify, for example, that users will
     -- see only the previous 10 minutes of the conversation
-    messages_time_window integer default 600
+    messages_time_window integer default 600,
+    -- if set, display user avatars in the chat room
+    avatar_p   boolean default 't'
 );
 
 
@@ -237,7 +251,6 @@ AS 'declare
           null            -- name_method
        );
 
-
        attr_id := acs_attribute__create_attribute (
           ''chat_transcript'', -- object_type
           ''pretty_name'',     -- attribute_name
@@ -253,7 +266,6 @@ AS 'declare
           ''type_specific'',   -- storage (default)
           ''f''                -- static_p (default)
         );
-
 
         attr_id := acs_attribute__create_attribute (
           ''chat_transcript'', -- object_type
@@ -271,7 +283,6 @@ AS 'declare
           ''f''                -- static_p (default)
         );
 
-
         attr_id := acs_attribute__create_attribute (
           ''chat_transcript'',          -- object_type
           ''contents'',                 -- attribute_name
@@ -288,9 +299,7 @@ AS 'declare
           ''f''                -- static_p (default)
         );
 
-
-
-         return 0;
+        return 0;
 
     end;'
 

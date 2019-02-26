@@ -33,6 +33,8 @@ begin
     acs_privilege.create_privilege('chat_read', 'View chat message');
     acs_privilege.create_privilege('chat_write', 'Write chat message');
 
+    acs_privilege.create_privilege('chat_avatar_allow', 'Enable/disable user avatars in a chat room');
+
     -- Set of privileges for regular chat user.
     acs_privilege.create_privilege('chat_user', 'Regular chat user');
     acs_privilege.add_child('chat_user', 'chat_read');
@@ -60,6 +62,7 @@ begin
     acs_privilege.add_child('chat_room_admin', 'chat_moderator_grant');
     acs_privilege.add_child('chat_room_admin', 'chat_moderator_revoke');
     acs_privilege.add_child('chat_room_admin', 'chat_moderator');
+    acs_privilege.add_child('chat_room_admin', 'chat_avatar_allow');
 
     -- Site wite admin also administrator of the chat room.
     acs_privilege.add_child('admin', 'chat_room_admin');        
@@ -120,6 +123,14 @@ begin
         pretty_plural  => 'Archived',
         datatype       => 'boolean'
     );
+
+    attr_id := acs_attribute.create_attribute (
+        object_type    => 'chat_room',
+        attribute_name => 'avatar_p',
+        pretty_name    => 'Avatar',
+        pretty_plural  => 'Avatars',
+        datatype       => 'boolean'
+    );
 end;
 /
 show errors;
@@ -155,7 +166,11 @@ create table chat_rooms (
 
 	logout_messages_p  char(1) default 't'
 					   constraint chat_rooms_logout_messages_ck
-					   check (logout_messages_p in ('t', 'f'))
+					   check (logout_messages_p in ('t', 'f')),
+
+	avatar_p           char(1) default 't'
+					   constraint chat_rooms_avatar_p_ck
+					   check (avatar_p in ('t', 'f'))
 ); 
 
 declare
@@ -254,6 +269,7 @@ as
 	auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
 	login_messages_p  in chat_rooms.login_messages_p%TYPE default  't',
 	logout_messages_p in chat_rooms.logout_messages_p%TYPE default 't',	
+	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't',
         context_id     in acs_objects.context_id%TYPE    default null,
         creation_date  in acs_objects.creation_date%TYPE default sysdate,
         creation_user  in acs_objects.creation_user%TYPE default null,
@@ -273,7 +289,8 @@ as
         active_p       in chat_rooms.active_p%TYPE,
         archive_p      in chat_rooms.archive_p%TYPE,
    		auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
-		auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE
+		auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE,
+	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't'
     );        
 
     function name (
@@ -352,6 +369,7 @@ as
 	auto_transcript_p in chat_rooms.auto_transcript_p%TYPE default 'f',
 	login_messages_p  in chat_rooms.login_messages_p%TYPE default  't',
 	logout_messages_p in chat_rooms.logout_messages_p%TYPE default 't',	
+	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't',
         context_id     in acs_objects.context_id%TYPE    default null,
         creation_date  in acs_objects.creation_date%TYPE default sysdate,
         creation_user  in acs_objects.creation_user%TYPE default null,
@@ -379,7 +397,8 @@ as
 	    auto_flush_p,
 	    auto_transcript_p,
 	    login_messages_p,
-	    logout_messages_p)
+	    logout_messages_p,
+	    avatar_p)
 	values (
             v_room_id, 
             chat_room.new.pretty_name, 
@@ -390,7 +409,8 @@ as
 	    chat_room.new.auto_flush_p,
 	    chat_room.new.auto_transcript_p,
 	    chat_room.new.login_messages_p,
-	    chat_room.new.logout_messages_p);
+	    chat_room.new.logout_messages_p,
+        chat_room.new.avatar_p);
 
         return v_room_id;
     end new;
@@ -420,7 +440,8 @@ as
         active_p       in chat_rooms.active_p%TYPE,
         archive_p      in chat_rooms.archive_p%TYPE,
 	auto_flush_p   in chat_rooms.auto_flush_p%TYPE,
-	auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE
+	auto_transcript_p	in chat_rooms.auto_transcript_p%TYPE,
+	    avatar_p       in chat_rooms.avatar_p%TYPE	 default 't'
     ) 
     is
     begin
@@ -431,7 +452,8 @@ as
             active_p    = chat_room.edit.active_p,
             archive_p   = chat_room.edit.archive_p,
             auto_flush_p   = chat_room.edit.auto_flush_p,
-            auto_transcript_p = chat_room.edit.auto_transcript_p
+            auto_transcript_p = chat_room.edit.auto_transcript_p,
+            avatar_p       = chat_room.edit.avatar_p
         where 
             room_id = chat_room.edit.room_id;
     end edit;        
@@ -591,13 +613,3 @@ as
 end chat_transcript;
 /
 show errors
-
-
-
-
-
-
-
-
-
-

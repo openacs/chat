@@ -52,6 +52,10 @@
         <td class="form-label">#chat.message_count#</td>
         <td>@message_count@</td>
     </tr>
+    <tr class="form-element">
+        <td class="form-label">#chat.ShowAvatar#</td>
+        <td>@avatar_p@</td>
+    </tr>
 </table>
 <if @room_edit_p;literal@ true>
   <a class="button" href="room-edit?room_id=@room_id@">#chat.Edit#</a>
