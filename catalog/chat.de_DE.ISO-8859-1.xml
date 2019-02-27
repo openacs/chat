@@ -112,6 +112,8 @@
   <msg key="rooms">Räume</msg>
   <msg key="Send_Refresh">Senden</msg>
   <msg key="sending_message">Sende Nachricht...</msg>
+  <msg key="ShowAvatar">Benutzeravatare anzeigen</msg>
+  <msg key="ShowAvatarHelp">Um die Avatare (Benutzerprofilbilder) im Chat anzuzeigen, aktivieren Sie diese Option.</msg>
   <msg key="There_are_no_rooms_available">Es sind keine Räume verfügbar</msg>
   <msg key="to">an</msg>
   <msg key="Transcript">Protokoll</msg>
