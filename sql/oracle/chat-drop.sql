@@ -17,9 +17,6 @@ end;
 show errors
 
 
-drop package chat_room;
-drop package chat_transcript;
-
 drop table chat_msgs;
 drop table chat_transcripts;
 drop table chat_rooms;

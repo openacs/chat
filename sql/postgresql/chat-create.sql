@@ -197,7 +197,7 @@ create table chat_rooms (
     room_id            integer
                        constraint chat_rooms_room_id_pk primary key
                        constraint chat_rooms_room_id_fk
-                       references acs_objects(object_id),
+                       references acs_objects(object_id) on delete cascade,
     -- This is room name.
     pretty_name        varchar(100)
                        constraint chat_rooms_pretty_name_nn not null,
@@ -314,7 +314,7 @@ create table chat_transcripts (
     transcript_id      integer
                        constraint chat_trans_transcript_id_pk primary key
                        constraint chat_trans_transcript_id_fk
-                       references acs_objects(object_id),
+                       references acs_objects(object_id) on delete cascade,
     contents           varchar(32000)
                        constraint chat_trans_contents_nn not null,
     -- Chat transcript name.
@@ -322,7 +322,8 @@ create table chat_transcripts (
                        constraint chat_trans_pretty_name_nn not null,
     description        varchar(2000),
     room_id            integer
-                       constraint chat_trans_room_id_fk references chat_rooms
+                       constraint chat_trans_room_id_fk
+                       references chat_rooms(room_id) on delete cascade
 );
 
 
@@ -345,141 +346,11 @@ create table chat_msgs (
                        check(approved_p in ('t','f')),
     creation_user      integer
                        constraint chat_msgs_creation_user_fk
-                       references parties(party_id)
+                       references parties(party_id) on delete cascade
                        constraint chat_msgs_creation_user_nn not null,
     creation_ip        varchar(50) ,
     creation_date      timestamptz,
     room_id            integer
-                       constraint chat_msgs_room_id_fk references chat_rooms
+                       constraint chat_msgs_room_id_fk
+                       references chat_rooms(room_id) on delete cascade
 );
-
-
----------------------------------
-
-
--- added
-select define_function_args('chat_room__delete_all_msgs','room_id');
-
---
--- procedure chat_room__delete_all_msgs/1
---
-CREATE OR REPLACE FUNCTION chat_room__delete_all_msgs(
-   p_room_id integer
-) RETURNS integer AS $$
-DECLARE
-BEGIN
-   delete from chat_msgs where room_id = p_room_id;
-   return 0;
-END;
-$$ LANGUAGE plpgsql;
-
----------------------------------
-
-
--- added
-select define_function_args('chat_room__del','room_id');
-
---
--- procedure chat_room__del/1
---
-CREATE OR REPLACE FUNCTION chat_room__del(
-   p_room_id integer
-) RETURNS integer AS $$
-DECLARE
-BEGIN
-
-    --TO DO: delete transcriptions?
-
-
-    -- First erase all the messages relate to this chat room.
-    delete from chat_msgs where room_id = p_room_id;
-
-     -- Delete all privileges associate with this room
-     delete from acs_permissions where object_id = p_room_id;
-
-     -- Now delete the chat room itself.
-     delete from chat_rooms where room_id = p_room_id;
-
-     PERFORM acs_object__delete(p_room_id);
-
-   return 0;
-END;
-$$ LANGUAGE plpgsql;
-
-
----------------------------------
-
-
--- added
-select define_function_args('chat_transcript__del','transcript_id');
-
---
--- procedure chat_transcript__del/1
---
-CREATE OR REPLACE FUNCTION chat_transcript__del(
-   p_transcript_id integer
-) RETURNS integer AS $$
-DECLARE
-BEGIN
-
-        -- Delete all privileges associate with this transcript
-        delete from acs_permissions where object_id = p_transcript_id;
-
-        delete from chat_transcripts
-        where transcript_id = p_transcript_id;
-
-        PERFORM acs_object__delete(p_transcript_id);
-        return 0;
-END;
-$$ LANGUAGE plpgsql;
-----------------------------
-
-
--- added
-select define_function_args('chat_room__message_post','room_id,msg,creation_user,creation_ip');
-
---
--- procedure chat_room__message_post/4
---
-CREATE OR REPLACE FUNCTION chat_room__message_post(
-   p_room_id integer,
-   p_msg varchar,
-   p_creation_user integer,
-   p_creation_ip varchar
-) RETURNS integer AS $$
-DECLARE
-   v_msg_id chat_msgs.msg_id%TYPE;
-   v_msg_archive_p chat_rooms.archive_p%TYPE;
-   v_msg chat_msgs.msg%TYPE;
-BEGIN
-    -- Get msg id from the global acs_object sequence.
-    select nextval('t_acs_object_id_seq') into v_msg_id from dual;
-
-    select archive_p into v_msg_archive_p from chat_rooms where room_id = p_room_id;
-
-    if v_msg_archive_p = 't' then
-            v_msg := p_msg;
-        else
-            v_msg := null;
-        end if;
-
-     -- Insert into chat_msgs table.
-     insert into chat_msgs (
-            msg_id,
-            room_id,
-            msg,
-            creation_user,
-            creation_ip,
-            creation_date)
-        values (
-            v_msg_id,
-            p_room_id,
-            v_msg,
-            p_creation_user,
-            p_creation_ip,
-            now()) ;
-return 0;
-END;
-$$ LANGUAGE plpgsql;
-
----------------------------

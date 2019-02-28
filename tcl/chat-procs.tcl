@@ -235,7 +235,26 @@ ad_proc -private chat_post_message_to_db {
 } {
     Log chat message to the database.
 } {
-    db_string post_message {}
+    chat_room_get -room_id $room_id -array c
+    if {$c(archive_p)} {
+        set msg_id [db_nextval acs_object_id_seq]
+        db_dml save_message {
+            insert into chat_msgs (
+                                   msg_id,
+                                   room_id,
+                                   msg,
+                                   creation_user,
+                                   creation_ip,
+                                   creation_date)
+            values (
+                    :msg_id,
+                    :room_id,
+                    :msg,
+                    :creation_user,
+                    :creation_ip,
+                    current_timestamp)
+        }
+    }
 }
 
 ad_proc -public chat_room_get {
@@ -375,7 +394,17 @@ ad_proc -public chat_room_delete {
 } {
     Delete chat room.
 } {
-    db_string delete_room {}
+    # Delete the transcripts explicitly, otherwise the acs_object
+    # related to them would stay around
+    foreach transcript_id [db_list get_transcripts {
+        select transcript_id from chat_transcripts
+        where room_id = :room_id
+    }] {
+        ::xo::db::sql::acs_object delete \
+            -object_id $transcript_id
+    }
+    ::xo::db::sql::acs_object delete \
+        -object_id $room_id
     ns_cache flush -- chat_room_cache $room_id
 }
 
@@ -384,7 +413,10 @@ ad_proc -public chat_room_message_delete {
 } {
     Delete all message in the room.
 } {
-    db_string delete_message {}
+    db_dml delete_message {
+        delete from chat_msgs
+        where room_id = :room_id
+    }
 }
 
 ad_proc -public chat_message_count {
@@ -392,7 +424,10 @@ ad_proc -public chat_message_count {
 } {
     Get message count in the room.
 } {
-    return [db_string message_count {} -default 0]
+    return [db_string message_count {
+        select count(*) from chat_msgs
+        where room_id = :room_id
+    } -default 0]
 }
 
 ad_proc -public room_active_status {
@@ -596,7 +631,8 @@ ad_proc -public chat_transcript_delete {
 } {
     Delete chat transcript.
 } {
-    db_string delete_transcript {}
+    ::xo::db::sql::acs_object delete \
+        -object_id $transcript_id
 }
 
 ad_proc -public chat_transcript_edit {

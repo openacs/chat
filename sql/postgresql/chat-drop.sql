@@ -42,12 +42,6 @@ drop function inline_0 ();
 select acs_object_type__drop_type('chat_room','t');
 select acs_object_type__drop_type('chat_transcript','t');
 
-drop   function chat_transcript__del (integer);
-
-drop   function chat_room__message_post (integer, varchar, integer, varchar);
-drop   function chat_room__delete_all_msgs (integer);
-drop   function chat_room__del (integer);
-
 drop table chat_msgs;
 drop table chat_transcripts;
 drop table chat_rooms;
