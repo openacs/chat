@@ -112,6 +112,8 @@
   <msg key="rooms">stanze</msg>
   <msg key="Send_Refresh">Invia/Rinfresca</msg>
   <msg key="sending_message">Invio messaggio...</msg>
+  <msg key="ShowAvatar">Mostra avatar utente</msg>
+  <msg key="ShowAvatarHelp">Mostra gli avatar (l&#39;immagine del profilo utente) nella chat</msg>
   <msg key="There_are_no_rooms_available">Non ci sono stanze disponibili</msg>
   <msg key="to">a</msg>
   <msg key="Transcript">Trascrizione</msg>
