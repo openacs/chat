@@ -32,8 +32,6 @@ select acs_privilege__create_privilege('chat_ban', 'Ban from a chat room', null)
 select acs_privilege__create_privilege('chat_read', 'View chat message', null);
 select acs_privilege__create_privilege('chat_write', 'Write chat message', null);
 
-select acs_privilege__create_privilege('chat_avatar_allow', 'Enable/disable user avatars in a chat room', null);
-
 -- Set of privileges for regular chat user.
 select acs_privilege__create_privilege('chat_user', 'Regular chat user', null);
 select acs_privilege__add_child('chat_user', 'chat_read');
@@ -61,7 +59,6 @@ select acs_privilege__add_child('chat_room_admin', 'chat_room_view');
 select acs_privilege__add_child('chat_room_admin', 'chat_moderator_grant');
 select acs_privilege__add_child('chat_room_admin', 'chat_moderator_revoke');
 select acs_privilege__add_child('chat_room_admin', 'chat_moderator');
-select acs_privilege__add_child('chat_room_admin', 'chat_avatar_allow');
 
 -- Site wite admin also administrator of the chat room.
 select acs_privilege__add_child('admin', 'chat_room_admin');

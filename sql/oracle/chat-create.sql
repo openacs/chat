@@ -33,8 +33,6 @@ begin
     acs_privilege.create_privilege('chat_read', 'View chat message');
     acs_privilege.create_privilege('chat_write', 'Write chat message');
 
-    acs_privilege.create_privilege('chat_avatar_allow', 'Enable/disable user avatars in a chat room');
-
     -- Set of privileges for regular chat user.
     acs_privilege.create_privilege('chat_user', 'Regular chat user');
     acs_privilege.add_child('chat_user', 'chat_read');
@@ -62,7 +60,6 @@ begin
     acs_privilege.add_child('chat_room_admin', 'chat_moderator_grant');
     acs_privilege.add_child('chat_room_admin', 'chat_moderator_revoke');
     acs_privilege.add_child('chat_room_admin', 'chat_moderator');
-    acs_privilege.add_child('chat_room_admin', 'chat_avatar_allow');
 
     -- Site wite admin also administrator of the chat room.
     acs_privilege.add_child('admin', 'chat_room_admin');

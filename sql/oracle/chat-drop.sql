@@ -50,7 +50,6 @@ begin
     acs_privilege.remove_child('chat_room_admin', 'chat_moderator_grant');
     acs_privilege.remove_child('chat_room_admin', 'chat_moderator_revoke');
     acs_privilege.remove_child('chat_room_admin', 'chat_moderator');
-    acs_privilege.remove_child('chat_room_admin', 'chat_avatar_allow');
 
     acs_privilege.remove_child('admin', 'chat_room_admin');
 
@@ -75,7 +74,6 @@ begin
     acs_privilege.drop_privilege('chat_room_admin');
     acs_privilege.drop_privilege('chat_moderator');
     acs_privilege.drop_privilege('chat_user');
-    acs_privilege.drop_privilege('chat_avatar_allow');
 end;
 /
 show errors

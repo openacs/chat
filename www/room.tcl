@@ -47,7 +47,6 @@ set user_revoke_p       [permission::permission_p -object_id $room_id -privilege
 set moderator_grant_p   [permission::permission_p -object_id $room_id -privilege chat_moderator_grant]
 set moderator_revoke_p  [permission::permission_p -object_id $room_id -privilege chat_moderator_revoke]
 set transcript_create_p [permission::permission_p -object_id $room_id -privilege chat_transcript_create]
-set avatar_allow_p      [permission::permission_p -object_id $room_id -privilege chat_avatar_allow]
 
 ###
 # Get room basic information.

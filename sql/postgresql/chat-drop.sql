@@ -45,7 +45,6 @@ BEGIN
  PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_moderator_grant');
  PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_moderator_revoke');
  PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_moderator');
- PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_avatar_allow');
 
  -- remove Site wite admin also administrator of the chat room
  PERFORM acs_privilege__remove_child('admin', 'chat_room_admin');
@@ -71,7 +70,6 @@ BEGIN
  PERFORM acs_privilege__drop_privilege('chat_room_admin');
  PERFORM acs_privilege__drop_privilege('chat_moderator');
  PERFORM acs_privilege__drop_privilege('chat_user');
- PERFORM acs_privilege__drop_privilege('chat_avatar_allow');
 
   return 0;
 END;
