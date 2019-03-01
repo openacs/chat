@@ -1,6 +1,10 @@
 # /chat/tcl/chat-procs.tcl
 ad_library {
-    TCL Library for the chat system v.4
+    TCL Library for the chat system v.6
+
+    These procs serve now only as a backward compatibility layer, as
+    all the relevant logic is implemented in xotcl-chat-procs. These
+    procs will soon be deprecated.
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 17, 2000
@@ -15,26 +19,8 @@ ad_proc -private chat_post_message_to_db {
 } {
     Log chat message to the database.
 } {
-    chat_room_get -room_id $room_id -array c
-    if {$c(archive_p)} {
-        set msg_id [db_nextval acs_object_id_seq]
-        db_dml save_message {
-            insert into chat_msgs (
-                                   msg_id,
-                                   room_id,
-                                   msg,
-                                   creation_user,
-                                   creation_ip,
-                                   creation_date)
-            values (
-                    :msg_id,
-                    :room_id,
-                    :msg,
-                    :creation_user,
-                    :creation_ip,
-                    current_timestamp)
-        }
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r post_message -creation_user $creation_user -creation_ip $creation_ip -msg $msg
 }
 
 ad_proc -public chat_room_get {
@@ -47,22 +33,22 @@ ad_proc -public chat_room_get {
     array set row [ns_cache eval chat_room_cache $room_id {
         chat_room_get_not_cached $room_id
     }]
+    #array set row [chat_room_get_not_cached $room_id]
 }
 
 ad_proc -private chat_room_get_not_cached {
     room_id
 } {
-    if {![db_0or1row select_room_info {
-        select * from chat_rooms
-        where room_id = :room_id
-    } -column_array row]} {
-        set msg "Cannot find data for chatroom $room_id"
-        ad_log error $msg
-        error $msg
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    foreach var [$r info vars] {
+        set row($var) [$r set $var]
     }
+    # todo: extend oo machinery so these attributes are also returned
+    # by get_instance_from_db
     acs_object::get \
         -object_id $room_id \
         -array obj
+    set row(object_id)      $obj(object_id)
     set row(context_id)     $obj(context_id)
     set row(creation_user)  $obj(creation_user)
     set row(creation_date)  $obj(creation_date_ansi)
@@ -91,34 +77,22 @@ ad_proc -public chat_room_new {
 } {
     Create new chat room. Return room_id if successful else raise error.
 } {
-    if {[ad_conn isconnected] && $creation_user eq ""} {
-        set creation_user [ad_conn user_id]
-    }
-
-    db_transaction {
-        set room_id [::xo::db::sql::acs_object new \
-            -object_type   "chat_room" \
-            -creation_user $creation_user \
-            -creation_ip   $creation_ip \
-            -context_id    $context_id]
-
-        db_dml insert_room {}
-
-        if {$creation_user ne ""} {
-            foreach privilege {edit view delete} {
-                permission::grant \
-                    -party_id  $creation_user \
-                    -object_id $room_id \
-                    -privilege chat_room_${privilege}
-            }
-            permission::grant \
-                -party_id  $creation_user \
-                -object_id $room_id \
-                -privilege chat_transcript_create
-        }
-    }
-
-    return $room_id
+    set r [::xo::db::chat_room new \
+               -description          $description \
+               -moderated_p          $moderated_p \
+               -active_p             $active_p \
+               -archive_p            $archive_p \
+               -auto_flush_p         $auto_flush_p \
+               -auto_transcript_p    $auto_transcript_p \
+               -login_messages_p     $login_messages_p \
+               -logout_messages_p    $logout_messages_p \
+               -messages_time_window $messages_time_window \
+               -avatar_p             $avatar_p \
+               -pretty_name          $pretty_name]
+    $r set context_id    $context_id
+    $r set creation_user $creation_user
+    $r set creation_ip   $creation_ip
+    return [$r save_new]
 }
 
 ad_proc -public chat_room_exists_p {
@@ -128,25 +102,7 @@ ad_proc -public chat_room_exists_p {
 
     @return a boolean
 } {
-    if {[ns_cache names chat_room_cache $room_id] ne ""} {
-    # chat room is in cache: it exists "for sure"
-        return 1
-    } elseif {[info exists ::chat_room_deleted_p($room_id)]} {
-    # chat room deletion has been recorded in threaded cache: as
-    # object id comes from a sequence, unless somebody puts an id
-    # by hand, the same will never be used again system wide, so
-    # it is safe to cache this
-        return 0
-    } elseif {[db_0or1row room_exists {
-        select 1 from chat_rooms
-    where room_id = :room_id}]} {
-    # chat room existence has been confirmed by query
-        return 1
-    } else {
-    # chat room is not there: take note of this in threaded cache
-        set ::chat_room_deleted_p($room_id) 1
-        return 0
-    }
+    return [::xo::db::Class exists_in_db -id $room_id]
 }
 
 ad_proc -public chat_room_edit {
@@ -165,8 +121,23 @@ ad_proc -public chat_room_edit {
 } {
     Edit information on chat room. All information require.
 } {
-    db_dml update_room {}
-    ns_cache flush chat_room_cache $room_id
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    foreach var {
+        pretty_name
+        description
+        moderated_p
+        active_p
+        archive_p
+        auto_flush_p
+        auto_transcript_p
+        login_messages_p
+        logout_messages_p
+        messages_time_window
+        avatar_p
+    } {
+        $r set $var [set $var]
+    }
+    $r save
 }
 
 ad_proc -public chat_room_delete {
@@ -174,18 +145,8 @@ ad_proc -public chat_room_delete {
 } {
     Delete chat room.
 } {
-    # Delete the transcripts explicitly, otherwise the acs_object
-    # related to them would stay around
-    foreach transcript_id [db_list get_transcripts {
-        select transcript_id from chat_transcripts
-        where room_id = :room_id
-    }] {
-        ::xo::db::sql::acs_object delete \
-            -object_id $transcript_id
-    }
-    ::xo::db::sql::acs_object delete \
-        -object_id $room_id
-    ns_cache flush -- chat_room_cache $room_id
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r delete
 }
 
 ad_proc -public chat_room_message_delete {
@@ -193,10 +154,8 @@ ad_proc -public chat_room_message_delete {
 } {
     Delete all message in the room.
 } {
-    db_dml delete_message {
-        delete from chat_msgs
-        where room_id = :room_id
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r delete_messages
 }
 
 ad_proc -public chat_message_count {
@@ -204,10 +163,8 @@ ad_proc -public chat_message_count {
 } {
     Get message count in the room.
 } {
-    return [db_string message_count {
-        select count(*) from chat_msgs
-        where room_id = :room_id
-    } -default 0]
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r count_messages
 }
 
 ad_proc -public room_active_status {
@@ -215,11 +172,11 @@ ad_proc -public room_active_status {
 } {
     Get room active status.
 } {
-    if {[chat_room_exists_p $room_id]} {
-        chat_room_get -room_id $room_id -array c
-        return [expr {$c(active_p) ne "" ? $c(active_p) : "f"}]
+    if {[::xo::db::Class exists_in_db -id $room_id]} {
+        set r [::xo::db::Class get_instance_from_db -id $room_id]
+        return [string is true -strict [$r set active_p]]
     } else {
-        return "f"
+        return false
     }
 }
 
@@ -228,8 +185,8 @@ ad_proc -public chat_room_name {
 } {
     Get chat room name.
 } {
-    chat_room_get -room_id $room_id -array c
-    return $c(pretty_name)
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    return [$r set pretty_name]
 }
 
 ad_proc -public chat_moderator_grant {
@@ -238,10 +195,8 @@ ad_proc -public chat_moderator_grant {
 } {
     Grant party a chat moderate privilege to this chat room.
 } {
-    permission::grant \
-        -party_id  $party_id \
-        -object_id $room_id \
-        -privilege "chat_room_moderate"
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r grant_moderator -party_id $party_id
 }
 
 ad_proc -public chat_moderator_revoke {
@@ -250,10 +205,8 @@ ad_proc -public chat_moderator_revoke {
 } {
     Revoke party a chat moderate privilege to this chat room.
 } {
-    permission::revoke \
-        -party_id  $party_id \
-        -object_id $room_id \
-        -privilege "chat_room_moderate"
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r revoke_moderator -party_id $party_id
 }
 
 ad_proc -public chat_user_grant {
@@ -262,14 +215,8 @@ ad_proc -public chat_user_grant {
 } {
     Grant party a chat privilege to this chat room.
 } {
-    db_transaction {
-        foreach privilege {read write} {
-            permission::grant \
-                -party_id  $party_id \
-                -object_id $room_id \
-                -privilege chat_${privilege}
-        }
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r grant_user -party_id $party_id
 }
 
 ad_proc -public chat_user_revoke {
@@ -278,14 +225,8 @@ ad_proc -public chat_user_revoke {
 } {
     Revoke party a chat privilege to this chat room.
 } {
-    db_transaction {
-        foreach privilege {read write} {
-            permission::revoke \
-                -party_id  $party_id \
-                -object_id $room_id \
-                -privilege chat_${privilege}
-        }
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r revoke_user -party_id $party_id
 }
 
 ad_proc -public chat_user_ban {
@@ -294,10 +235,8 @@ ad_proc -public chat_user_ban {
 } {
     Explicit ban user from this chat room.
 } {
-    permission::grant \
-        -party_id  $party_id \
-        -object_id $room_id \
-        -privilege "chat_ban"
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r ban_user -party_id $party_id
 }
 
 ad_proc -public chat_user_unban {
@@ -306,10 +245,8 @@ ad_proc -public chat_user_unban {
 } {
     unban user from this chat room.
 } {
-    permission::revoke \
-        -party_id  $party_id \
-        -object_id $room_id \
-        -privilege "chat_ban"
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r unban_user -party_id $party_id
 }
 
 ad_proc -public chat_revoke_moderators {
@@ -318,12 +255,8 @@ ad_proc -public chat_revoke_moderators {
 } {
     Revoke a list of parties of a moderate privilege from this room.
 } {
-    foreach party_id $revoke_list {
-        permission::revoke \
-            -party_id  $party_id \
-            -object_id $room_id \
-            -privilege "chat_moderate_room"
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r revoke_moderator -party_id $revoke_list
 }
 
 ad_proc -public chat_room_moderate_p {
@@ -331,8 +264,8 @@ ad_proc -public chat_room_moderate_p {
 } {
     Return the moderate status of this chat room.
 } {
-    chat_room_get -room_id $room_id -array c
-    return $c(moderated_p)
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    return [$r set moderated_p]
 }
 
 ad_proc -public chat_user_name {
@@ -340,11 +273,7 @@ ad_proc -public chat_user_name {
 } {
     Return display name of this user to use in chat.
 } {
-    set name [acs_user::get_user_info -user_id $user_id -element screen_name]
-    if {$name eq ""} {
-        set name [person::name -person_id $user_id]
-    }
-    return $name
+    return [::chat::Package get_user_name -user_id $user_id]
 }
 
 ad_proc -public chat_message_post {
@@ -355,20 +284,8 @@ ad_proc -public chat_message_post {
 } {
     Post message to the chat room and broadcast to all applet clients. Used by ajax + html.
 } {
-    if {$moderator_p == 1} {
-        set status "approved"
-    } else {
-        set status "pending"
-    }
-
-    # do not write messages to the database if the room should not be archived
-    chat_room_get -room_id $room_id -array room_info
-    if { $room_info(archive_p) == "f" } { return }
-
-    # write message to the database
-    if {[catch {chat_post_message_to_db -creation_user $user_id $room_id $message} errmsg]} {
-        ns_log error "chat_post_message_to_db: error: $errmsg"
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r post_message -msg $message -creation_user $user_id
 }
 
 ad_proc -public chat_transcript_new {
@@ -382,28 +299,15 @@ ad_proc -public chat_transcript_new {
 } {
     Create chat transcript.
 } {
-    if {[ad_conn isconnected] && $creation_user eq ""} {
-        set creation_user [ad_conn user_id]
-    }
-
-    db_transaction {
-        set transcript_id [::xo::db::sql::acs_object new \
-            -object_type   "chat_transcript" \
-            -creation_user $creation_user \
-            -creation_ip   $creation_ip \
-            -context_id    $context_id]
-
-        db_dml insert_transcript {}
-
-        foreach privilege {edit view delete} {
-            permission::grant \
-                -party_id  $creation_user \
-                -object_id $transcript_id \
-                -privilege chat_transcript_${privilege}
-        }
-    }
-
-    return $transcript_id
+    set t [::xo::db::chat_transcript new \
+               -description $description \
+               -pretty_name $pretty_name \
+               -contents $contents \
+               -room_id $room_id]
+    $t set context_id    $context_id
+    $t set creation_user $creation_user
+    $t set creation_ip   $creation_ip
+    return [$t save_new]
 }
 
 ad_proc -public chat_transcript_delete {
@@ -423,16 +327,21 @@ ad_proc -public chat_transcript_edit {
 } {
     Edit chat transcript.
 } {
-    db_dml update_transcript {}
+    set t [::xo::db::Class get_instance_from_db -id $transcript_id]
+    foreach var {
+        pretty_name
+        description
+        contents
+    } {
+        $t set $var [set $var]
+    }
+    $t save
 }
 
 ad_proc -private chat_flush_rooms {} {
     Flush the messages in all of the chat rooms
 } {
-    set room_ids [db_list get_rooms *SQL*]
-    foreach room_id $room_ids {
-        chat_room_flush $room_id
-    }
+    ::chat::Package flush_rooms
 }
 
 ad_proc -private chat_room_flush {
@@ -440,28 +349,8 @@ ad_proc -private chat_room_flush {
 } {
     Flush the messages a single chat room
 } {
-    db_transaction {
-        chat_room_get -room_id $room_id -array room_info
-        # do we have to create a transcript for the room
-        if { $room_info(auto_transcript_p) == "t" } {
-        # build a list of all messages
-        set contents [list]
-            foreach message [db_list_of_lists get_archives_messages {}] {
-                lassign $message msg creation_user creation_date
-                set user_name [expr {$creation_user > 0 ? [chat_user_name $creation_user] : "system"}]
-                lappend contents "\[$creation_date\] <b>${user_name}</b>: $msg"
-            }
-            if { $contents ne "" } {
-                set today [clock format [clock seconds] -format "%d.%m.%Y"]
-                chat_transcript_new \
-                    -description "#chat.automatically_created_transcript#" \
-                    "#chat.transcript_of_date# $today" \
-                    [join $contents "<br>\n"] $room_id
-            }
-        }
-        # clear all the messages in the room
-        chat_room_message_delete $room_id
-    }
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r flush
 }
 
 # Local variables:
