@@ -8,12 +8,15 @@ ad_page_contract {
     room_id:naturalnum,notnull
 }
 
-if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
+if { [catch {
+  set r [::xo::db::Class get_instance_from_db -id $room_id]
+  set room_name [$r set pretty_name]
+} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
     ad_script_abort
 }
 
-set active [room_active_status $room_id]
+set active  [$r set active_p]
 
 # Local variables:
 #    mode: tcl

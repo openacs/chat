@@ -159,6 +159,14 @@ namespace eval ::chat {
         }
     }
 
+    ::xo::db::chat_room instproc get_instance_from_db {} {
+        next
+        ::xo::dc 1row get_metadata {
+            select context_id, creation_ip, creation_user
+            from acs_objects where object_id = :room_id
+        }
+    }
+
     ::xo::db::chat_room instproc save_new {} {
         if {![info exists :creation_user]} {
             set :creation_user [expr {[ns_conn isconnected] ? [ad_conn user_id] : ""}]

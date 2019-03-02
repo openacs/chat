@@ -37,21 +37,21 @@ namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
     Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
-        if {![chat_room_exists_p $chat_id]} {
+        if {![::xo::db::Class exists_in_db -id $chat_id]} {
             return [_ chat.Room_not_found]
         } else {
-            chat_room_get -room_id $chat_id -array c
-            set package_id $c(context_id)
+            set r [::xo::db::Class get_instance_from_db -id $chat_id]
+            set package_id [$r set context_id]
             set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
             next -chat_id           $chat_id \
                  -skin              $chat_skin \
                  -package_id        $package_id \
                  -mode              $mode \
                  -path              $path \
-                 -logout_messages_p $c(logout_messages_p) \
-                 -login_messages_p  $c(login_messages_p) \
-                 -timewindow        $c(messages_time_window) \
-                 -avatar_p          $c(avatar_p)
+                 -logout_messages_p [$r set logout_messages_p] \
+                 -login_messages_p  [$r set login_messages_p] \
+                 -timewindow        [$r set messages_time_window] \
+                 -avatar_p          [$r set avatar_p]
         }
     }
 
@@ -79,7 +79,7 @@ namespace eval ::chat {
     # if chat doesn't exist anymore, send a message that will inform
     # the user of being looking at an invalid chat
     Chat instproc check_valid_room {} {
-        if {![chat_room_exists_p [:chat_id]]} {
+        if {![::xo::db::Class exists_in_db -id [:chat_id]]} {
             ns_return 500 text/plain "chat-errmsg: [_ chat.Room_not_found]"
             ad_script_abort
         }
@@ -95,9 +95,10 @@ namespace eval ::chat {
         {-uid ""}
         msg
     } {
-        if {![chat_room_exists_p ${:chat_id}]} {
+        if {![::xo::db::Class exists_in_db -id ${:chat_id}]} {
             return
         }
+        set r [::xo::db::Class get_instance_from_db -id ${:chat_id}]
 
         # ignore empty messages
         if {$msg eq ""} return
@@ -109,7 +110,7 @@ namespace eval ::chat {
         # message is sent
         if {[:current_message_valid]} {
             set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
-            chat_message_post ${:chat_id} $uid $msg 1
+            $r post_message -msg $msg -creation_user $uid
         }
 
         return $retval

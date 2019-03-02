@@ -15,7 +15,13 @@ ad_page_contract {
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_edit
 
-if { [catch {chat_transcript_edit $transcript_id $transcript_name $description $contents} errmsg] } {
+if { [catch {
+    set t [::xo::db::Class get_instance_from_db -id $transcript_id]
+    $t set pretty_name $transcript_name
+    $t set description $description
+    $t set contents    $contents
+    $t save
+} errmsg] } {
     ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
     ad_script_abort
 }

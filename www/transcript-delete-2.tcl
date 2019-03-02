@@ -9,7 +9,10 @@ ad_page_contract {
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_delete
 
-if { [catch {chat_transcript_delete $transcript_id} errmsg] } {
+if { [catch {
+    set t [::xo::db::Class get_instance_from_db -id $transcript_id]
+    $t delete
+} errmsg] } {
     ad_return_complaint 1 "[_ chat.Delete_transcript_failed]: $errmsg"
     ad_script_abort
 }

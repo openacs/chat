@@ -24,7 +24,9 @@ set context_bar [list "[_ chat.Ban_user]"]
 set submit_label "[_ chat.Ban]"
 set title "[_ chat.Ban_user]"
 set action "user-ban-2"
-set description "[_ chat.Ban_chat_read_write] <b>[chat_room_name $room_id]</b> [_ chat.to]"
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set room_name [$r set pretty_name]
+set description "[_ chat.Ban_chat_read_write] <b>$room_name</b> [_ chat.to]"
 db_multirow parties list_parties {}
 
 ad_return_template grant-entry

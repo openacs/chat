@@ -23,7 +23,10 @@ ad_page_contract {
     msgs:multirow
 }
 
-if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
+if { [catch {
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    set room_name [$r set pretty_name]
+} errmsg] } {
     ad_return_complaint 1 "[_ chat.Room_not_found]"
     ad_script_abort
 }
@@ -38,7 +41,7 @@ set user_id [ad_conn user_id]
 set read_p  [permission::permission_p -object_id $room_id -privilege "chat_read"]
 set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
 set ban_p   [permission::permission_p -object_id $room_id -privilege "chat_ban"]
-set moderate_room_p [chat_room_moderate_p $room_id]
+set moderate_room_p [$r set moderated_p]
 
 if { $moderate_room_p == "t" } {
     set moderator_p [permission::permission_p -object_id $room_id -privilege "chat_moderator"]

@@ -51,18 +51,18 @@ set transcript_create_p [permission::permission_p -object_id $room_id -privilege
 ###
 # Get room basic information.
 ###
-chat_room_get -room_id $room_id -array r
-set pretty_name          $r(pretty_name)
-set description          $r(description)
-set moderated_p          $r(moderated_p)
-set active_p             $r(active_p)
-set archive_p            $r(archive_p)
-set auto_flush_p         $r(auto_flush_p)
-set auto_transcript_p    $r(auto_transcript_p)
-set login_messages_p     $r(login_messages_p)
-set logout_messages_p    $r(logout_messages_p)
-set messages_time_window $r(messages_time_window)
-set avatar_p             $r(avatar_p)
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set pretty_name          [$r set pretty_name]
+set description          [$r set description]
+set moderated_p          [$r set moderated_p]
+set active_p             [$r set active_p]
+set archive_p            [$r set archive_p]
+set auto_flush_p         [$r set auto_flush_p]
+set auto_transcript_p    [$r set auto_transcript_p]
+set login_messages_p     [$r set login_messages_p]
+set logout_messages_p    [$r set logout_messages_p]
+set messages_time_window [$r set messages_time_window]
+set avatar_p             [$r set avatar_p]
 
 # prettify flags
 foreach property {
@@ -79,7 +79,7 @@ foreach property {
 }
 
 # get db-message count
-set message_count [chat_message_count $room_id]
+set message_count [$r count_messages]
 
 # List user ban from chat
 db_multirow -extend {name email unban_url unban_text} banned_users list_user_ban {} {

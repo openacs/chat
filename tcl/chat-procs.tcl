@@ -11,19 +11,7 @@ ad_library {
     @cvs-id $Id$
 }
 
-ad_proc -private chat_post_message_to_db {
-    {-creation_user ""}
-    {-creation_ip ""}
-    room_id
-    msg
-} {
-    Log chat message to the database.
-} {
-    set r [::xo::db::Class get_instance_from_db -id $room_id]
-    $r post_message -creation_user $creation_user -creation_ip $creation_ip -msg $msg
-}
-
-ad_proc -public chat_room_get {
+ad_proc -deprecated -public chat_room_get {
     {-room_id {}}
     {-array:required}
 } {
@@ -59,7 +47,7 @@ ad_proc -private chat_room_get_not_cached {
     return [array get row]
 }
 
-ad_proc -public chat_room_new {
+ad_proc -deprecated -public chat_room_new {
     {-description ""}
     {-moderated_p f}
     {-active_p t}
@@ -95,7 +83,7 @@ ad_proc -public chat_room_new {
     return [$r save_new]
 }
 
-ad_proc -public chat_room_exists_p {
+ad_proc -deprecated -public chat_room_exists_p {
     room_id
 } {
     Return whether a chat room exists
@@ -105,7 +93,7 @@ ad_proc -public chat_room_exists_p {
     return [::xo::db::Class exists_in_db -id $room_id]
 }
 
-ad_proc -public chat_room_edit {
+ad_proc -deprecated -public chat_room_edit {
     room_id
     pretty_name
     description
@@ -138,18 +126,20 @@ ad_proc -public chat_room_edit {
         $r set $var [set $var]
     }
     $r save
+    ns_cache flush -- chat_room_cache $room_id
 }
 
-ad_proc -public chat_room_delete {
+ad_proc -deprecated -public chat_room_delete {
     room_id
 } {
     Delete chat room.
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r delete
+    ns_cache flush -- chat_room_cache $room_id
 }
 
-ad_proc -public chat_room_message_delete {
+ad_proc -deprecated -public chat_room_message_delete {
     room_id
 } {
     Delete all message in the room.
@@ -158,7 +148,7 @@ ad_proc -public chat_room_message_delete {
     $r delete_messages
 }
 
-ad_proc -public chat_message_count {
+ad_proc -deprecated -public chat_message_count {
     room_id
 } {
     Get message count in the room.
@@ -167,7 +157,7 @@ ad_proc -public chat_message_count {
     $r count_messages
 }
 
-ad_proc -public room_active_status {
+ad_proc -deprecated -public room_active_status {
     room_id
 } {
     Get room active status.
@@ -180,7 +170,7 @@ ad_proc -public room_active_status {
     }
 }
 
-ad_proc -public chat_room_name {
+ad_proc -deprecated -public chat_room_name {
     room_id
 } {
     Get chat room name.
@@ -189,7 +179,7 @@ ad_proc -public chat_room_name {
     return [$r set pretty_name]
 }
 
-ad_proc -public chat_moderator_grant {
+ad_proc -deprecated -public chat_moderator_grant {
     room_id
     party_id
 } {
@@ -199,7 +189,7 @@ ad_proc -public chat_moderator_grant {
     $r grant_moderator -party_id $party_id
 }
 
-ad_proc -public chat_moderator_revoke {
+ad_proc -deprecated -public chat_moderator_revoke {
     room_id
     party_id
 } {
@@ -209,7 +199,7 @@ ad_proc -public chat_moderator_revoke {
     $r revoke_moderator -party_id $party_id
 }
 
-ad_proc -public chat_user_grant {
+ad_proc -deprecated -public chat_user_grant {
     room_id
     party_id
 } {
@@ -219,7 +209,7 @@ ad_proc -public chat_user_grant {
     $r grant_user -party_id $party_id
 }
 
-ad_proc -public chat_user_revoke {
+ad_proc -deprecated -public chat_user_revoke {
     room_id
     party_id
 } {
@@ -229,7 +219,7 @@ ad_proc -public chat_user_revoke {
     $r revoke_user -party_id $party_id
 }
 
-ad_proc -public chat_user_ban {
+ad_proc -deprecated -public chat_user_ban {
     room_id
     party_id
 } {
@@ -239,7 +229,7 @@ ad_proc -public chat_user_ban {
     $r ban_user -party_id $party_id
 }
 
-ad_proc -public chat_user_unban {
+ad_proc -deprecated -public chat_user_unban {
     room_id
     party_id
 } {
@@ -249,7 +239,7 @@ ad_proc -public chat_user_unban {
     $r unban_user -party_id $party_id
 }
 
-ad_proc -public chat_revoke_moderators {
+ad_proc -deprecated -public chat_revoke_moderators {
     room_id
     revoke_list
 } {
@@ -259,7 +249,7 @@ ad_proc -public chat_revoke_moderators {
     $r revoke_moderator -party_id $revoke_list
 }
 
-ad_proc -public chat_room_moderate_p {
+ad_proc -deprecated -public chat_room_moderate_p {
     room_id
 } {
     Return the moderate status of this chat room.
@@ -268,7 +258,7 @@ ad_proc -public chat_room_moderate_p {
     return [$r set moderated_p]
 }
 
-ad_proc -public chat_user_name {
+ad_proc -deprecated -public chat_user_name {
     user_id
 } {
     Return display name of this user to use in chat.
@@ -276,7 +266,7 @@ ad_proc -public chat_user_name {
     return [::chat::Package get_user_name -user_id $user_id]
 }
 
-ad_proc -public chat_message_post {
+ad_proc -deprecated -public chat_message_post {
     room_id
     user_id
     message
@@ -288,7 +278,7 @@ ad_proc -public chat_message_post {
     $r post_message -msg $message -creation_user $user_id
 }
 
-ad_proc -public chat_transcript_new {
+ad_proc -deprecated -public chat_transcript_new {
     {-description ""}
     {-context_id ""}
     {-creation_user ""}
@@ -310,7 +300,7 @@ ad_proc -public chat_transcript_new {
     return [$t save_new]
 }
 
-ad_proc -public chat_transcript_delete {
+ad_proc -deprecated -public chat_transcript_delete {
     transcript_id
 } {
     Delete chat transcript.
@@ -319,7 +309,7 @@ ad_proc -public chat_transcript_delete {
         -object_id $transcript_id
 }
 
-ad_proc -public chat_transcript_edit {
+ad_proc -deprecated -public chat_transcript_edit {
     transcript_id
     pretty_name
     description

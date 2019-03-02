@@ -17,7 +17,8 @@ permission::require_permission -object_id $room_id -privilege chat_room_delete
 
 set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Delete_room]"]
 
-set pretty_name [chat_room_name $room_id]
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set pretty_name [$r set pretty_name]
 
 ad_return_template
 

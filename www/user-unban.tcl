@@ -17,8 +17,8 @@ set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"]
 
 set party_pretty_name [acs_object_name $party_id]
 
-
-set pretty_name [chat_room_name $room_id]
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set pretty_name [$r set pretty_name]
 
 # Local variables:
 #    mode: tcl

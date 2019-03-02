@@ -11,7 +11,10 @@ ad_page_contract {
 
 permission::require_permission -object_id $room_id -privilege chat_room_delete
 
-if { [catch {chat_room_delete $room_id} errmsg] } {
+if { [catch {
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    $r delete
+} errmsg] } {
     ad_return_complaint 1 "[_ chat.Delete_room_failed]: $errmsg"
     ad_script_abort
 }

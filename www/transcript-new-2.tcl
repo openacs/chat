@@ -16,22 +16,26 @@ set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 set creation_ip [ad_conn peeraddr]
 
-set transcript_id [chat_transcript_new \
-    -description $description \
-    -context_id $package_id \
-    -creation_user $user_id \
-    -creation_ip $creation_ip \
-    $transcript_name $contents $room_id
-]
+set t [::xo::db::chat_transcript new \
+           -description $description \
+           -context_id $package_id \
+           -creation_user $user_id \
+           -creation_ip $creation_ip \
+           -pretty_name $transcript_name \
+           -contents $contents \
+           -room_id $room_id]
+set transcript_id [$t save_new]
 
+set r [::xo::db::Class get_instance_from_db -id $room_id]
 if { $delete_messages eq "on" } {
-    chat_room_message_delete $room_id
+    $r delete_messages
     # forward the information to AJAX
     ::chat::Chat flush_messages -chat_id $room_id
 }
 
 if { $deactivate_room eq "on" } {
-    db_dml "update_chat" "update chat_rooms set active_p = 'f' where room_id = $room_id"
+    $r set active_p false
+    $r save
 }
 
 ad_returnredirect "chat-transcript?room_id=$room_id&transcript_id=$transcript_id"

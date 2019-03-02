@@ -19,14 +19,11 @@ ad_page_contract {
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_view
 
 set context_bar [list "[_ chat.View_transcript]"]
-db_1row get_transcript {
-    select pretty_name as transcript_name,
-           description,
-           contents,
-           room_id
-    from chat_transcripts
-    where transcript_id=:transcript_id
-}
+set t [::xo::db::Class get_instance_from_db -id $transcript_id]
+set transcript_name [$t set transcript_name]
+set description     [$t set description]
+set contents        [$t set contents]
+set room_is         [$t set room_id]
 
 ad_return_template
 

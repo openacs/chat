@@ -14,13 +14,13 @@ permission::require_permission -object_id $transcript_id -privilege chat_transcr
 set context_bar [list "[_ chat.Edit_transcript]"]
 
 set submit_label "[_ chat.Edit]"
-set active_p [room_active_status $room_id]
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set active_p [$r set active_p]
 
-db_1row get_transcript_info {
-    select pretty_name, description, contents
-    from chat_transcripts
-    where transcript_id = :transcript_id
-}
+set t [::xo::db::Class get_instance_from_db -id $transcript_id]
+set pretty_name [$t set pretty_name]
+set description [$t set description]
+set contents    [$t set contents]
 
 ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]] -has_edit 1 -form {
     {room_id:integer(hidden)
@@ -44,7 +44,12 @@ ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]
         {value $contents}
     }
 } -on_submit {
-    if { [catch {chat_transcript_edit $transcript_id $pretty_name $description $contents} errmsg] } {
+    $t set pretty_name $pretty_name
+    $t set description $description
+    $t set contents    $contents
+    if { [catch {
+        $t save
+    } errmsg] } {
         ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
     } else {
         ad_returnredirect [export_vars -base "chat-transcript" {transcript_id room_id}]
