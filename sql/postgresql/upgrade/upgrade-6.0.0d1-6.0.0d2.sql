@@ -8,5 +8,7 @@
 --- @cvs-id $Id$
 ---
 
-PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_avatar_allow');
-PERFORM acs_privilege__drop_privilege('chat_avatar_allow');
+begin;
+    select acs_privilege__remove_child('chat_room_admin', 'chat_avatar_allow');
+    select acs_privilege__drop_privilege('chat_avatar_allow');
+end;
