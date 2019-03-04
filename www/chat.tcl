@@ -21,14 +21,16 @@ ad_page_contract {
     port:onevalue
     moderator_p:onevalue
     msgs:multirow
-}
-
-if { [catch {
-    set r [::xo::db::Class get_instance_from_db -id $room_id]
-    set room_name [$r set pretty_name]
-} errmsg] } {
-    ad_return_complaint 1 "[_ chat.Room_not_found]"
-    ad_script_abort
+} -validate {
+    valid_room_id -requires room_id {
+        if { [catch {
+            set r [::xo::db::Class get_instance_from_db -id $room_id]
+            set room_name [$r set pretty_name]
+        } errmsg] } {
+            ad_complain [_ chat.Room_not_found]
+            ad_log Warning "Chat room not found. Invalid room_id: $room_id"
+        }
+    }
 }
 
 set doc(title) $room_name
