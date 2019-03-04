@@ -23,7 +23,7 @@ set t [::xo::db::Class get_instance_from_db -id $transcript_id]
 set transcript_name [$t set transcript_name]
 set description     [$t set description]
 set contents        [$t set contents]
-set room_is         [$t set room_id]
+set room_id         [$t set room_id]
 
 ad_return_template
 
