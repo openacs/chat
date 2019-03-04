@@ -79,6 +79,18 @@ namespace eval ::chat {
         creation_date {timestamp with time zone}
     }
 
+    # TODO: We should consider adding acs_object attributes as slots
+    # for the generic ::xo::db::Object, so we don't have to specify
+    # the fetch query here.
+    ::xo::db::chat_room proc fetch_query {id} {
+        return [subst {
+            select r.*, o.*
+            from chat_rooms r, acs_objects o
+            where r.room_id = o.object_id
+            and r.room_id = $id
+        }]
+    }
+
     ::xo::db::chat_room instproc grant_creator {} {
         if {${:creation_user} ne ""} {
             foreach privilege {edit view delete} {
@@ -156,14 +168,6 @@ namespace eval ::chat {
                 -party_id  $party_id \
                 -object_id ${:room_id} \
                 -privilege chat_room_moderate
-        }
-    }
-
-    ::xo::db::chat_room instproc get_instance_from_db {} {
-        next
-        ::xo::dc 1row get_metadata {
-            select context_id, creation_ip, creation_user
-            from acs_objects where object_id = :room_id
         }
     }
 
