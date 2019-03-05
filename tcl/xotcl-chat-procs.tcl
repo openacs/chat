@@ -79,18 +79,6 @@ namespace eval ::chat {
         creation_date {timestamp with time zone}
     }
 
-    # TODO: We should consider adding acs_object attributes as slots
-    # for the generic ::xo::db::Object, so we don't have to specify
-    # the fetch query here.
-    ::xo::db::chat_room proc fetch_query {id} {
-        return [subst {
-            select r.*, o.*
-            from chat_rooms r, acs_objects o
-            where r.room_id = o.object_id
-            and r.room_id = $id
-        }]
-    }
-
     ::xo::db::chat_room instproc grant_creator {} {
         if {${:creation_user} ne ""} {
             foreach privilege {edit view delete} {
@@ -172,33 +160,13 @@ namespace eval ::chat {
     }
 
     ::xo::db::chat_room instproc save_new {} {
-        if {![info exists :creation_user]} {
-            set :creation_user [expr {[ns_conn isconnected] ? [ad_conn user_id] : ""}]
-        }
-        if {![info exists :creation_ip]} {
-            set :creation_ip [expr {[ns_conn isconnected] ? [ad_conn peeraddr] : ""}]
-        }
         if {![info exists :context_id]} {
             set :context_id [expr {[ns_conn isconnected] ? [ad_conn package_id] : ""}]
         }
-        set creation_user ${:creation_user}
-        set creation_ip   ${:creation_ip}
-        set context_id    ${:context_id}
         ::xo::dc transaction {
             set room_id [next]
-            # todo: changing the acs_object by hand might change if we
-            # would add these metadata to the acs_object orm in
-            # xotcl-core
-            ::xo::dc dml update {
-                update acs_objects set
-                  creation_user = :creation_user
-                 ,creation_ip   = :creation_ip
-                 ,context_id    = :context_id
-                where object_id = :room_id
-            }
             :grant_creator
         }
-
         return $room_id
     }
 
@@ -311,30 +279,11 @@ namespace eval ::chat {
         }
 
     ::xo::db::chat_transcript instproc save_new {} {
-        if {![info exists :creation_user]} {
-            set :creation_user [expr {[ns_conn isconnected] ? [ad_conn user_id] : ""}]
-        }
-        if {![info exists :creation_ip]} {
-            set :creation_ip [expr {[ns_conn isconnected] ? [ad_conn peeraddr] : ""}]
-        }
         if {![info exists :context_id]} {
             set :context_id [expr {[ns_conn isconnected] ? [ad_conn package_id] : ""}]
         }
-        set creation_user ${:creation_user}
-        set creation_ip   ${:creation_ip}
-        set context_id    ${:context_id}
         ::xo::dc transaction {
             set transcript_id [next]
-            # todo: changing the acs_object by hand might change if we
-            # would add these metadata to the acs_object orm in
-            # xotcl-core
-            ::xo::dc dml update {
-                update acs_objects set
-                  creation_user = :creation_user
-                 ,creation_ip   = :creation_ip
-                 ,context_id    = :context_id
-                where object_id = :transcript_id
-            }
             foreach privilege {edit view delete} {
                 permission::grant \
                     -party_id  ${:creation_user} \
