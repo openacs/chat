@@ -9,7 +9,7 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>t</inherit-templates-p>
 
-    <version name="6.0.0d3" url="http://openacs.org/repository/download/apm/chat-6.0.0d3.apm">
+    <version name="6.0.0d4" url="http://openacs.org/repository/download/apm/chat-6.0.0d4.apm">
         <owner url="http://www.openacs.org">Peter Alberer</owner>
         <summary>Server based chat with an html and ajax client.</summary>
         <release-date>2019-03-01</release-date>
@@ -22,7 +22,7 @@
         </description>
         <maturity>0</maturity>
 
-        <provides url="chat" version="6.0.0d3"/>
+        <provides url="chat" version="6.0.0d4"/>
         <requires url="acs-kernel" version="5.9.1"/>
         <requires url="xowiki" version="5.10.0d24"/>
 
