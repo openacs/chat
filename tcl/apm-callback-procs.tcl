@@ -26,11 +26,11 @@ ad_proc -private chat::apm::after_upgrade {
                     ServerPort
                     ShowAvatarP
                 }
-                ::xo::dc foreach [subst {
+                ::xo::dc foreach get_parameters [subst {
                     select parameter_id, parameter_name
                       from apm_parameters
                     where package_key = 'chat'
-                      and parameter_name in ('[join $parameter_names ']')
+                      and parameter_name in ('[join $parameter_names ',']')
                 }] {
                     apm_parameter_unregister \
                         -package_key chat $parameter_id
