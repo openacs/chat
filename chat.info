@@ -27,6 +27,7 @@
         <requires url="xowiki" version="5.10.0d24"/>
 
         <callbacks>
+          <callback type="after-upgrade"  proc="chat::apm::after_upgrade"/>
         </callbacks>
         <parameters>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to user names in the chat"/>

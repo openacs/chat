@@ -6,9 +6,9 @@ ad_library {
 
 namespace eval chat::apm {}
 
-ad_proc -private chat::apm::upgrade {
-    -from_version_name
-    -to_version_name
+ad_proc -private chat::apm::after_upgrade {
+    -from_version_name:required
+    -to_version_name:required
 } {
     Upgrade logics for the chat package
 } {
