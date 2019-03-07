@@ -17,7 +17,7 @@ ad_proc -private chat::apm::after_upgrade {
 	-to_version_name $to_version_name \
 	-spec {
 	    6.0.0d3 6.0.0d4 {
-                ns_write "Deleting obsolete parameters"
+                ns_write "\n\nDeleting obsolete parameters"
                 set parameter_names {
                     AppletHeight
                     AppletWidth
@@ -34,9 +34,9 @@ ad_proc -private chat::apm::after_upgrade {
                 }] {
                     apm_parameter_unregister \
                         -package_key chat $parameter_id
-                    ns_write " - deleting obsolete parameter chat.$parameter_name"
+                    ns_write "\n - deleting obsolete parameter chat.$parameter_name"
                 }
-                ns_write "Finished!"
+                ns_write "\nFinished!"
             }
         }
 }
