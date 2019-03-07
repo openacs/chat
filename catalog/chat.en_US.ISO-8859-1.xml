@@ -136,6 +136,7 @@
   <msg key="View_transcript">View transcript</msg>
   <msg key="What_search">for name or email or username limited to</msg>
   <msg key="xotcl_missing">&lt;b&gt;Warning&lt;/b&gt; The package parameter &#34;DefaultClient&#34; is set to &#34;Ajax&#34; but the package xotcl-core is not installed. Ajax will not work without xotcl-core!</msg>
+  <msg key="xowiki_includelet_help_text">Copy/Paste this snippet into any XoWiki-based application&#39;s page to embed this chat room there.</msg>
   <msg key="You_dont_have_permission_room">You don&#39;t have permission to enter this chat room</msg>
   <msg key="Your_browser_doesnt_support_">Your browser doesn&#39;t support frames, please use the HTML version of this chat.</msg>
   <msg key="your_name_is">your name is</msg>

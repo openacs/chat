@@ -87,6 +87,12 @@
            readonly="true"
            value="@xowiki_includelet_code@">
   </span>
+  <p class="form-help-text">
+    <img src="/shared/images/info.gif"
+         width="12" height="9" alt="Help"
+         title="Help text" style="border:0">
+    #chat.xowiki_includelet_help_text#
+  </p>
   <script nonce="@::__csp_nonce;literal@">
     if (document.execCommand != undefined) {
         var button = document.createElement("button");

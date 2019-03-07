@@ -136,6 +136,7 @@
   <msg key="View_transcript">Protokoll anzeigen</msg>
   <msg key="What_search">für Name oder E-Mail oder Benutzername beschränkt auf</msg>
   <msg key="xotcl_missing">&lt;b&gt;Warnung&lt;/b&gt; Der Parameter &#34;DefaultClient&#34; des aktuellen Chat-Packets hat den Wert &#34;Ajax&#34; aber das Packet &#34;xotcl-core&#34; ist nicht installiert. Das Ajax Client Interface funktioniert nicht, wenn das Packet xotcl-core nicht installiert ist.</msg>
+  <msg key="xowiki_includelet_help_text">Kopieren/Einfügen dieses Ausschnitts in eine beliebige XoWiki-basierte Anwendungsseite, um diesen Chatraum dort einzubetten.</msg>
   <msg key="You_dont_have_permission_room">Sie sind nicht berechtigt, diesen Chatraum zu betreten</msg>
   <msg key="Your_browser_doesnt_support_">Ihr Browser unterstützt keine frames, verwenden Sie bitte die HTML-Version des Chats.</msg>
   <msg key="your_name_is">Ihr Name ist</msg>
