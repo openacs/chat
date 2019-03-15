@@ -24,8 +24,10 @@ if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
+set base_url [site_node::get_url_from_object_id -object_id $package_id]
+
 db_multirow -extend {
-    active_users last_activity room_url base_url
+    active_users last_activity room_url
 } rooms rooms_list {
     select rm.room_id,
            rm.pretty_name,
@@ -42,7 +44,6 @@ db_multirow -extend {
       and obj.context_id = :package_id
     order by rm.pretty_name
 } {
-    set base_url [site_node::get_url_from_object_id -object_id $context_id]
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
@@ -100,7 +101,7 @@ list::create \
             display_template {
                 <a href="chat-transcripts?room_id=@rooms.room_id@" class=button>#chat.Transcripts#</a>
                 <if @room_create_p;literal@ true>
-                <a href="@rooms.base_url@room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
+                <a href="${base_url}@room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
                 </if>
             }
         }
