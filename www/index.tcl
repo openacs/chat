@@ -15,6 +15,7 @@ ad_page_contract {
 }
 
 set package_id [ad_conn package_id]
+set base_url [ad_conn package_url]
 set user_id [ad_conn user_id]
 set actions [list]
 set room_create_p [permission::permission_p -object_id $package_id -privilege chat_room_create]
@@ -23,8 +24,6 @@ set warning ""
 if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
-
-set base_url [site_node::get_url_from_object_id -object_id $package_id]
 
 db_multirow -extend {
     active_users last_activity room_url
