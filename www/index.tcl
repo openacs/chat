@@ -33,14 +33,12 @@ db_multirow -extend {
            rm.description,
            rm.moderated_p,
            rm.active_p,
-           rm.archive_p,
-           obj.context_id,
-           acs_permission.permission_p(rm.room_id, :user_id, 'chat_room_admin') as admin_p,
-           acs_permission.permission_p(rm.room_id, :user_id, 'chat_read') as user_p
+           rm.archive_p
      from chat_rooms rm,
           acs_objects obj
     where rm.room_id = obj.object_id
       and obj.context_id = :package_id
+      and acs_permission.permission_p(rm.room_id, :user_id, 'chat_read')
     order by rm.pretty_name
 } {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
