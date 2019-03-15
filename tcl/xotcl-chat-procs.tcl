@@ -246,6 +246,7 @@ namespace eval ::chat {
             if {[llength $contents] > 0} {
                 set today [clock format [clock seconds] -format "%d.%m.%Y"]
                 set t [::xo::db::chat_transcript new \
+                           -creation_user ${:creation_user} \
                            -pretty_name "#chat.transcript_of_date# $today" \
                            -description "#chat.automatically_created_transcript#" \
                            -room_id ${:room_id} \
