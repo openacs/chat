@@ -24,7 +24,25 @@ if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
-db_multirow -extend { active_users last_activity room_url} rooms rooms_list {} {
+db_multirow -extend {
+    active_users last_activity room_url base_url
+} rooms rooms_list {
+    select rm.room_id,
+           rm.pretty_name,
+           rm.description,
+           rm.moderated_p,
+           rm.active_p,
+           rm.archive_p,
+           obj.context_id,
+           acs_permission.permission_p(rm.room_id, :user_id, 'chat_room_admin') as admin_p,
+           acs_permission.permission_p(rm.room_id, :user_id, 'chat_read') as user_p
+     from chat_rooms rm,
+          acs_objects obj
+    where rm.room_id = obj.object_id
+      and obj.context_id = :package_id
+    order by rm.pretty_name
+} {
+    set base_url [site_node::get_url_from_object_id -object_id $context_id]
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
