@@ -98,7 +98,7 @@ list::create \
             display_template {
                 <a href="chat-transcripts?room_id=@rooms.room_id@" class=button>#chat.Transcripts#</a>
                 <if @room_create_p;literal@ true>
-                <a href="${base_url}@room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
+                <a href="${base_url}room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
                 </if>
             }
         }
