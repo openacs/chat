@@ -79,7 +79,7 @@
 </if>
 
 <if @room_edit_p;literal@ true>
-  <h2>XoWiki Includelet</h2>
+  <h2>#xowiki.pretty_name# Includelet</h2>
   <span id="xowiki-includelet">
     <input id="xowiki-includelet-code"
            type="text"

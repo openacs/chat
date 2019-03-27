@@ -136,7 +136,7 @@
   <msg key="View_transcript">Vedi trascrizione</msg>
   <msg key="What_search">per nome, email o nome utente limitati a</msg>
   <msg key="xotcl_missing">&lt;b&gt;Attenzione&lt;/b&gt; Il parametro &#34;DefaultClient&#34; di questo pacchetto è settato come &#34;Ajax&#34;, ma il pacchetto xotcl-core non è installato. Ajax non funzionerà senza xotcl-core!</msg>
-  <msg key="xowiki_includelet_help_text">Copia/incolla questo frammento nella pagina di qualsiasi applicazione basata su XoWiki per incorporare questa chat room.</msg>
+  <msg key="xowiki_includelet_help_text">Copia/incolla questo frammento nella pagina di qualsiasi applicazione basata sul Wiki per incorporare questa chat room.</msg>
   <msg key="You_dont_have_permission_room">Non hai il permesso di accedere a questa stanza</msg>
   <msg key="Your_browser_doesnt_support_">Il tuo browser non supporta i frame, ti preghiamo di utilizzare la versione HTML di questa chat.</msg>
   <msg key="your_name_is">il tuo nome è</msg>
