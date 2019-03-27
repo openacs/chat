@@ -68,6 +68,8 @@ namespace eval ::chat {
     }
 
     Chat instproc init {} {
+        # Check read permissions
+        permission::require_permission -object_id ${:chat_id} -privilege "chat_read"
         set ban_p [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]
         if {$ban_p} {
             ad_return_forbidden
@@ -98,6 +100,15 @@ namespace eval ::chat {
         if {![::xo::db::Class exists_in_db -id ${:chat_id}]} {
             return
         }
+
+        set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
+
+        # Check write permissions
+        permission::require_permission \
+            -party_id $uid \
+            -object_id ${:chat_id} \
+            -privilege "chat_write"
+
         set r [::xo::db::Class get_instance_from_db -id ${:chat_id}]
 
         # ignore empty messages
@@ -109,7 +120,6 @@ namespace eval ::chat {
         # This way messages can be persisted immediately every time a
         # message is sent
         if {[:current_message_valid]} {
-            set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
             $r post_message -msg $msg -creation_user $uid
         }
 
