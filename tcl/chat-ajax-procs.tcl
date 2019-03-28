@@ -68,14 +68,15 @@ namespace eval ::chat {
     }
 
     Chat instproc init {} {
-        # Check read permissions
-        set forbidden_p [expr {
-                               ![permission::permission_p -object_id ${:chat_id} -privilege "chat_read"] ||
-                               [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]
-                           }]
-        if {$forbidden_p} {
-            ad_return_forbidden
-            ad_script_abort
+        # Instantiating a chat outside a connection context happens
+        # e.g. in the sweeper. We don't want to check permissions in
+        # this case.
+        if {[ns_conn isconnected]} {
+            permission::require_permission -object_id ${:chat_id} -privilege "chat_read"
+            if {[permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]} {
+                ad_return_forbidden
+                ad_script_abort
+            }
         }
         next
     }
