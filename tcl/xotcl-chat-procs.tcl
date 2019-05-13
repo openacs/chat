@@ -253,6 +253,7 @@ namespace eval ::chat {
                            -creation_user ${:creation_user} \
                            -pretty_name "#chat.transcript_of_date# $today" \
                            -description "#chat.automatically_created_transcript#" \
+                           -package_id ${:package_id} \
                            -room_id ${:room_id} \
                            -contents [join $contents "<br>\n"]]
                 $t save_new
