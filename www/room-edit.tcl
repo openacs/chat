@@ -91,7 +91,7 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
                    -logout_messages_p    $logout_messages_p \
                    -messages_time_window $messages_time_window \
                    -avatar_p             $avatar_p \
-                   -context_id           [ad_conn package_id] \
+                   -package_id           [ad_conn package_id] \
                    -creation_user        [ad_conn user_id] \
                    -creation_ip          [ad_conn peeraddr] \
                    -pretty_name          $pretty_name]

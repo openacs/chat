@@ -161,7 +161,7 @@ namespace eval ::chat {
 
     ::xo::db::chat_room instproc save_new {} {
         if {![info exists :context_id]} {
-            set :context_id [expr {[ns_conn isconnected] ? [ad_conn package_id] : ""}]
+            set :context_id ${:package_id}
         }
         ::xo::dc transaction {
             set room_id [next]
@@ -240,7 +240,11 @@ namespace eval ::chat {
                 and msg is not null
                 order by creation_date
             } {
-                set user_name [expr {$creation_user > 0 ? [chat_user_name $creation_user] : "system"}]
+                if {$creation_user > 0} {
+                    set user_name [::chat::Package get_user_name -user_id $creation_user]
+                } else {
+                    set user_name "system"
+                }
                 lappend contents "\[$creation_date\] <b>${user_name}</b>: $msg"
             }
             if {[llength $contents] > 0} {
@@ -281,7 +285,7 @@ namespace eval ::chat {
 
     ::xo::db::chat_transcript instproc save_new {} {
         if {![info exists :context_id]} {
-            set :context_id [expr {[ns_conn isconnected] ? [ad_conn package_id] : ""}]
+            set :context_id ${:package_id}
         }
         ::xo::dc transaction {
             set transcript_id [next]

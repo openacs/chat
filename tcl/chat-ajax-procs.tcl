@@ -41,7 +41,7 @@ namespace eval ::chat {
             return [_ chat.Room_not_found]
         } else {
             set r [::xo::db::Class get_instance_from_db -id $chat_id]
-            set package_id [$r set context_id]
+            set package_id [$r set package_id]
             set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
             next -chat_id           $chat_id \
                  -skin              $chat_skin \

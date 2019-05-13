@@ -18,7 +18,7 @@ set creation_ip [ad_conn peeraddr]
 
 set t [::xo::db::chat_transcript new \
            -description $description \
-           -context_id $package_id \
+           -package_id $package_id \
            -creation_user $user_id \
            -creation_ip $creation_ip \
            -pretty_name $transcript_name \

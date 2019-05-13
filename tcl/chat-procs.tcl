@@ -24,7 +24,7 @@ ad_proc -deprecated -public chat_room_get {
     #array set row [chat_room_get_not_cached $room_id]
 }
 
-ad_proc -private chat_room_get_not_cached {
+ad_proc -deprecated -private chat_room_get_not_cached {
     room_id
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
