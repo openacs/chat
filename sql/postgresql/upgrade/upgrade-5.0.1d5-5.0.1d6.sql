@@ -10,10 +10,7 @@
 
 begin;
 
-    -- alter table chat_rooms add column avatar_p boolean default 't';
-
-    -- select acs_privilege__create_privilege('chat_avatar_allow', 'Enable/disable user avatars in a chat room', null);
-    -- select acs_privilege__add_child('chat_room_admin', 'chat_avatar_allow');
-    -- select acs_attribute__create_attribute('chat_room','avatar_p','boolean','Avatar','Avatars',null,null,'t',1,1,null,'type_specific','f');
+    select acs_privilege__create_privilege('chat_avatar_allow', 'Enable/disable user avatars in a chat room', null);
+    select acs_privilege__add_child('chat_room_admin', 'chat_avatar_allow');
 
 end;
