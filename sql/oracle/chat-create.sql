@@ -61,7 +61,7 @@ begin
     acs_privilege.add_child('chat_room_admin', 'chat_moderator_revoke');
     acs_privilege.add_child('chat_room_admin', 'chat_moderator');
 
-    -- Site wite admin also administrator of the chat room.
+    -- Site-wide admin also administrator of the chat room.
     acs_privilege.add_child('admin', 'chat_room_admin');
 end;
 /

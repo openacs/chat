@@ -46,7 +46,7 @@ BEGIN
  PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_moderator_revoke');
  PERFORM acs_privilege__remove_child('chat_room_admin', 'chat_moderator');
 
- -- remove Site wite admin also administrator of the chat room
+ -- remove site-wide admin also administrator of the chat room
  PERFORM acs_privilege__remove_child('admin', 'chat_room_admin');
 
  PERFORM acs_privilege__drop_privilege('chat_room_create');

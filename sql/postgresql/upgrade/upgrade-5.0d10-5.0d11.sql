@@ -1,6 +1,6 @@
 begin;
 
--- allow to set whether we want login/logout messages or not
+-- allow one to set whether we want login/logout messages or not
 alter table chat_rooms add column login_messages_p boolean default 't';
 alter table chat_rooms add column logout_messages_p boolean default 't';
 

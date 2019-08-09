@@ -57,7 +57,7 @@ public class adChatServer {
             output.println("Bye");
             output.close();
         } catch (Exception e) {
-            System.out.println("Exception in stoping server: " + e);
+            System.out.println("Exception in stopping server: " + e);
         }
     }
 
@@ -82,7 +82,7 @@ public class adChatServer {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.out.println("   Usuage: java adChatServer (start | stop) <port>");
+            System.out.println("   Usage: java adChatServer (start | stop) <port>");
             return;
         }
         int port = Integer.parseInt(args[1]);
@@ -92,7 +92,7 @@ public class adChatServer {
         else if (args[0].equals("stop"))
             server.stop();
         else 
-            System.out.println("   Usuage: java adChatServer (start | stop) <port>");
+            System.out.println("   Usage: java adChatServer (start | stop) <port>");
         
     }
 }

@@ -45,7 +45,7 @@
   <msg key="creation_date">Creation date</msg>
   <msg key="current_transcript">Current conversation</msg>
   <msg key="date">date</msg>
-  <msg key="deactivate_room_after_transcript">Deactive the room after creating transcript</msg>
+  <msg key="deactivate_room_after_transcript">Deactivate the room after creating transcript</msg>
   <msg key="Delete_all_messages_in_the_room">Delete all messages in the room</msg>
   <msg key="Delete_messages">Delete messages</msg>
   <msg key="delete_messages_after_transcript">Delete messages after creating the transcript</msg>
@@ -103,7 +103,7 @@
   <msg key="Revoke_user">Revoke user</msg>
   <msg key="Room_active">Room active</msg>
   <msg key="room_admin">Admin</msg>
-  <msg key="Room_deactivate">Deactive Room</msg>
+  <msg key="Room_deactivate">Deactivate Room</msg>
   <msg key="Room_Information">Room Information</msg>
   <msg key="Room_moderators">Room moderators</msg>
   <msg key="Room_name">Room name</msg>
