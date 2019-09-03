@@ -26,7 +26,10 @@ set action "moderator-grant-2"
 set r [::xo::db::Class get_instance_from_db -id $room_id]
 set room_name [$r set pretty_name]
 set description "[_ chat.Grant_moderator_for] <b>$room_name</b> [_ chat.to]"
-db_multirow parties list_parties {}
+db_multirow parties list_parties {
+    select party_id, acs_object.name(party_id) as name
+    from parties
+}
 
 ad_return_template grant-entry
 
