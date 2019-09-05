@@ -14,7 +14,10 @@ namespace eval ::chat {
 
     Class create ::chat::Package
 
-    ::chat::Package proc flush_rooms {} {
+    ::chat::Package ad_proc flush_rooms {} {
+        Flush every room supposed to be archived and automatically
+        flushed. Meant to be executed in a scheduled procedure.
+    } {
         foreach room_id [::xo::dc list get_rooms {
             select room_id from chat_rooms
             where archive_p and auto_flush_p
@@ -24,7 +27,15 @@ namespace eval ::chat {
         }
     }
 
-    ::chat::Package proc get_user_name {-user_id} {
+    ::chat::Package ad_proc get_user_name {
+        -user_id:required
+    } {
+        Retrieves the username supposed to be displayed in the chat
+        UI: aither the screen name or the person name when the former
+        is missing.
+
+        @return a user name
+    } {
         set name [acs_user::get_user_info -user_id $user_id -element screen_name]
         if {$name eq ""} {
             set name [person::name -person_id $user_id]
@@ -79,7 +90,12 @@ namespace eval ::chat {
         creation_date {timestamp with time zone}
     }
 
-    ::xo::db::chat_room instproc grant_creator {} {
+    ::xo::db::chat_room ad_instproc grant_creator {} {
+        Grants operative privileges to the chat creator (when
+        available on the chat room object). In detail the permissions
+        to edit, view and delete the chat room and also to create
+        transcripts of it.
+    } {
         if {${:creation_user} ne ""} {
             foreach privilege {edit view delete} {
                 permission::grant \
@@ -94,8 +110,11 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room instproc grant_user {
-        -party_id
+    ::xo::db::chat_room ad_instproc grant_user {
+        -party_id:required
+    } {
+        Grants operative privileges to the specified party. In detail,
+        the permission to read and write for the chat room.
     } {
         ::xo::dc transaction {
             foreach privilege {read write} {
@@ -107,8 +126,11 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room instproc revoke_user {
-        -party_id
+    ::xo::db::chat_room ad_instproc revoke_user {
+        -party_id:required
+    } {
+        Revokes operative privileges to the specified party. In detail,
+        the permission to read and write for the chat room.
     } {
         ::xo::dc transaction {
             foreach privilege {read write} {
@@ -120,8 +142,10 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room instproc ban_user {
-        -party_id
+    ::xo::db::chat_room ad_instproc ban_user {
+        -party_id:required
+    } {
+        Bans specified user from the chat room
     } {
         permission::grant \
             -party_id  $party_id \
@@ -129,8 +153,10 @@ namespace eval ::chat {
             -privilege chat_ban
     }
 
-    ::xo::db::chat_room instproc unban_user {
-        -party_id
+    ::xo::db::chat_room ad_instproc unban_user {
+        -party_id:required
+    } {
+        Lift ban on specified user from the chat room
     } {
         permission::revoke \
             -party_id  $party_id \
@@ -138,8 +164,10 @@ namespace eval ::chat {
             -privilege chat_ban
     }
 
-    ::xo::db::chat_room instproc grant_moderator {
-        -party_id
+    ::xo::db::chat_room ad_instproc grant_moderator {
+        -party_id:required
+    } {
+        Make specified party the chat room moderator
     } {
         permission::grant \
             -party_id  $party_id \
@@ -147,8 +175,10 @@ namespace eval ::chat {
             -privilege chat_room_moderate
     }
 
-    ::xo::db::chat_room instproc revoke_moderator {
-        -party_id
+    ::xo::db::chat_room ad_instproc revoke_moderator {
+        -party_id:required
+    } {
+        Revoke moderation rights on the chat room for specified party
     } {
         set parties $party_id
         foreach party_id $parties {
@@ -159,7 +189,12 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room instproc save_new {} {
+    ::xo::db::chat_room ad_instproc save_new {} {
+        Create a new chat room and make sure its creator is granted
+        the necessary privileges
+
+        @return new chat room id
+    } {
         if {![info exists :context_id]} {
             set :context_id ${:package_id}
         }
@@ -170,7 +205,9 @@ namespace eval ::chat {
         return $room_id
     }
 
-    ::xo::db::chat_room instproc delete {} {
+    ::xo::db::chat_room ad_instproc delete {} {
+        Delete the chat room and all of its transcripts
+    } {
         set room_id ${:room_id}
         foreach transcript_id [::xo::dc list get_transcripts {
             select transcript_id from chat_transcripts
@@ -183,10 +220,22 @@ namespace eval ::chat {
     }
 
 
-    ::xo::db::chat_room instproc post_message {
+    ::xo::db::chat_room ad_instproc post_message {
         {-msg ""}
         {-creation_user ""}
         {-creation_ip ""}
+    } {
+        Post a message in the chat room. This actually means
+        persisting the message in the database, but only if the chat
+        room is configured to be archived.
+
+        @param msg the message
+        @param creation_user the alleged creation user of the
+               persisted message. Won't be set automatically from the
+               connection
+        @param creation_ip the alleged creation IP of the
+               persisted message. Won't be set automatically from the
+               connection
     } {
         if {!${:archive_p}} {
             return
@@ -212,14 +261,18 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room instproc delete_messages {} {
+    ::xo::db::chat_room ad_instproc delete_messages {} {
+        Delete all persisted messages from the chat room.
+    } {
         set room_id ${:room_id}
         ::xo::dc dml delete_messages {
             delete from chat_msgs where room_id = :room_id
         }
     }
 
-    ::xo::db::chat_room instproc count_messages {} {
+    ::xo::db::chat_room ad_instproc count_messages {} {
+        Count messages currently persisted for this chat room.
+    } {
         set room_id ${:room_id}
         ::xo::dc get_value count_messages {
             select count(*) from chat_msgs
@@ -227,7 +280,10 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room instproc flush {} {
+    ::xo::db::chat_room ad_instproc flush {} {
+        Save all currently persisted messages for this chat room as a
+        new transcript and then delete them.
+    } {
         if {${:auto_transcript_p}} {
             set room_id ${:room_id}
             set contents [list]
@@ -284,7 +340,12 @@ namespace eval ::chat {
                 -references "chat_rooms(room_id) on delete cascade"
         }
 
-    ::xo::db::chat_transcript instproc save_new {} {
+    ::xo::db::chat_transcript ad_instproc save_new {} {
+        Save a new transcript, making sure its creator is granted the
+        necessary operative privileges.
+
+        @return new transcript id
+    } {
         if {![info exists :context_id]} {
             set :context_id ${:package_id}
         }
