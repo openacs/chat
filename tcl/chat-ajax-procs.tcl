@@ -17,7 +17,14 @@ namespace eval ::xowiki::includelet {
           {-mode:optional ""}
           {-path:optional ""}
         }}
+      } -ad_doc {
+          Include a chat room
+
+          @param chat_id
+          @param mode 
+          @param path
       }
+
 
   chat_room instproc render {} {
       :get_parameters
