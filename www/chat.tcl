@@ -48,12 +48,12 @@ set moderate_room_p [$r set moderated_p]
 if { $moderate_room_p == "t" } {
     set moderator_p [permission::permission_p -object_id $room_id -privilege "chat_moderator"]
 } else {
-    # This is an unmoderate room, therefore everyone is a moderator.
+    # This is an unmoderated room, therefore, everyone is a moderator.
     set moderator_p "1"
 }
 
 if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
-    #Display unauthorize privilege page.
+    # Display unauthorize privilege page.
     ad_returnredirect unauthorized
     ad_script_abort
 }
