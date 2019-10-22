@@ -11,7 +11,7 @@ set sql {
     order by creation_date
 }
 
-db_multirow -extend { person_name } messages select_msg_itens $sql {
+db_multirow -extend { person_name } messages select_msg_items $sql {
     set person_name [::chat::Package get_user_name -user_id $creation_user]
     if {$person_name eq ""} {
         set person_name "Unknown"
