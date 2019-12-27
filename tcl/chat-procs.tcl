@@ -16,6 +16,8 @@ ad_proc -deprecated -public chat_room_get {
     {-array:required}
 } {
     Get all the information about a chat room into an array
+
+    @see ::xo::db::chat_room
 } {
     upvar $array row
     array set row [ns_cache eval chat_room_cache $room_id {
@@ -26,6 +28,8 @@ ad_proc -deprecated -public chat_room_get {
 
 ad_proc -deprecated -private chat_room_get_not_cached {
     room_id
+} {
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     foreach var [$r info vars] {
@@ -64,6 +68,8 @@ ad_proc -deprecated -public chat_room_new {
     pretty_name
 } {
     Create new chat room. Return room_id if successful else raise error.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::chat_room new \
                -description          $description \
@@ -89,6 +95,8 @@ ad_proc -deprecated -public chat_room_exists_p {
     Return whether a chat room exists
 
     @return a boolean
+
+    @see ::xo::db::chat_room
 } {
     return [::xo::db::Class exists_in_db -id $room_id]
 }
@@ -108,6 +116,8 @@ ad_proc -deprecated -public chat_room_edit {
     avatar_p
 } {
     Edit information on chat room. All information require.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     foreach var {
@@ -133,6 +143,8 @@ ad_proc -deprecated -public chat_room_delete {
     room_id
 } {
     Delete chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r delete
@@ -143,6 +155,8 @@ ad_proc -deprecated -public chat_room_message_delete {
     room_id
 } {
     Delete all message in the room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r delete_messages
@@ -152,6 +166,8 @@ ad_proc -deprecated -public chat_message_count {
     room_id
 } {
     Get message count in the room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r count_messages
@@ -161,6 +177,8 @@ ad_proc -deprecated -public room_active_status {
     room_id
 } {
     Get room active status.
+
+    @see ::xo::db::chat_room
 } {
     if {[::xo::db::Class exists_in_db -id $room_id]} {
         set r [::xo::db::Class get_instance_from_db -id $room_id]
@@ -174,6 +192,8 @@ ad_proc -deprecated -public chat_room_name {
     room_id
 } {
     Get chat room name.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     return [$r set pretty_name]
@@ -184,6 +204,8 @@ ad_proc -deprecated -public chat_moderator_grant {
     party_id
 } {
     Grant party a chat moderate privilege to this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r grant_moderator -party_id $party_id
@@ -194,6 +216,8 @@ ad_proc -deprecated -public chat_moderator_revoke {
     party_id
 } {
     Revoke party a chat moderate privilege to this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r revoke_moderator -party_id $party_id
@@ -204,6 +228,8 @@ ad_proc -deprecated -public chat_user_grant {
     party_id
 } {
     Grant party a chat privilege to this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r grant_user -party_id $party_id
@@ -214,6 +240,8 @@ ad_proc -deprecated -public chat_user_revoke {
     party_id
 } {
     Revoke party a chat privilege to this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r revoke_user -party_id $party_id
@@ -224,6 +252,8 @@ ad_proc -deprecated -public chat_user_ban {
     party_id
 } {
     Explicit ban user from this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r ban_user -party_id $party_id
@@ -234,6 +264,8 @@ ad_proc -deprecated -public chat_user_unban {
     party_id
 } {
     unban user from this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r unban_user -party_id $party_id
@@ -244,6 +276,8 @@ ad_proc -deprecated -public chat_revoke_moderators {
     revoke_list
 } {
     Revoke a list of parties of a moderate privilege from this room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r revoke_moderator -party_id $revoke_list
@@ -253,6 +287,8 @@ ad_proc -deprecated -public chat_room_moderate_p {
     room_id
 } {
     Return the moderate status of this chat room.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     return [$r set moderated_p]
@@ -262,6 +298,8 @@ ad_proc -deprecated -public chat_user_name {
     user_id
 } {
     Return display name of this user to use in chat.
+
+    @see ::chat::Package
 } {
     return [::chat::Package get_user_name -user_id $user_id]
 }
@@ -273,6 +311,8 @@ ad_proc -deprecated -public chat_message_post {
     moderator_p
 } {
     Post message to the chat room and broadcast to all applet clients. Used by ajax + html.
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r post_message -msg $message -creation_user $user_id
@@ -288,6 +328,8 @@ ad_proc -deprecated -public chat_transcript_new {
     room_id
 } {
     Create chat transcript.
+
+    @see ::xo::db::chat_transcript
 } {
     set t [::xo::db::chat_transcript new \
                -description $description \
@@ -304,6 +346,8 @@ ad_proc -deprecated -public chat_transcript_delete {
     transcript_id
 } {
     Delete chat transcript.
+
+    @see ::xo::db::chat_transcript
 } {
     ::xo::db::sql::acs_object delete \
         -object_id $transcript_id
@@ -316,6 +360,8 @@ ad_proc -deprecated -public chat_transcript_edit {
     contents
 } {
     Edit chat transcript.
+
+    @see ::xo::db::chat_transcript
 } {
     set t [::xo::db::Class get_instance_from_db -id $transcript_id]
     foreach var {
@@ -330,6 +376,8 @@ ad_proc -deprecated -public chat_transcript_edit {
 
 ad_proc -private chat_flush_rooms {} {
     Flush the messages in all of the chat rooms
+
+    @see ::chat::Package
 } {
     ::chat::Package flush_rooms
 }
@@ -338,6 +386,8 @@ ad_proc -private chat_room_flush {
     room_id
 } {
     Flush the messages a single chat room
+
+    @see ::xo::db::chat_room
 } {
     set r [::xo::db::Class get_instance_from_db -id $room_id]
     $r flush
