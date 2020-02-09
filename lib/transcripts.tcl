@@ -15,7 +15,7 @@ db_multirow -extend {
     transcript_url
     delete_url
 } chat_transcripts list_transcripts {
-   select ct.transcript_id, ct.pretty_name, ao.creation_date
+    select ct.transcript_id, ct.pretty_name, ao.creation_date
     from chat_transcripts ct, acs_objects ao
     where ct.transcript_id = ao.object_id and ct.room_id = :room_id
     order by ao.creation_date desc
@@ -28,7 +28,7 @@ db_multirow -extend {
 set actions {}
 if {$transcript_create_p} {
     lappend actions \
-	[_ chat.Create_transcript] [export_vars -base "transcript-new" {room_id}] ""
+        [_ chat.Create_transcript] [export_vars -base "transcript-new" {room_id}] ""
 }
 
 list::create \
@@ -52,10 +52,16 @@ list::create \
             html { align "center" }
             display_template {
                 <if @transcript_delete_p;literal@ true>
-                  <a href="@chat_transcripts.delete_url@">
-                    <img src="/shared/images/Delete16.gif" alt="#chat.Delete_transcript#">
-                  </a>
+                <a href="@chat_transcripts.delete_url@">
+                <img src="/shared/images/Delete16.gif" alt="#chat.Delete_transcript#">
+                </a>
                 </if>
             }
         }
     }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

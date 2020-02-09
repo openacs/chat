@@ -13,10 +13,10 @@ ad_proc -private chat::apm::after_upgrade {
     Upgrade logics for the chat package
 } {
     apm_upgrade_logic \
-	-from_version_name $from_version_name \
-	-to_version_name $to_version_name \
-	-spec {
-	    6.0.0d3 6.0.0d4 {
+        -from_version_name $from_version_name \
+        -to_version_name $to_version_name \
+        -spec {
+            6.0.0d3 6.0.0d4 {
                 ns_write "\n\nDeleting obsolete parameters"
                 set parameter_names {
                     AppletHeight
@@ -38,7 +38,7 @@ ad_proc -private chat::apm::after_upgrade {
                 }
                 ns_write "\nFinished!"
             }
-	    6.0.0d6 6.0.0d7 {
+            6.0.0d6 6.0.0d7 {
                 ns_write "<br>Setting rooms and transcripts package_id to context_id where missing"
                 set n_rows [::xo::dc dml update_package {
                     update acs_objects set
@@ -51,3 +51,9 @@ ad_proc -private chat::apm::after_upgrade {
             }
         }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

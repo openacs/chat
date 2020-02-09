@@ -17,3 +17,9 @@ db_multirow -extend { person_name } messages select_msg_items $sql {
         set person_name "Unknown"
     }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
