@@ -26,7 +26,10 @@ if { $room_create_p } {
 }
 
 db_multirow -extend {
-    active_users last_activity room_url
+    active_users
+    last_activity
+    room_url
+    toggle_active_url
 } rooms rooms_list {
     select rm.room_id,
            rm.pretty_name,
@@ -44,6 +47,11 @@ db_multirow -extend {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
+
+    if {[permission::permission_p -object_id $package_id \
+             -party_id $user_id -privilege chat_room_edit]} {
+        set toggle_active_url toggle-active?room_id=$room_id
+    }
 
     if { $active_p } {
         set room_url [export_vars -base "room-enter" {room_id}]
@@ -63,12 +71,18 @@ list::create \
             label "#chat.Active#"
             html { style "text-align: center" }
             display_template {
-                <if @rooms.active_p;literal@ true>
-                <img src="/resources/chat/active.png" alt="#chat.Room_active#">
+                <if @rooms.toggle_active_url@ ne "">
+                  <a href="@rooms.toggle_active_url@">
                 </if>
-                <else>
-                <img src="/resources/chat/inactive.png" alt="#chat.Room_no_active#">
-                </else>
+                  <if @rooms.active_p;literal@ true>
+                    <img src="/resources/chat/active.png" alt="#chat.Room_active#">
+                  </if>
+                  <else>
+                    <img src="/resources/chat/inactive.png" alt="#chat.Room_no_active#">
+                  </else>
+                <if @rooms.toggle_active_url@ ne "">
+                  </a>
+                </if>
             }
         }
         pretty_name {
