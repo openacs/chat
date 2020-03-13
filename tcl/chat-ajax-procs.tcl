@@ -79,8 +79,9 @@ namespace eval ::chat {
         # e.g. in the sweeper. We don't want to check permissions in
         # this case.
         if {[ns_conn isconnected]} {
-            permission::require_permission -object_id ${:chat_id} -privilege "chat_read"
-            if {[permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]} {
+            # Check that user can read the chat and is not banned
+            if {![permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"] ||
+                 [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]} {
                 ad_return_forbidden
                 ad_script_abort
             }
