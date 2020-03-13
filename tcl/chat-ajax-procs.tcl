@@ -80,7 +80,7 @@ namespace eval ::chat {
         # this case.
         if {[ns_conn isconnected]} {
             # Check that user can read the chat and is not banned
-            if {![permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"] ||
+            if {![permission::permission_p -object_id ${:chat_id} -privilege "chat_read"] ||
                  [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]} {
                 ad_return_forbidden
                 ad_script_abort
