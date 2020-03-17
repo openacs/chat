@@ -298,8 +298,8 @@ namespace eval ::chat {
     } {
         Creates a new transcript of all current chat room messages.
 
-        @return transcript_id of the new transcript or the empty
-                string when no messages were in the chat room.
+        @return transcript_id of the new transcript or 0 when no
+                messages were in the chat room.
     } {
         if {![info exists pretty_name]} {
             set today [clock format [clock seconds] -format "%d.%m.%Y"]
@@ -324,6 +324,8 @@ namespace eval ::chat {
                        -contents [join $contents \n]]
             $t save_new
             return [$t set transcript_id]
+        } else {
+            return 0
         }
     }
 
