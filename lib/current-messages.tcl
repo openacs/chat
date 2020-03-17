@@ -4,19 +4,9 @@ ad_include_contract {
     room_id:naturalnum
 }
 
-set sql {
-    select to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date, creation_user, msg 
-    from chat_msgs 
-    where room_id  = :room_id 
-    order by creation_date
-}
-
-db_multirow -extend { person_name } messages select_msg_items $sql {
-    set person_name [::chat::Package get_user_name -user_id $creation_user]
-    if {$person_name eq ""} {
-        set person_name "Unknown"
-    }
-}
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set messages [$r transcript_messages]
+set n_messages [llength $messages]
 
 # Local variables:
 #    mode: tcl

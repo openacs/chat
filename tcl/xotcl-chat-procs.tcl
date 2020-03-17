@@ -285,37 +285,77 @@ namespace eval ::chat {
         new transcript and then delete them.
     } {
         if {${:auto_transcript_p}} {
-            set room_id ${:room_id}
-            set contents [list]
-            ::xo::dc foreach get_archives_messages {
-                select msg,
-                creation_user,
-                to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date
-                from chat_msgs
-                where room_id = :room_id
-                and msg is not null
-                order by creation_date
-            } {
-                if {$creation_user > 0} {
-                    set user_name [::chat::Package get_user_name -user_id $creation_user]
-                } else {
-                    set user_name "system"
-                }
-                lappend contents "\[$creation_date\] <b>${user_name}</b>: $msg"
-            }
-            if {[llength $contents] > 0} {
-                set today [clock format [clock seconds] -format "%d.%m.%Y"]
-                set t [::xo::db::chat_transcript new \
-                           -creation_user ${:creation_user} \
-                           -pretty_name "#chat.transcript_of_date# $today" \
-                           -description "#chat.automatically_created_transcript#" \
-                           -package_id ${:package_id} \
-                           -room_id ${:room_id} \
-                           -contents [join $contents "<br>\n"]]
-                $t save_new
-            }
+            :create_transcript
         }
         :delete_messages
+    }
+
+    ::xo::db::chat_room ad_instproc create_transcript {
+        -pretty_name
+        -description
+        -creation_user
+        {-creation_ip ""}
+    } {
+        Creates a new transcript of all current chat room messages.
+
+        @return transcript_id of the new transcript or the empty
+                string when no messages were in the chat room.
+    } {
+        if {![info exists pretty_name]} {
+            set today [clock format [clock seconds] -format "%d.%m.%Y"]
+            set pretty_name "#chat.transcript_of_date# $today"
+        }
+        if {![info exists description]} {
+            set description "#chat.automatically_created_transcript#"
+        }
+        if {![info exists creation_user]} {
+            set creation_user ${:creation_user}
+        }
+
+        set contents [:transcript_messages]
+        if {[llength $contents] > 0} {
+            set t [::xo::db::chat_transcript new \
+                       -creation_user $creation_user \
+                       -creation_ip $creation_ip \
+                       -pretty_name $pretty_name \
+                       -description $description \
+                       -package_id ${:package_id} \
+                       -room_id ${:room_id} \
+                       -contents [join $contents \n]]
+            $t save_new
+            return [$t set transcript_id]
+        }
+    }
+
+    ::xo::db::chat_room ad_instproc transcript_messages {} {
+        Formats the current content of a chat room as a list of
+        messages formatted so they can be displayed or stored in the
+        transcript.
+
+        @return list of formatted messages
+    } {
+        set room_id ${:room_id}
+        set contents [list]
+        ::xo::dc foreach get_archives_messages {
+            select msg,
+            creation_user,
+            to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date
+            from chat_msgs
+            where room_id = :room_id
+            and msg is not null
+            order by creation_date
+        } {
+            if {$creation_user > 0} {
+                set user_name [::chat::Package get_user_name -user_id $creation_user]
+                if {$user_name eq ""} {
+                    set user_name Unknown
+                }
+            } else {
+                set user_name "system"
+            }
+            lappend contents "\[$creation_date\] ${user_name}: $msg"
+        }
+        return $contents
     }
 
     #

@@ -7,26 +7,21 @@ ad_page_contract {
     {description:trim ""}
     {delete_messages:optional "off"}
     {deactivate_room:optional "off"}
-    contents:trim,notnull,html
 }
 
 permission::require_permission -object_id $room_id -privilege chat_transcript_create
 
-set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 set creation_ip [ad_conn peeraddr]
 
-set t [::xo::db::chat_transcript new \
-           -description $description \
-           -package_id $package_id \
-           -creation_user $user_id \
-           -creation_ip $creation_ip \
-           -pretty_name $transcript_name \
-           -contents $contents \
-           -room_id $room_id]
-set transcript_id [$t save_new]
-
 set r [::xo::db::Class get_instance_from_db -id $room_id]
+
+set transcript_id [$r create_transcript \
+                       -pretty_name $transcript_name \
+                       -description $description \
+                       -creation_user $user_id \
+                       -creation_ip $creation_ip]
+
 if { $delete_messages eq "on" } {
     $r delete_messages
     # forward the information to AJAX

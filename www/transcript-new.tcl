@@ -28,11 +28,7 @@ set submit_label "[_ chat.Create_transcript]"
 set r [::xo::db::Class get_instance_from_db -id $room_id]
 set active_p [$r set active_p]
 
-#Build a list of all message.
-db_foreach get_archives_messages {} {
-    set user_name [::chat::Package get_user_name -user_id $creation_user]
-    append contents "\[$creation_date\] <b>$user_name</b>: $msg<br>\n"
-}
+set messages [$r transcript_messages]
 
 ad_return_template "transcript-entry"
 

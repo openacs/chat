@@ -13,7 +13,6 @@
     <div>
     <input type="hidden" name="transcript_id" value="@transcript_id@">
     <input type="hidden" name="room_id" value="@room_id@">
-    <input type="hidden" name="contents" value="@contents@">
     </div>
     <div class="form-item-wrapper">
         <div class="form-label">
@@ -60,7 +59,11 @@
       <div class="form-item-wrapper">
         <div class="form-label">#chat.Contents#</div>
         <div class="form-widget">
-    	  <div style="border: 1px solid #222; padding: 3px">@contents;noquote@</div>
+    	  <div style="border: 1px solid #222; padding: 3px">
+            <list name="messages">
+              @messages:item@<br>
+            </list>
+          </div>
         </div>
       </div>
       <div class="form-button">

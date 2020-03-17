@@ -13,4 +13,4 @@
     </tr>
 </table>
      
-<div id="messages">@contents;noquote@</div>
+<div id="messages"><pre>@contents@</pre></div>
