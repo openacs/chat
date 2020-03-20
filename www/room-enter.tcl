@@ -16,7 +16,15 @@ set read_p  [permission::permission_p -object_id $room_id -privilege "chat_read"
 set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
 set ban_p   [permission::permission_p -object_id $room_id -privilege "chat_ban"]
 ns_log notice "--query ban $ban_p: permission::permission_p -object_id $room_id -privilege chat_ban -party_id [ad_conn user_id]"
-set r [::xo::db::Class get_instance_from_db -id $room_id]
+
+if { [catch {
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+} errmsg] } {
+    ad_return_error [_ chat.Room_not_found] [_ chat.Room_not_found]
+    ad_log Warning "Chat room not found. Invalid room_id: $room_id"
+    ad_script_abort
+}
+
 set active  [$r set active_p]
 
 if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) || ($active == "f") } {
