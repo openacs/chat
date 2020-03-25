@@ -3,7 +3,7 @@
 
   <msg key="actions">Aktionen</msg>
   <msg key="Active">Aktiv</msg>
-  <msg key="active_users">Aktive Benutzer</msg>
+  <msg key="active_users">Aktive Benutzer/innen</msg>
   <msg key="Add_moderator">Moderator hinzufügen</msg>
   <msg key="Add_user_to_room">Benutzer hinzufügen</msg>
   <msg key="Ajax">Ajax</msg>
