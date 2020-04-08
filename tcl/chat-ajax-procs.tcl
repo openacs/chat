@@ -50,10 +50,10 @@ namespace eval ::chat {
             set r [::xo::db::Class get_instance_from_db -id $chat_id]
             set package_id [$r set package_id]
             if {$skin eq ""} {
-                set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
+                set skin [parameter::get -package_id $package_id -parameter ChatSkin]
             }
             next -chat_id           $chat_id \
-                 -skin              $chat_skin \
+                 -skin              $skin \
                  -package_id        $package_id \
                  -mode              $mode \
                  -path              $path \
