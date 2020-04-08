@@ -43,13 +43,15 @@ namespace eval ::xowiki::includelet {
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
-    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
+    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""} {-skin ""}} {
         if {![::xo::db::Class exists_in_db -id $chat_id]} {
             return [_ chat.Room_not_found]
         } else {
             set r [::xo::db::Class get_instance_from_db -id $chat_id]
             set package_id [$r set package_id]
-            set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
+            if {$skin eq ""} {
+                set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
+            }
             next -chat_id           $chat_id \
                  -skin              $chat_skin \
                  -package_id        $package_id \
