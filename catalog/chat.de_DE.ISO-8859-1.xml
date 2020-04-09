@@ -58,6 +58,7 @@
   <msg key="Edit">Bearbeiten</msg>
   <msg key="Edit_room">Raum bearbeiten</msg>
   <msg key="Edit_transcript">Protokoll bearbeiten</msg>
+  <msg key="Enable_web_notifications">Benachrichtigung aktivieren</msg>
   <msg key="Enter_html_pretty_name">Chatroom über HTML-Klienten betreten</msg>
   <msg key="Enter_rooms_pretty_name">Chatroom betreten</msg>
   <msg key="exit_msg">Chat Raum verlassen</msg>

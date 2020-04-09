@@ -58,7 +58,7 @@
   <msg key="Edit">Edit</msg>
   <msg key="Edit_room">Edit Room</msg>
   <msg key="Edit_transcript">Edit transcript</msg>
-  <msg key="Enable_web_notifications">Enable notifications</msg>
+  <msg key="Enable_web_notifications">Activate notifications</msg>
   <msg key="Enter_html_pretty_name">Enter chat room using the HTML client</msg>
   <msg key="Enter_rooms_pretty_name">Enter chat room</msg>
   <msg key="exit_msg">exit chat room</msg>
