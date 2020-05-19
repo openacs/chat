@@ -9,31 +9,31 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>t</inherit-templates-p>
 
-    <version name="6.0.0d11" url="http://openacs.org/repository/download/apm/chat-6.0.0d11.apm">
-        <owner url="http://www.openacs.org">Peter Alberer</owner>
-        <summary>Server based chat with an html and ajax client.</summary>
-        <release-date>2019-03-01</release-date>
-        <vendor url="http://openacs.org">OpenACS</vendor>
-        <description format="text/html">
-          Adapted by Peter Alberer 2006/03/25 to allow java and ajax to coexist.
-          Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of generalized chat class from xotcl-core.
-          Adapted by Antonio Pisano circa 2016-2019 to reduce bloating and exploit xotcl ORM and server push capabilities. Java server was discontinued in the process.
-          Adapted by Hector Romojaro Gomez 2018-2019 to give a modern look and feel, customizable skins and avatar picture.
-        </description>
-        <maturity>0</maturity>
+    <version name="6.0.0d12" url="http://openacs.org/repository/download/apm/chat-6.0.0d12.apm">
+	<owner url="http://www.openacs.org">Peter Alberer</owner>
+	<summary>Server based chat with an html and ajax client.</summary>
+	<release-date>2019-03-01</release-date>
+	<vendor url="http://openacs.org">OpenACS</vendor>
+	<description format="text/html">
+	  Adapted by Peter Alberer 2006/03/25 to allow java and ajax to coexist.
+	  Adapted by Tekne 2006/03/01 to replace JAVA server with AJAX; make use of generalized chat class from xotcl-core.
+	  Adapted by Antonio Pisano circa 2016-2019 to reduce bloating and exploit xotcl ORM and server push capabilities. Java server was discontinued in the process.
+	  Adapted by Hector Romojaro Gomez 2018-2019 to give a modern look and feel, customizable skins and avatar picture.
+	</description>
+	<maturity>0</maturity>
 
-        <provides url="chat" version="6.0.0d11"/>
-        <requires url="acs-kernel" version="5.9.1"/>
-        <requires url="xowiki" version="5.10.0d24"/>
+	<provides url="chat" version="6.0.0d12"/>
+	<requires url="acs-kernel" version="5.9.1"/>
+	<requires url="xowiki" version="5.10.0d24"/>
 
-        <callbacks>
-          <callback type="after-upgrade"  proc="chat::apm::after_upgrade"/>
-        </callbacks>
-        <parameters>
-            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to user names in the chat"/>
-            <parameter scope="global" datatype="string"  min_n_values="1"  max_n_values="1"  name="LinkRegex"  default="(https?:\\/\\/[^\\s]+)" description="Regular expression to detect URLs in chat messages, creating html links accordingly. By default, it matches any string starting with http:// or https://. Please notice the backslash double escaping."/>
-            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ChatSkin"  default="bubbles" description="Chat skin. Current options are 'classic', 'bubbles' and 'minimal'."/>
-        </parameters>
+	<callbacks>
+	  <callback type="after-upgrade"  proc="chat::apm::after_upgrade"/>
+	</callbacks>
+	<parameters>
+	    <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to user names in the chat"/>
+	    <parameter scope="global" datatype="string"  min_n_values="1"  max_n_values="1"  name="LinkRegex"  default="(https?:\\/\\/[^\\s]+)" description="Regular expression to detect URLs in chat messages, creating html links accordingly. By default, it matches any string starting with http:// or https://. Please notice the backslash double escaping."/>
+	    <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ChatSkin"  default="bubbles" description="Chat skin. Current options are 'classic', 'bubbles' and 'minimal'."/>
+	</parameters>
 
     </version>
 </package>
