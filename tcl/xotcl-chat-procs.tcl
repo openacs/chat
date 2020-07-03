@@ -34,7 +34,7 @@ namespace eval ::chat {
         UI: aither the screen name or the person name when the former
         is missing.
 
-        @return a user name
+        @return a username
     } {
         set name [acs_user::get_user_info -user_id $user_id -element screen_name]
         if {$name eq ""} {
@@ -87,7 +87,7 @@ namespace eval ::chat {
         approved_p    {boolean default true}
         creation_user {integer references parties(party_id) on delete cascade not null}
         creation_ip   {varchar(50)}
-        creation_date {timestamp with time zone}
+        creation_date {timestamp with timezone}
     }
 
     ::xo::db::chat_room ad_instproc grant_creator {} {
