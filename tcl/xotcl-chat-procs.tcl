@@ -382,6 +382,9 @@ namespace eval ::chat {
                 -references "chat_rooms(room_id) on delete cascade"
         }
 
+    ::xo::db::require index \
+        -table chat_transcripts -col room_id
+
     ::xo::db::chat_transcript ad_instproc save_new {} {
         Save a new transcript, making sure its creator is granted the
         necessary operative privileges.
