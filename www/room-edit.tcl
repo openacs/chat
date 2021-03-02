@@ -67,10 +67,11 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         {value "f"}
         {help_text "[_ chat.LogoutMessagesHelp]"}
     }
-    {messages_time_window:integer
+    {messages_time_window:integer(number)
         {label "#chat.MessagesTimeWindow#" }
         {help_text "[_ chat.MessagesTimeWindowHelp]"}
         {value "$four_hours"}
+        {html {min 0 max 2147483647}}
     }
     {avatar_p:boolean(radio)
         {label "#chat.ShowAvatar#" }
