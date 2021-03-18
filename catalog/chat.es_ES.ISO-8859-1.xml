@@ -104,6 +104,7 @@
   <msg key="Revoke_user">Revocar usuario</msg>
   <msg key="Room_active">Sala activa</msg>
   <msg key="room_admin">Admin</msg>
+  <msg key="Room">Sala</msg>
   <msg key="Room_deactivate">Desactivar la sala</msg>
   <msg key="Room_Information">Información de sala</msg>
   <msg key="Room_moderators">Moderadores de sala</msg>
@@ -111,6 +112,7 @@
   <msg key="Room_no_active">Sala no activa</msg>
   <msg key="Room_not_found">Sala no encontrada. Id de sala incorrecto</msg>
   <msg key="rooms">salas</msg>
+  <msg key="Rooms">Salas</msg>
   <msg key="Send_Refresh">Enviar/Actualizar</msg>
   <msg key="sending_message">Enviando mensaje...</msg>
   <msg key="ShowAvatar">Mostrar avatars</msg>
