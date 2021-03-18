@@ -58,6 +58,7 @@
   <msg key="Edit">Edita</msg>
   <msg key="Edit_room">Edita Stanza</msg>
   <msg key="Edit_transcript">Edita trascrizione</msg>
+  <msg key="Enable_web_notifications">Attiva notifiche</msg>
   <msg key="Enter_html_pretty_name">Entra nella stanza usando il client HTML</msg>
   <msg key="Enter_rooms_pretty_name">Entra nella stanza</msg>
   <msg key="exit_msg">esci dalla stanza</msg>
@@ -101,6 +102,7 @@
   <msg key="revoke">revoca</msg>
   <msg key="Revoke_moderator">Revoca moderatore</msg>
   <msg key="Revoke_user">Revoca utente</msg>
+  <msg key="Room">Stanza</msg>
   <msg key="Room_active">Stanza attiva</msg>
   <msg key="room_admin">Admin</msg>
   <msg key="Room_deactivate">Disattiva Stanza</msg>
@@ -109,6 +111,7 @@
   <msg key="Room_name">Nome stanza</msg>
   <msg key="Room_no_active">Stanza non attiva</msg>
   <msg key="Room_not_found">Stanza non trovata, id stanza non valido</msg>
+  <msg key="Rooms">Stanze</msg>
   <msg key="rooms">stanze</msg>
   <msg key="Send_Refresh">Invia/Rinfresca</msg>
   <msg key="sending_message">Invio messaggio...</msg>
