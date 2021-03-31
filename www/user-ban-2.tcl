@@ -13,7 +13,8 @@ ad_page_contract {
 
 permission::require_permission -object_id $room_id -privilege chat_user_ban
 
-chat_user_ban $room_id $party_id
+set room [::xo::db::Class get_instance_from_db -id $room_id]
+$room ban_user -party_id $party_id
 
 ad_returnredirect "room?room_id=$room_id"
 
