@@ -21,7 +21,7 @@ db_multirow -extend {
     order by ao.creation_date desc
 } {
     set creation_date_pretty [lc_time_fmt $creation_date "%q %X"]
-    set transcript_url [export_vars -base "chat-transcript" {room_id transcript_id}]
+    set transcript_url [export_vars -base "transcript-edit" {room_id transcript_id}]
     set delete_url [export_vars -base "transcript-delete" {room_id transcript_id}]
 }
 
