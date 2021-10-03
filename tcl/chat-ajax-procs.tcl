@@ -72,7 +72,7 @@ namespace eval ::chat {
             select room_id, to_char(max(creation_date),'HH24:MI:SS YYYY-MM-DD') as last_activity
             from chat_msgs group by room_id
         } {
-            ::xo::clusterwide nsv_set [self]-$room_id-seen last [clock scan $last_activity]
+            ::acs::clusterwide nsv_set [self]-$room_id-seen last [clock scan $last_activity]
         }
     }
 
