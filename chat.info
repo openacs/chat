@@ -31,7 +31,7 @@
 	  <callback type="after-upgrade"  proc="chat::apm::after_upgrade"/>
 	</callbacks>
 	<parameters>
-	    <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to user names in the chat"/>
+	    <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserColors"  default="#006400 #0000ff #b8860b #bdb76b #8b0000" description="A list of colors to assign to usernames in the chat"/>
 	    <parameter scope="global" datatype="string"  min_n_values="1"  max_n_values="1"  name="LinkRegex"  default="(https?:\\/\\/[^\\s]+)" description="Regular expression to detect URLs in chat messages, creating html links accordingly. By default, it matches any string starting with http:// or https://. Please notice the backslash double escaping."/>
 	    <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ChatSkin"  default="bubbles" description="Chat skin. Current options are 'classic', 'bubbles' and 'minimal'."/>
 	</parameters>
