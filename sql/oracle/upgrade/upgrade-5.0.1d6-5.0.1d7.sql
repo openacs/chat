@@ -3,7 +3,7 @@ begin;
     drop package chat_room;
     drop package chat_transcript;
 
-    alter table chat_rooms add column messages_time_window integer default 600;
+    alter table chat_rooms add messages_time_window integer default 600;
 
     alter table chat_rooms drop constraint chat_rooms_room_id_fk;
     alter table chat_rooms add  constraint chat_rooms_room_id_fk
