@@ -1,4 +1,3 @@
-# /chat/tcl/chat-procs.tcl
 ad_library {
     TCL Library for the chat system v.6
 
@@ -349,7 +348,7 @@ ad_proc -deprecated -public chat_transcript_delete {
 
     @see ::xo::db::chat_transcript
 } {
-    ::xo::db::sql::acs_object delete \
+    ::acs::dc call acs_object delete \
         -object_id $transcript_id
 }
 

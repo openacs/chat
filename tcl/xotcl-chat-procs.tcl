@@ -213,7 +213,7 @@ namespace eval ::chat {
             select transcript_id from chat_transcripts
             where room_id = :room_id
         }] {
-            ::xo::db::sql::acs_object delete \
+            ::acs::dc call acs_object delete \
                 -object_id $transcript_id
         }
         next
