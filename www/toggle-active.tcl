@@ -3,7 +3,7 @@ ad_page_contract {
     Toggle chat room active state
 
 } {
-    room_id:naturalnum,optional
+    room_id:object_type(chat_room)
     {return_url:localurl .}
 }
 

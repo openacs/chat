@@ -5,7 +5,7 @@ ad_page_contract {
     @author Peter Alberer (peter@alberer.com)
     @creation-date March 26, 2006
 } {
-    room_id:naturalnum,optional
+    room_id:object_id,optional
 }
 
 permission::require_permission -object_id [ad_conn package_id] -privilege chat_room_edit

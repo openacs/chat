@@ -7,7 +7,7 @@ ad_page_contract {
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
-    room_id:naturalnum,notnull
+    room_id:object_type(chat_room)
 } -properties {
     context:onevalue
     user_id:onevalue
@@ -21,17 +21,9 @@ ad_page_contract {
     port:onevalue
     moderator_p:onevalue
     msgs:multirow
-} -validate {
-    valid_room_id -requires room_id {
-        if { [catch {
-            set r [::xo::db::Class get_instance_from_db -id $room_id]
-        } errmsg] } {
-            ad_complain [_ chat.Room_not_found]
-            ad_log Warning "Chat room not found. Invalid room_id: $room_id"
-        }
-    }
 }
 
+set r [::xo::db::Class get_instance_from_db -id $room_id]
 set room_name [$r set pretty_name]
 set doc(title) $room_name
 set doc(type) {<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">}

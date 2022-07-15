@@ -1,7 +1,7 @@
 ad_include_contract {
     This include is the UI to display and manage chat room transcripts
 } {
-    room_id:naturalnum
+    room_id:object_type(chat_room)
 }
 
 set transcript_create_p [permission::permission_p -object_id $room_id -privilege chat_transcript_create]

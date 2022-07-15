@@ -7,7 +7,7 @@ ad_page_contract {
     @creation-date November 22, 2000
     @cvs-id $Id$
 } {
-    room_id:naturalnum,notnull
+    room_id:object_type(chat_room)
 } -properties {
     context_bar:onevalue
     title:onevalue

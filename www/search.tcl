@@ -1,8 +1,8 @@
 ad_page_contract {
 
 } {
-  type:notnull
-  room_id:naturalnum,notnull
+    type:notnull
+    room_id:object_type(chat_room)
 }
 
 set context [list "Users"]

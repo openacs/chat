@@ -6,19 +6,11 @@ ad_page_contract {
     @creation-date November 15, 2000
     @cvs-id $Id$
 } {
-    room_id:notnull,naturalnum
+    room_id:object_type(chat_room)
 } -properties {
     room_id:onevalue
     pretty_name:onevalue
     context_bar:onevalue
-} -validate {
-    id_is_a_room -requires room_id {
-        if {![::xo::dc 0or1row -prepare integer check_id {
-            select 1 from chat_rooms where room_id = :room_id
-        }]} {
-            ad_complain [_ chat.Room_not_found]
-        }
-    }
 }
 
 permission::require_permission -object_id $room_id -privilege chat_room_delete
