@@ -141,7 +141,7 @@ if { [info exists limit_to_users_in_group_id] && $limit_to_users_in_group_id ne 
     set title "User search"
 }
 
-set export_authorize [export_ns_set_vars {url} {only_authorized_p}]
+set export_authorize [export_vars -url -entire_form -exclude {only_authorized_p}]
 
 ad_return_template
 
