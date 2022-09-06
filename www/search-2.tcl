@@ -81,7 +81,7 @@ lappend where_clause {member_state = 'approved'}
 if { ![info exists passthrough] } {
     set passthrough_parameters ""
 } else {
-    set passthrough_parameters "[export_entire_form_as_url_vars $passthrough]"
+    set passthrough_parameters [export_vars -url -formvars $passthrough]
 }
 
 if { [info exists limit_to_users_in_group_id] && $limit_to_users_in_group_id ne "" } {
