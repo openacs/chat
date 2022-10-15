@@ -20,7 +20,7 @@ namespace eval ::chat {
     } {
         foreach room_id [::xo::dc list get_rooms {
             select room_id from chat_rooms
-            where archive_p and auto_flush_p
+            where archive_p = 't' and auto_flush_p = 't'
         }] {
             set room [::xo::db::Class get_instance_from_db -id $room_id]
             $room flush
