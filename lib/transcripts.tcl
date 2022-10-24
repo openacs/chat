@@ -53,7 +53,7 @@ list::create \
             display_template {
                 <if @transcript_delete_p;literal@ true>
                 <a href="@chat_transcripts.delete_url@">
-                <img src="/shared/images/Delete16.gif" alt="#chat.Delete_transcript#">
+                <adp:icon name="trash" title="#chat.Delete_transcript#">
                 </a>
                 </if>
             }
