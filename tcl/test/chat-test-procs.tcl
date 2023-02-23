@@ -4,8 +4,8 @@ ad_library {
 
 aa_register_case \
     -procs {
-        "xo::db::chat_room instproc save_new"
-        "xo::db::chat_room instproc grant_creator"
+        "::xo::db::chat_room instproc save_new"
+        "::xo::db::chat_room instproc grant_creator"
     } chat_room_tests {
 
         Test the chat room api
