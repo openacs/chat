@@ -189,7 +189,10 @@ namespace eval ::chat {
         }
     }
 
-    ::xo::db::chat_room ad_instproc save_new {} {
+    ::xo::db::chat_room ad_instproc save_new {
+        -creation_user
+        args
+    } {
         Create a new chat room and make sure its creator is granted
         the necessary privileges
 
@@ -198,14 +201,28 @@ namespace eval ::chat {
         if {![info exists :context_id]} {
             set :context_id ${:package_id}
         }
+
+        #
+        # save_new wants certain object metadata to be supplied
+        # explicitly to the call. Here we pass them as arguments when
+        # we detect them as instance variables.
+        #
+        set args [list]
+        foreach var {package_id context_id creation_ip creation_user} {
+            if {[info exists :${var}] && "-${var}" ni $args} {
+                lappend args -${var} [set :${var}]
+            }
+        }
+
         ::xo::dc transaction {
-            set room_id [next]
+            set room_id [next {*}$args]
             :grant_creator
         }
+
         return $room_id
     }
 
-    ::xo::db::chat_room ad_instproc delete {} {
+    ::xo::db::chat_room ad_instproc delete args {
         Delete the chat room and all of its transcripts
     } {
         set room_id ${:room_id}
@@ -385,7 +402,7 @@ namespace eval ::chat {
     ::xo::db::require index \
         -table chat_transcripts -col room_id
 
-    ::xo::db::chat_transcript ad_instproc save_new {} {
+    ::xo::db::chat_transcript ad_instproc save_new args {
         Save a new transcript, making sure its creator is granted the
         necessary operative privileges.
 
