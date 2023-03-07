@@ -16,13 +16,15 @@ namespace eval ::xowiki::includelet {
           {-chat_id}
           {-mode:optional ""}
           {-path:optional ""}
+          {-skin:optional ""}
         }}
       } -ad_doc {
           Include a chat room
 
           @param chat_id
-          @param mode 
+          @param mode
           @param path
+          @param skin
       }
 
 
@@ -33,7 +35,8 @@ namespace eval ::xowiki::includelet {
             [::chat::Chat login \
                   -chat_id $chat_id \
                   -mode    $mode \
-                  -path    $path]
+                  -path    $path \
+                  -skin    $skin]
         </div>
       }]
   }
