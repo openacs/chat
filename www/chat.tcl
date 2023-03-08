@@ -30,7 +30,6 @@ set doc(type) {<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "h
 
 set context [list $doc(title)]
 
-auth::require_login
 set user_id [ad_conn user_id]
 set read_p  [permission::permission_p -object_id $room_id -privilege "chat_read"]
 set write_p [permission::permission_p -object_id $room_id -privilege "chat_write"]
