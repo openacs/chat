@@ -30,15 +30,11 @@ namespace eval ::xowiki::includelet {
 
   chat_room instproc render {} {
       :get_parameters
-      set html [subst {
-        <div id='xowiki-chat-includelet'>
-            [::chat::Chat login \
+      return [::chat::Chat login \
                   -chat_id $chat_id \
                   -mode    $mode \
                   -path    $path \
                   -skin    $skin]
-        </div>
-      }]
   }
 
 }
