@@ -115,9 +115,24 @@ namespace eval ::chat {
 
         set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
 
-        # Check write permissions
+        #
+        # Check write permissions for the chat user
+        #
+        if {[string is integer -strict $uid]} {
+            #
+            # The uid is an integer, that we expect to correspond to a
+            # party_id.
+            #
+            set party_id $uid
+        } else {
+            #
+            # The uid is another kind of anonymous identifier
+            # (e.g. the IP address). We map these to the public.
+            #
+            set party_id [acs_magic_object the_public]
+        }
         permission::require_permission \
-            -party_id $uid \
+            -party_id $party_id \
             -object_id ${:chat_id} \
             -privilege "chat_write"
 
@@ -129,10 +144,16 @@ namespace eval ::chat {
         # code around expects the return value of the original method
         set retval [next]
 
-        # This way messages can be persisted immediately every time a
-        # message is sent
+        #
+        # Persist the chat message. We take note of the creation user,
+        # which may be The Public for anonymous participants and the
+        # IP address.
+        #
         if {[:current_message_valid]} {
-            $r post_message -msg $msg -creation_user $uid
+            $r post_message \
+                -msg $msg \
+                -creation_user $party_id \
+                -creation_ip [ad_conn peeraddr]
         }
 
         return $retval
