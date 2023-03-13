@@ -224,3 +224,51 @@ aa_register_case \
         }
 
     }
+
+aa_register_case \
+    -cats {web smoke} \
+    -urls {
+        /room-edit
+        /room-enter
+        /room
+        /chat
+    } web_chat_room_create {
+       Testing the creation of a chat room via web
+    } {
+        set room_id 0
+        aa_run_with_teardown -test_code {
+
+            #
+            # Create a new admin user
+            #
+            set user_info [acs::test::user::create -admin]
+            set user_id [dict get $user_info user_id]
+
+            #
+            # Create a new chat
+            #
+            set pretty_name [ad_generate_random_string]
+            set d [chat::test::new \
+                       -user_info $user_info \
+                       -pretty_name $pretty_name]
+            set room_id [dict get $d payload room_id]
+            aa_log "Created chat with id $room_id"
+
+            #
+            # View a chat via name.
+            #
+            set response [chat::test::view \
+                              -last_request $d \
+                              -room_id $room_id]
+
+        } -teardown_code {
+            #
+            # Delete the chat.
+            #
+            if {$room_id != 0} {
+                set r [::xo::db::Class get_instance_from_db -id $room_id]
+                $r delete
+            }
+            acs::test::user::delete -user_id [dict get $user_info user_id]
+        }
+    }
