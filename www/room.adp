@@ -96,7 +96,7 @@
   <script nonce="@::__csp_nonce;literal@">
     if (document.execCommand != undefined) {
         var button = document.createElement("button");
-        button.textContent = "#xowiki.menu-Clipboard-Use-Copy#";
+        button.textContent = "#acs-kernel.common_Copy#";
         button.addEventListener("click", function () {
            document.getElementById("xowiki-includelet-code").select();
            document.execCommand("copy");
