@@ -49,6 +49,11 @@ ad_proc -private chat::apm::after_upgrade {
                 ns_write "<br>$n_rows objects updated."
                 ns_write "<br>Finished!"
             }
+            6.0.0d17 7.0.0 {
+                ::xo::dc dml drop_moderated_column {
+                    alter table chat_rooms drop column moderated_p
+                }
+            }
         }
 }
 

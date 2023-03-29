@@ -58,8 +58,6 @@ namespace eval ::chat {
                 -sqltype varchar(100) -not_null true
             ::xo::db::Attribute create description \
                 -sqltype varchar(2000)
-            ::xo::db::Attribute create moderated_p \
-                -datatype boolean -default false
             ::xo::db::Attribute create active_p \
                 -datatype boolean -default true
             ::xo::db::Attribute create archive_p \

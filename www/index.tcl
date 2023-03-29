@@ -34,7 +34,6 @@ db_multirow -extend {
     select rm.room_id,
            rm.pretty_name,
            rm.description,
-           rm.moderated_p,
            rm.active_p,
            rm.archive_p
      from chat_rooms rm,

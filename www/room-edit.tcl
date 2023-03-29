@@ -22,9 +22,6 @@ set four_hours [expr {60 * 60 * 4}]
 
 ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] -has_edit 1 -form {
     {room_id:key}
-    {moderated_p:boolean(hidden)
-        {value "f"}
-    }
     {pretty_name:text(text)
         {label "#chat.Room_name#" }
     }
@@ -82,7 +79,6 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
 } -new_data {
     if {[catch {
         set r [::xo::db::chat_room new \
-                   -moderated_p          $moderated_p \
                    -description          $description \
                    -active_p             $active_p \
                    -archive_p            $archive_p \
@@ -120,7 +116,6 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         set r [::xo::db::Class get_instance_from_db -id $room_id]
         set pretty_name          [$r set pretty_name]
         set description          [$r set description]
-        set moderated_p          [$r set moderated_p]
         set active_p             [$r set active_p]
         set archive_p            [$r set archive_p]
         set auto_flush_p         [$r set auto_flush_p]
@@ -138,7 +133,6 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
     foreach var {
         pretty_name
         description
-        moderated_p
         active_p
         archive_p
         auto_flush_p

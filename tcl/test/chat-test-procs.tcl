@@ -49,7 +49,6 @@ aa_register_case \
             set test_user_id [dict get $test_user user_id]
 
             set r [::xo::db::chat_room new \
-                       -moderated_p          t \
                        -description          {Test Chat Room} \
                        -active_p             t \
                        -archive_p            t \

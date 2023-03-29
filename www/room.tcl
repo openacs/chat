@@ -11,7 +11,6 @@ ad_page_contract {
     pretty_name:onevalue
     description:onevalue
     archive_p:onevalue
-    moderated_p:onevalue
     active_p:onevalue
     room_view_p:onevalue
     room_edit_p:onevalue
@@ -54,7 +53,6 @@ set transcript_create_p [permission::permission_p -object_id $room_id -privilege
 set r [::xo::db::Class get_instance_from_db -id $room_id]
 set pretty_name          [$r set pretty_name]
 set description          [$r set description]
-set moderated_p          [$r set moderated_p]
 set active_p             [$r set active_p]
 set archive_p            [$r set archive_p]
 set auto_flush_p         [$r set auto_flush_p]
@@ -66,7 +64,6 @@ set avatar_p             [$r set avatar_p]
 
 # prettify flags
 foreach property {
-    moderated_p
     active_p
     archive_p
     auto_flush_p

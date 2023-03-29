@@ -72,7 +72,6 @@ ad_proc -deprecated -public chat_room_new {
 } {
     set r [::xo::db::chat_room new \
                -description          $description \
-               -moderated_p          $moderated_p \
                -active_p             $active_p \
                -archive_p            $archive_p \
                -auto_flush_p         $auto_flush_p \
@@ -122,7 +121,6 @@ ad_proc -deprecated -public chat_room_edit {
     foreach var {
         pretty_name
         description
-        moderated_p
         active_p
         archive_p
         auto_flush_p
@@ -287,10 +285,12 @@ ad_proc -deprecated -public chat_room_moderate_p {
 } {
     Return the moderate status of this chat room.
 
+    Note that the moderated_p flag is not part of the current
+    datamodel anymore.
+
     @see ::xo::db::chat_room
 } {
-    set r [::xo::db::Class get_instance_from_db -id $room_id]
-    return [$r set moderated_p]
+    return false
 }
 
 ad_proc -deprecated -public chat_user_name {
