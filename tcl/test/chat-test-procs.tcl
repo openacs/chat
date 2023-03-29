@@ -229,7 +229,6 @@ aa_register_case \
     -cats {web smoke} \
     -urls {
         /room-edit
-        /room-enter
         /room
         /chat
     } web_chat_room_create {

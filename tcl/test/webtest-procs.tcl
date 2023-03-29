@@ -73,17 +73,10 @@ namespace eval chat::test {
 
         set d $last_request
 
-        aa_log "Entering room via '$chat_page/room-enter?room_id=$room_id'"
+        aa_log "Entering room via '$chat_page/chat?room_id=$room_id'"
         set d [::acs::test::http \
                    -last_request $d \
-                   $chat_page/room-enter?room_id=$room_id]
-        acs::test::reply_has_status_code $d 302
-
-        set room_url [acs::test::get_url_from_location $d]
-        aa_log "Redirected to '$room_url'"
-        set d [::acs::test::http \
-                   -last_request $d \
-                   $room_url]
+                   $chat_page/chat?room_id=$room_id]
         acs::test::reply_has_status_code $d 200
 
         return $d

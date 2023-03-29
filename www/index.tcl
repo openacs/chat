@@ -54,7 +54,7 @@ db_multirow -extend {
     }
 
     if { $active_p } {
-        set room_url [export_vars -base "room-enter" {room_id}]
+        set room_url [export_vars -base "chat" {room_id}]
     }
 }
 
