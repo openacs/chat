@@ -150,10 +150,21 @@ namespace eval ::chat {
         # IP address.
         #
         if {[:current_message_valid]} {
+            #
+            # We may also add a message from outside of a connection,
+            # for instance when the chat sweeper logs people out after
+            # the timeout.
+            #
+            if {[ns_conn isconnected]} {
+                set creation_ip [ns_conn peeraddr]
+            } else {
+                set creation_ip ""
+            }
+
             $r post_message \
                 -msg $msg \
                 -creation_user $party_id \
-                -creation_ip [ad_conn peeraddr]
+                -creation_ip $creation_ip
         }
 
         return $retval
