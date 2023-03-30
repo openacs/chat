@@ -54,6 +54,13 @@ ad_proc -private chat::apm::after_upgrade {
                     alter table chat_rooms drop column moderated_p
                 }
             }
+            7.0.0 7.0.1 {
+                ::xo::dc dml drop_moderated_column {
+                    delete from acs_attributes
+                     where object_type = 'chat_room'
+                       and attribute_name = 'moderated_p'
+                }
+            }
         }
 }
 
