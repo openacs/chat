@@ -30,19 +30,7 @@ db_multirow -extend {
     last_activity
     room_url
     toggle_active_url
-} rooms rooms_list {
-    select rm.room_id,
-           rm.pretty_name,
-           rm.description,
-           rm.active_p,
-           rm.archive_p
-     from chat_rooms rm,
-          acs_objects obj
-    where rm.room_id = obj.object_id
-      and obj.package_id = :package_id
-      and acs_permission.permission_p(rm.room_id, :user_id, 'chat_read')
-    order by rm.pretty_name
-} {
+} rooms rooms_list {} {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
