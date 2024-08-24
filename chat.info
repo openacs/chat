@@ -9,7 +9,7 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>t</inherit-templates-p>
 
-    <version name="7.0.2" url="http://openacs.org/repository/download/apm/chat-7.0.2.apm">
+    <version name="7.0.3" url="http://openacs.org/repository/download/apm/chat-7.0.3.apm">
 	<owner url="http://www.openacs.org">Peter Alberer</owner>
 	<summary>Server based chat with an html and ajax client.</summary>
 	<release-date>2023-05-02</release-date>
@@ -20,9 +20,9 @@
 	  Adapted by Antonio Pisano circa 2016-2019 to reduce bloating and exploit xotcl ORM and server push capabilities. Java server was discontinued in the process.
 	  Adapted by Hector Romojaro Gomez 2018-2019 to give a modern look and feel, customizable skins and avatar picture.
 	</description>
-	<maturity>0</maturity>
+	<maturity>2</maturity>
 
-	<provides url="chat" version="7.0.2"/>
+	<provides url="chat" version="7.0.3"/>
 	<requires url="acs-kernel" version="5.10.1b1"/>
         <requires url="acs-tcl" version="5.10.1b1"/>
 	<requires url="acs-templating" version="5.10.1b1"/>
