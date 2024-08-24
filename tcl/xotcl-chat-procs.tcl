@@ -329,7 +329,7 @@ namespace eval ::chat {
 
         set contents [:transcript_messages]
         if {[llength $contents] > 0} {
-            set t [::xo::db::chat_transcript new \
+            set t [::xo::db::chat_transcript new -volatile \
                        -creation_user $creation_user \
                        -creation_ip $creation_ip \
                        -pretty_name $pretty_name \
@@ -338,7 +338,7 @@ namespace eval ::chat {
                        -room_id ${:room_id} \
                        -contents [join $contents \n]]
             $t save_new
-            return [$t set transcript_id]
+            return [$t transcript_id]
         } else {
             return 0
         }
