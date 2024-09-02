@@ -7,6 +7,6 @@
     </list>
   </if>
   <else>
-    <p class="line">#chat.No_information_available#</p>
+    <p class="line">#chat.No_chat_messages_available#</p>
   </else>
 </div>

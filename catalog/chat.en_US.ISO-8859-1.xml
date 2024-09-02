@@ -93,6 +93,7 @@
   <msg key="Moderated">Moderated</msg>
   <msg key="msg">Message</msg>
   <msg key="Name">Name</msg>
+  <msg key="No_chat_messages_available">No chat messages available</msg>
   <msg key="No_information_available">No information available</msg>
   <msg key="noactive">No active</msg>
   <msg key="Participants_list">Participants List</msg>

@@ -48,7 +48,7 @@ aa_register_case \
 
             set test_user_id [dict get $test_user user_id]
 
-            set r [::xo::db::chat_room new \
+            set r [::xo::db::chat_room new -volatile \
                        -description          {Test Chat Room} \
                        -active_p             t \
                        -archive_p            t \
@@ -183,7 +183,7 @@ aa_register_case \
             aa_log "Creating a few rooms, with a couple messages"
             set other_rooms [list]
             for {set i 2} {$i <= 4} {incr i} {
-                set r [::xo::db::chat_room new \
+                set r [::xo::db::chat_room new -volatile \
                            -description          "Test Chat Room $i" \
                            -archive_p            t \
                            -auto_flush_p         t \
