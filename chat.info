@@ -12,7 +12,7 @@
     <version name="7.0.3" url="http://openacs.org/repository/download/apm/chat-7.0.3.apm">
 	<owner url="http://www.openacs.org">Peter Alberer</owner>
 	<summary>Server based chat with an html and ajax client.</summary>
-	<release-date>2023-05-02</release-date>
+	<release-date>2024-09-02</release-date>
 	<vendor url="http://openacs.org">OpenACS</vendor>
 	<description format="text/html">
 	  Adapted by Peter Alberer 2006/03/25 to allow java and ajax to coexist.
@@ -23,10 +23,10 @@
 	<maturity>2</maturity>
 
 	<provides url="chat" version="7.0.3"/>
-	<requires url="acs-kernel" version="5.10.1b1"/>
-        <requires url="acs-tcl" version="5.10.1b1"/>
-	<requires url="acs-templating" version="5.10.1b1"/>
-	<requires url="xowiki" version="5.10.1b1"/>
+	<requires url="acs-kernel" version="5.10.1"/>
+        <requires url="acs-tcl" version="5.10.1"/>
+	<requires url="acs-templating" version="5.10.1"/>
+	<requires url="xowiki" version="5.10.1"/>
 
 	<callbacks>
 	  <callback type="after-upgrade"  proc="chat::apm::after_upgrade"/>
