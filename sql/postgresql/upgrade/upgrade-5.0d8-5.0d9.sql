@@ -32,7 +32,7 @@ BEGIN
             v_msg := null;
         end if;
 
-    -- TO DO: aproved_p, Hhtml_p and lengh
+    -- TO DO: aproved_p, Hhtml_p and length
     -- Insert into chat_msgs table.
         insert into chat_msgs (
             msg_id,

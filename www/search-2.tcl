@@ -81,7 +81,7 @@ lappend where_clause {member_state = 'approved'}
 if { ![info exists passthrough] } {
     set passthrough_parameters ""
 } else {
-    set passthrough_parameters "[export_entire_form_as_url_vars $passthrough]"
+    set passthrough_parameters [export_vars -formvars $passthrough]
 }
 
 if { [info exists limit_to_users_in_group_id] && $limit_to_users_in_group_id ne "" } {
@@ -141,7 +141,7 @@ if { [info exists limit_to_users_in_group_id] && $limit_to_users_in_group_id ne 
     set title "User search"
 }
 
-set export_authorize [export_ns_set_vars {url} {only_authorized_p}]
+set export_authorize [export_vars -entire_form -exclude {only_authorized_p}]
 
 ad_return_template
 

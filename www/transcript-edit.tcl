@@ -6,23 +6,26 @@ ad_page_contract {
     @creation-date November 28, 2000
     @cvs-id $Id$
 } {
-    transcript_id:naturalnum,notnull
-    room_id:naturalnum,notnull
+    room_id:object_type(chat_room)
+    transcript_id:object_type(chat_transcript)
 }
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_edit
 set context_bar [list "[_ chat.Edit_transcript]"]
 
 set submit_label "[_ chat.Edit]"
-set active_p [room_active_status $room_id]
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set active_p [$r set active_p]
 
-db_1row get_transcript_info {
-    select pretty_name, description, contents
-    from chat_transcripts
-    where transcript_id = :transcript_id
-}
+set t [::xo::db::Class get_instance_from_db -id $transcript_id]
+set pretty_name [lang::util::localize [$t set pretty_name]]
+set description [lang::util::localize [$t set description]]
+set contents    [lang::util::localize [$t set contents]]
 
-ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]] -has_edit 1 -form {
+ad_form \
+    -mode display \
+    -name "edit-transcription" \
+    -form {
     {room_id:integer(hidden)
         {value $room_id}
     }
@@ -38,18 +41,32 @@ ad_form -name "edit-transcription" -edit_buttons [list [list [_ chat.Edit] next]
         {html {rows 6 cols 65}}
         {value $description}
     }
-    {contents:text(textarea)
-        {label "#chat.Transcript#" }
-        {html {rows 6 cols 65}}
-        {value $contents}
+}
+
+if { [template::form::get_action "edit-transcription"] eq "" } {
+    ad_form -extend -name "edit-transcription" -form {
+        {contents:text(inform)
+            {label "#chat.Transcript#" }
+            {html {rows 6 cols 65}}
+            {noquote noquote}
+            {value "<pre>$contents</pre>"}
+        }
     }
-} -on_submit {
-    if { [catch {chat_transcript_edit $transcript_id $pretty_name $description $contents} errmsg] } {
-        ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
-    } else {
-        ad_returnredirect [export_vars -base "chat-transcript" {transcript_id room_id}]
+} else {
+    ad_form -extend -name "edit-transcription" -form {
+        {contents:text(textarea)
+            {label "#chat.Transcript#" }
+            {html {rows 6 cols 65}}
+            {value "$contents"}
+        }
+    }  -on_submit {
+        $t set pretty_name $pretty_name
+        $t set description $description
+        $t set contents    $contents
+        $t save
+        ad_returnredirect [export_vars -base "transcript-edit" {transcript_id room_id}]
+        ad_script_abort
     }
-    ad_script_abort
 }
 
 # Local variables:

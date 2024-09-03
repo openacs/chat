@@ -3,7 +3,7 @@
 
   <msg key="actions">Aktionen</msg>
   <msg key="Active">Aktiv</msg>
-  <msg key="active_users">Aktive Benutzer</msg>
+  <msg key="active_users">Aktive Benutzer/innen</msg>
   <msg key="Add_moderator">Moderator hinzufügen</msg>
   <msg key="Add_user_to_room">Benutzer hinzufügen</msg>
   <msg key="Ajax">Ajax</msg>
@@ -58,6 +58,7 @@
   <msg key="Edit">Bearbeiten</msg>
   <msg key="Edit_room">Raum bearbeiten</msg>
   <msg key="Edit_transcript">Protokoll bearbeiten</msg>
+  <msg key="Enable_web_notifications">Benachrichtigung aktivieren</msg>
   <msg key="Enter_html_pretty_name">Chatroom über HTML-Klienten betreten</msg>
   <msg key="Enter_rooms_pretty_name">Chatroom betreten</msg>
   <msg key="exit_msg">Chat Raum verlassen</msg>
@@ -92,6 +93,7 @@
   <msg key="Moderated">Moderiert</msg>
   <msg key="msg">Nachricht</msg>
   <msg key="Name">Name</msg>
+  <msg key="No_chat_messages_available">Keine Chatnachrichten vorhanden</msg>
   <msg key="No_information_available">Keine Information verfügbar</msg>
   <msg key="noactive">Keine aktiven</msg>
   <msg key="Participants_list">Teilnehmerliste</msg>
@@ -112,6 +114,8 @@
   <msg key="rooms">Räume</msg>
   <msg key="Send_Refresh">Senden</msg>
   <msg key="sending_message">Sende Nachricht...</msg>
+  <msg key="ShowAvatar">Benutzeravatare anzeigen</msg>
+  <msg key="ShowAvatarHelp">Um die Avatare (Benutzerprofilbilder) im Chat anzuzeigen, aktivieren Sie diese Option.</msg>
   <msg key="There_are_no_rooms_available">Es sind keine Räume verfügbar</msg>
   <msg key="to">an</msg>
   <msg key="Transcript">Protokoll</msg>
@@ -134,6 +138,7 @@
   <msg key="View_transcript">Protokoll anzeigen</msg>
   <msg key="What_search">für Name oder E-Mail oder Benutzername beschränkt auf</msg>
   <msg key="xotcl_missing">&lt;b&gt;Warnung&lt;/b&gt; Der Parameter &#34;DefaultClient&#34; des aktuellen Chat-Packets hat den Wert &#34;Ajax&#34; aber das Packet &#34;xotcl-core&#34; ist nicht installiert. Das Ajax Client Interface funktioniert nicht, wenn das Packet xotcl-core nicht installiert ist.</msg>
+  <msg key="xowiki_includelet_help_text">Kopieren/Einfügen dieses Ausschnitts in eine beliebige Wiki-basierte Anwendungsseite, um diesen Chatraum dort einzubetten.</msg>
   <msg key="You_dont_have_permission_room">Sie sind nicht berechtigt, diesen Chatraum zu betreten</msg>
   <msg key="Your_browser_doesnt_support_">Ihr Browser unterstützt keine frames, verwenden Sie bitte die HTML-Version des Chats.</msg>
   <msg key="your_name_is">Ihr Name ist</msg>

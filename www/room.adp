@@ -52,6 +52,10 @@
         <td class="form-label">#chat.message_count#</td>
         <td>@message_count@</td>
     </tr>
+    <tr class="form-element">
+        <td class="form-label">#chat.ShowAvatar#</td>
+        <td>@avatar_p@</td>
+    </tr>
 </table>
 <if @room_edit_p;literal@ true>
   <a class="button" href="room-edit?room_id=@room_id@">#chat.Edit#</a>
@@ -75,7 +79,7 @@
 </if>
 
 <if @room_edit_p;literal@ true>
-  <h2>XoWiki Includelet</h2>
+  <h2>#xowiki.pretty_name# Includelet</h2>
   <span id="xowiki-includelet">
     <input id="xowiki-includelet-code"
            type="text"
@@ -83,10 +87,16 @@
            readonly="true"
            value="@xowiki_includelet_code@">
   </span>
+  <p class="form-help-text">
+    <img src="/shared/images/info.gif"
+         width="12" height="9" alt="Help"
+         title="Help text" style="border:0">
+    #chat.xowiki_includelet_help_text#
+  </p>
   <script nonce="@::__csp_nonce;literal@">
     if (document.execCommand != undefined) {
         var button = document.createElement("button");
-        button.textContent = "#xowiki.menu-Clipboard-Copy#";
+        button.textContent = "#acs-kernel.common_Copy#";
         button.addEventListener("click", function () {
            document.getElementById("xowiki-includelet-code").select();
            document.execCommand("copy");

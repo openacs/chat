@@ -6,7 +6,7 @@ ad_page_contract {
     @creation-date January 18, 2001
     @cvs-id $Id$
 } {
-    room_id:notnull,naturalnum
+    room_id:object_type(chat_room)
 } -properties {
     room_id:onevalue
     pretty_name:onevalue
@@ -18,9 +18,10 @@ permission::require_permission -object_id $room_id -privilege chat_room_delete
 
 set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Delete_messages]"]
 
-set pretty_name [chat_room_name $room_id]
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set pretty_name [$r set pretty_name]
 
-set message_count [chat_message_count $room_id]
+set message_count [$r count_messages]
 
 ad_return_template
 

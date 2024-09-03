@@ -1,8 +1,10 @@
 ad_page_contract {
-    mostra mensagens do chat arquivadas
+
+  Display archived chat messages
+
 } {
-   room_id:naturalnum,notnull
-   {transcript_id:naturalnum,optional 0}
+  room_id:object_type(chat_room)
+  {transcript_id:object_type(chat_transcript) 0}
 }
 
 set page_title "[_ chat.Transcript]"
@@ -19,10 +21,8 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) } {
     ad_script_abort
 }
 
-if { [catch {set room_name [chat_room_name $room_id]} errmsg] } {
-    ad_return_complaint 1 "[_ chat.Room_not_found]"
-    ad_script_abort
-}
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set room_name [$r set pretty_name]
 
 template::head::add_style -style "#messages {
     border: 1px dotted black;

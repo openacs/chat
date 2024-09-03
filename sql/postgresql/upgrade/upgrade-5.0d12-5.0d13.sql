@@ -1,6 +1,6 @@
 begin;
 
--- dropping unneded database functions: we now use plain db operations for this
+-- dropping unneeded database functions: we now use plain db operations for this
 drop   function chat_transcript__new (varchar, varchar, varchar, integer, integer, timestamptz, integer,  varchar, varchar);
 drop   function chat_transcript__edit (integer, varchar, varchar, varchar );
 

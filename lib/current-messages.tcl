@@ -1,19 +1,15 @@
 ad_include_contract {
     This include displays currently persisted chat room messages
 } {
-    room_id:naturalnum
+    room_id:object_type(chat_room)
 }
 
-set sql {
-    select to_char(creation_date, 'DD.MM.YYYY hh24:mi:ss') as creation_date, creation_user, msg 
-    from chat_msgs 
-    where room_id  = :room_id 
-    order by creation_date
-}
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+set messages [$r transcript_messages]
+set n_messages [llength $messages]
 
-db_multirow -extend { person_name } messages select_msg_itens $sql {
-    set person_name [chat_user_name $creation_user]
-    if {$person_name eq ""} {
-        set person_name "Unknown"
-    }
-}
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

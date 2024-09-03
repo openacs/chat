@@ -6,12 +6,13 @@ ad_page_contract {
     party_id:naturalnum,notnull
 }
 
+set room [::xo::db::Class get_instance_from_db -id $room_id]
 if {$type eq "user"} {
-  permission::require_permission -object_id $room_id -privilege chat_user_grant
-  chat_user_grant $room_id $party_id
+    permission::require_permission -object_id $room_id -privilege chat_user_grant
+    $room grant_user -party_id $party_id
 } else {
-  permission::require_permission -object_id $room_id -privilege chat_user_ban
-  chat_user_ban $room_id $party_id
+    permission::require_permission -object_id $room_id -privilege chat_user_ban
+    $room ban_user -party_id $party_id
 }
 ad_returnredirect "room?room_id=$room_id"
 

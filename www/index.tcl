@@ -15,6 +15,7 @@ ad_page_contract {
 }
 
 set package_id [ad_conn package_id]
+set base_url [ad_conn package_url]
 set user_id [ad_conn user_id]
 set actions [list]
 set room_create_p [permission::permission_p -object_id $package_id -privilege chat_room_create]
@@ -24,14 +25,23 @@ if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
-db_multirow -extend { active_users last_activity room_url} rooms rooms_list {} {
+db_multirow -extend {
+    active_users
+    last_activity
+    room_url
+    toggle_active_url
+} rooms rooms_list {} {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
 
+    if {[permission::permission_p -object_id $package_id \
+             -party_id $user_id -privilege chat_room_edit]} {
+        set toggle_active_url toggle-active?room_id=$room_id
+    }
+
     if { $active_p } {
-        set room_url [export_vars -base "room-enter" {room_id}]
-        set room_url [ns_quotehtml $room_url]
+        set room_url [export_vars -base "chat" {room_id}]
     }
 }
 
@@ -48,12 +58,18 @@ list::create \
             label "#chat.Active#"
             html { style "text-align: center" }
             display_template {
-                <if @rooms.active_p;literal@ true>
-                <img src="/resources/chat/active.png" alt="#chat.Room_active#">
+                <if @rooms.toggle_active_url@ ne "">
+                  <a href="@rooms.toggle_active_url@">
                 </if>
-                <else>
-                <img src="/resources/chat/inactive.png" alt="#chat.Room_no_active#">
-                </else>
+                  <if @rooms.active_p;literal@ true>
+                    <img src="/resources/chat/active.png" alt="#chat.Room_active#">
+                  </if>
+                  <else>
+                    <img src="/resources/chat/inactive.png" alt="#chat.Room_no_active#">
+                  </else>
+                <if @rooms.toggle_active_url@ ne "">
+                  </a>
+                </if>
             }
         }
         pretty_name {
@@ -83,7 +99,7 @@ list::create \
             display_template {
                 <a href="chat-transcripts?room_id=@rooms.room_id@" class=button>#chat.Transcripts#</a>
                 <if @room_create_p;literal@ true>
-                <a href="@rooms.base_url@room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
+                <a href="${base_url}room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
                 </if>
             }
         }

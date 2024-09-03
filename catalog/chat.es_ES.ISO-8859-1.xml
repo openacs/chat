@@ -11,6 +11,7 @@
   <msg key="AllowUserTranscript">Permitir transcripciones a usuarios</msg>
   <msg key="AllowUserTranscriptHelp">Permitis a usuarios crear transcripciones de la sala de chat</msg>
   <msg key="Archive">Archivar</msg>
+  <msg key="ArchiveHelp">¿Salvar los mensajes de este chat? &#39;No&#39;, impedirá la creación de una transcripción.</msg>
   <msg key="Are_you_sure_you_want_to_delete">Seguro que quieres borrar</msg>
   <msg key="Are_you_sure_you_want_to_revoke">Seguro que quieres revocar el permiso de usuario de chat de</msg>
   <msg key="Are_you_sure_you_want_to_revoke_moderator">Seguro que quieres revocar el permiso de moderador de chat de</msg>
@@ -57,6 +58,7 @@
   <msg key="Edit">Editar</msg>
   <msg key="Edit_room">Editar sala</msg>
   <msg key="Edit_transcript">Editar transcripción</msg>
+  <msg key="Enable_web_notifications">Activar notificaciones</msg>
   <msg key="Enter_html_pretty_name">Entrar con el cliente HTML</msg>
   <msg key="Enter_rooms_pretty_name">Entrar en el chat</msg>
   <msg key="exit_msg">Salir de la sala</msg>
@@ -102,6 +104,7 @@
   <msg key="Revoke_user">Revocar usuario</msg>
   <msg key="Room_active">Sala activa</msg>
   <msg key="room_admin">Admin</msg>
+  <msg key="Room">Sala</msg>
   <msg key="Room_deactivate">Desactivar la sala</msg>
   <msg key="Room_Information">Información de sala</msg>
   <msg key="Room_moderators">Moderadores de sala</msg>
@@ -109,8 +112,11 @@
   <msg key="Room_no_active">Sala no activa</msg>
   <msg key="Room_not_found">Sala no encontrada. Id de sala incorrecto</msg>
   <msg key="rooms">salas</msg>
+  <msg key="Rooms">Salas</msg>
   <msg key="Send_Refresh">Enviar/Actualizar</msg>
   <msg key="sending_message">Enviando mensaje...</msg>
+  <msg key="ShowAvatar">Mostrar avatars</msg>
+  <msg key="ShowAvatarHelp">Mostrar avatars (imágenes de perfil de usuario) en el chat.</msg>
   <msg key="There_are_no_rooms_available">No hay salas disponibles</msg>
   <msg key="to">a</msg>
   <msg key="Transcript">Transcripción</msg>
@@ -133,6 +139,7 @@
   <msg key="View_transcript">Ver transcrición</msg>
   <msg key="What_search">por nombre o email o usuario limitado a</msg>
   <msg key="xotcl_missing">&lt;b&gt;Atención&lt;/b&gt; El parámetro &#34;DefaultClient&#34; contiene &#34;Ajax&#34; pero el paquete xotcl-core no está instalado. El chat Ajax no podrá funcionar sin xotcl-core.</msg>
+  <msg key="xowiki_includelet_help_text">Copiar/pegar esta línea en cualquier aplicación basada en el Wiki para incluir la sala allí.</msg>
   <msg key="You_dont_have_permission_room">No tienes permiso para entrar en esta sala</msg>
   <msg key="Your_browser_doesnt_support_">Su navegador no soporta marcos, por favor, utilice la versión HTML del chat.</msg>
   <msg key="your_name_is">tu nombre es</msg>

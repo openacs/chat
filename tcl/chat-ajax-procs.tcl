@@ -16,19 +16,25 @@ namespace eval ::xowiki::includelet {
           {-chat_id}
           {-mode:optional ""}
           {-path:optional ""}
+          {-skin:optional ""}
         }}
+      } -ad_doc {
+          Include a chat room
+
+          @param chat_id
+          @param mode
+          @param path
+          @param skin
       }
+
 
   chat_room instproc render {} {
       :get_parameters
-      set html [subst {
-        <div id='xowiki-chat-includelet'>
-            [::chat::Chat login \
+      return [::chat::Chat login \
                   -chat_id $chat_id \
                   -mode    $mode \
-                  -path    $path]
-        </div>
-      }]
+                  -path    $path \
+                  -skin    $skin]
   }
 
 }
@@ -36,23 +42,24 @@ namespace eval ::xowiki::includelet {
 namespace eval ::chat {
     ::xo::ChatClass Chat -superclass ::xowiki::Chat
 
-    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""}} {
-        if {![chat_room_exists_p $chat_id]} {
+    Chat proc login {-chat_id {-package_id ""} {-mode ""} {-path ""} {-skin ""}} {
+        if {![::xo::db::Class exists_in_db -id $chat_id]} {
             return [_ chat.Room_not_found]
         } else {
-            chat_room_get -room_id $chat_id -array c
-            set package_id $c(context_id)
-            set chat_skin [parameter::get -package_id $package_id -parameter ChatSkin]
-            set chat_avatar_p [parameter::get -package_id $package_id -parameter ShowAvatarP]
-            next -chat_id $chat_id \
-                -skin $chat_skin \
-                -show_avatar $chat_avatar_p \
-                -package_id $package_id \
-                -mode $mode \
-                -path $path \
-                -logout_messages_p $c(logout_messages_p) \
-                -login_messages_p $c(login_messages_p) \
-                -timewindow $c(messages_time_window)
+            set r [::xo::db::Class get_instance_from_db -id $chat_id]
+            set package_id [$r set package_id]
+            if {$skin eq ""} {
+                set skin [parameter::get -package_id $package_id -parameter ChatSkin]
+            }
+            next -chat_id           $chat_id \
+                 -skin              $skin \
+                 -package_id        $package_id \
+                 -mode              $mode \
+                 -path              $path \
+                 -logout_messages_p [$r set logout_messages_p] \
+                 -login_messages_p  [$r set login_messages_p] \
+                 -timewindow        [$r set messages_time_window] \
+                 -avatar_p          [$r set avatar_p]
         }
     }
 
@@ -64,15 +71,21 @@ namespace eval ::chat {
             select room_id, to_char(max(creation_date),'HH24:MI:SS YYYY-MM-DD') as last_activity
             from chat_msgs group by room_id
         } {
-            ::xo::clusterwide nsv_set [self]-$room_id-seen last [clock scan $last_activity]
+            ::acs::clusterwide nsv_set [self]-$room_id-seen last [clock scan $last_activity]
         }
     }
 
     Chat instproc init {} {
-        set ban_p [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]
-        if {$ban_p} {
-            ad_return_forbidden
-            ad_script_abort
+        # Instantiating a chat outside a connection context happens
+        # e.g. in the sweeper. We don't want to check permissions in
+        # this case.
+        if {[ns_conn isconnected]} {
+            # Check that user can read the chat and is not banned
+            if {![permission::permission_p -object_id ${:chat_id} -privilege "chat_read"] ||
+                 [permission::permission_p -object_id ${:chat_id} -privilege "chat_ban"]} {
+                ad_return_forbidden
+                ad_script_abort
+            }
         }
         next
     }
@@ -80,7 +93,7 @@ namespace eval ::chat {
     # if chat doesn't exist anymore, send a message that will inform
     # the user of being looking at an invalid chat
     Chat instproc check_valid_room {} {
-        if {![chat_room_exists_p [:chat_id]]} {
+        if {![::xo::db::Class exists_in_db -id [:chat_id]]} {
             ns_return 500 text/plain "chat-errmsg: [_ chat.Room_not_found]"
             ad_script_abort
         }
@@ -96,9 +109,34 @@ namespace eval ::chat {
         {-uid ""}
         msg
     } {
-        if {![chat_room_exists_p ${:chat_id}]} {
+        if {![::xo::db::Class exists_in_db -id ${:chat_id}]} {
             return
         }
+
+        set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
+
+        #
+        # Check write permissions for the chat user
+        #
+        if {[string is integer -strict $uid]} {
+            #
+            # The uid is an integer, that we expect to correspond to a
+            # party_id.
+            #
+            set party_id $uid
+        } else {
+            #
+            # The uid is another kind of anonymous identifier
+            # (e.g. the IP address). We map these to the public.
+            #
+            set party_id [acs_magic_object the_public]
+        }
+        permission::require_permission \
+            -party_id $party_id \
+            -object_id ${:chat_id} \
+            -privilege "chat_write"
+
+        set r [::xo::db::Class get_instance_from_db -id ${:chat_id}]
 
         # ignore empty messages
         if {$msg eq ""} return
@@ -106,11 +144,27 @@ namespace eval ::chat {
         # code around expects the return value of the original method
         set retval [next]
 
-        # This way messages can be persisted immediately every time a
-        # message is sent
+        #
+        # Persist the chat message. We take note of the creation user,
+        # which may be The Public for anonymous participants and the
+        # IP address.
+        #
         if {[:current_message_valid]} {
-            set uid [expr {$uid ne "" ? $uid : ${:user_id}}]
-            chat_message_post ${:chat_id} $uid $msg 1
+            #
+            # We may also add a message from outside of a connection,
+            # for instance when the chat sweeper logs people out after
+            # the timeout.
+            #
+            if {[ns_conn isconnected]} {
+                set creation_ip [ns_conn peeraddr]
+            } else {
+                set creation_ip ""
+            }
+
+            $r post_message \
+                -msg $msg \
+                -creation_user $party_id \
+                -creation_ip $creation_ip
         }
 
         return $retval

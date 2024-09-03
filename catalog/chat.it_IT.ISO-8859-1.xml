@@ -58,6 +58,7 @@
   <msg key="Edit">Edita</msg>
   <msg key="Edit_room">Edita Stanza</msg>
   <msg key="Edit_transcript">Edita trascrizione</msg>
+  <msg key="Enable_web_notifications">Attiva notifiche</msg>
   <msg key="Enter_html_pretty_name">Entra nella stanza usando il client HTML</msg>
   <msg key="Enter_rooms_pretty_name">Entra nella stanza</msg>
   <msg key="exit_msg">esci dalla stanza</msg>
@@ -92,6 +93,7 @@
   <msg key="Moderated">Moderato</msg>
   <msg key="msg">Messaggio</msg>
   <msg key="Name">Nome</msg>
+  <msg key="No_chat_messages_available">Nessun messaggio presente</msg>
   <msg key="No_information_available">Nessuna informazione disponibile</msg>
   <msg key="noactive">Non attiva</msg>
   <msg key="Participants_list">Lista Partecipanti</msg>
@@ -101,6 +103,7 @@
   <msg key="revoke">revoca</msg>
   <msg key="Revoke_moderator">Revoca moderatore</msg>
   <msg key="Revoke_user">Revoca utente</msg>
+  <msg key="Room">Stanza</msg>
   <msg key="Room_active">Stanza attiva</msg>
   <msg key="room_admin">Admin</msg>
   <msg key="Room_deactivate">Disattiva Stanza</msg>
@@ -109,9 +112,12 @@
   <msg key="Room_name">Nome stanza</msg>
   <msg key="Room_no_active">Stanza non attiva</msg>
   <msg key="Room_not_found">Stanza non trovata, id stanza non valido</msg>
+  <msg key="Rooms">Stanze</msg>
   <msg key="rooms">stanze</msg>
   <msg key="Send_Refresh">Invia/Rinfresca</msg>
   <msg key="sending_message">Invio messaggio...</msg>
+  <msg key="ShowAvatar">Mostra avatar utente</msg>
+  <msg key="ShowAvatarHelp">Mostra gli avatar (l&#39;immagine del profilo utente) nella chat</msg>
   <msg key="There_are_no_rooms_available">Non ci sono stanze disponibili</msg>
   <msg key="to">a</msg>
   <msg key="Transcript">Trascrizione</msg>
@@ -134,6 +140,7 @@
   <msg key="View_transcript">Vedi trascrizione</msg>
   <msg key="What_search">per nome, email o nome utente limitati a</msg>
   <msg key="xotcl_missing">&lt;b&gt;Attenzione&lt;/b&gt; Il parametro &#34;DefaultClient&#34; di questo pacchetto è settato come &#34;Ajax&#34;, ma il pacchetto xotcl-core non è installato. Ajax non funzionerà senza xotcl-core!</msg>
+  <msg key="xowiki_includelet_help_text">Copia/incolla questo frammento nella pagina di qualsiasi applicazione basata sul Wiki per incorporare questa chat room.</msg>
   <msg key="You_dont_have_permission_room">Non hai il permesso di accedere a questa stanza</msg>
   <msg key="Your_browser_doesnt_support_">Il tuo browser non supporta i frame, ti preghiamo di utilizzare la versione HTML di questa chat.</msg>
   <msg key="your_name_is">il tuo nome è</msg>

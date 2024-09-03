@@ -6,15 +6,13 @@ ad_page_contract {
     @creation-date January 18, 2001
     @cvs-id $Id$
 } {
-    room_id:naturalnum,notnull
+    room_id:object_type(chat_room)
 }
 
 permission::require_permission -object_id $room_id -privilege chat_room_delete
 
-if { [catch {chat_room_message_delete $room_id} errmsg] } {
-    ad_return_complaint 1 "[_ chat.Delete_messages_failed]: $errmsg"
-    ad_script_abort
-}
+set r [::xo::db::Class get_instance_from_db -id $room_id]
+$r delete_messages
 
 ::chat::Chat flush_messages -chat_id $room_id
 

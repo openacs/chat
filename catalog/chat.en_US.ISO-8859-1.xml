@@ -45,7 +45,7 @@
   <msg key="creation_date">Creation date</msg>
   <msg key="current_transcript">Current conversation</msg>
   <msg key="date">date</msg>
-  <msg key="deactivate_room_after_transcript">Deactive the room after creating transcript</msg>
+  <msg key="deactivate_room_after_transcript">Deactivate the room after creating transcript</msg>
   <msg key="Delete_all_messages_in_the_room">Delete all messages in the room</msg>
   <msg key="Delete_messages">Delete messages</msg>
   <msg key="delete_messages_after_transcript">Delete messages after creating the transcript</msg>
@@ -58,6 +58,7 @@
   <msg key="Edit">Edit</msg>
   <msg key="Edit_room">Edit Room</msg>
   <msg key="Edit_transcript">Edit transcript</msg>
+  <msg key="Enable_web_notifications">Activate notifications</msg>
   <msg key="Enter_html_pretty_name">Enter chat room using the HTML client</msg>
   <msg key="Enter_rooms_pretty_name">Enter chat room</msg>
   <msg key="exit_msg">exit chat room</msg>
@@ -92,6 +93,7 @@
   <msg key="Moderated">Moderated</msg>
   <msg key="msg">Message</msg>
   <msg key="Name">Name</msg>
+  <msg key="No_chat_messages_available">No chat messages available</msg>
   <msg key="No_information_available">No information available</msg>
   <msg key="noactive">No active</msg>
   <msg key="Participants_list">Participants List</msg>
@@ -103,15 +105,19 @@
   <msg key="Revoke_user">Revoke user</msg>
   <msg key="Room_active">Room active</msg>
   <msg key="room_admin">Admin</msg>
-  <msg key="Room_deactivate">Deactive Room</msg>
+  <msg key="Room">Room</msg>
+  <msg key="Room_deactivate">Deactivate Room</msg>
   <msg key="Room_Information">Room Information</msg>
   <msg key="Room_moderators">Room moderators</msg>
   <msg key="Room_name">Room name</msg>
   <msg key="Room_no_active">Room no active</msg>
   <msg key="Room_not_found">Room not found, Invalid room id</msg>
   <msg key="rooms">rooms</msg>
+  <msg key="Rooms">Rooms</msg>
   <msg key="Send_Refresh">Send/Refresh</msg>
   <msg key="sending_message">Sending message...</msg>
+  <msg key="ShowAvatar">Display user avatars</msg>
+  <msg key="ShowAvatarHelp">Show avatars (user profile pictures) in the chat.</msg>
   <msg key="There_are_no_rooms_available">There are no rooms available</msg>
   <msg key="to">to</msg>
   <msg key="Transcript">Transcript</msg>
@@ -134,6 +140,7 @@
   <msg key="View_transcript">View transcript</msg>
   <msg key="What_search">for name or email or username limited to</msg>
   <msg key="xotcl_missing">&lt;b&gt;Warning&lt;/b&gt; The package parameter &#34;DefaultClient&#34; is set to &#34;Ajax&#34; but the package xotcl-core is not installed. Ajax will not work without xotcl-core!</msg>
+  <msg key="xowiki_includelet_help_text">Copy/Paste this snippet into any Wiki-based application&#39;s page to embed this chat room there.</msg>
   <msg key="You_dont_have_permission_room">You don&#39;t have permission to enter this chat room</msg>
   <msg key="Your_browser_doesnt_support_">Your browser doesn&#39;t support frames, please use the HTML version of this chat.</msg>
   <msg key="your_name_is">your name is</msg>

@@ -1,15 +1,15 @@
 ad_page_contract {
 
 } {
-  type:notnull
-  room_id:naturalnum,notnull
+    type:notnull
+    room_id:object_type(chat_room)
 }
 
 set context [list "Users"]
 
 db_1row users_n_users {}
 
-set n_users [util_commify_number $n_users]
+set n_users [lc_numeric $n_users]
 set last_registration [lc_time_fmt $last_registration "%q"]
 
 set groups [db_html_select_value_options groups_select {

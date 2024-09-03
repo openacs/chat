@@ -5,7 +5,7 @@ ad_page_contract {
     @author Peter Alberer (peter@alberer.com)
     @creation-date March 26, 2006
 } {
-    room_id:naturalnum,optional
+    room_id:object_id,optional
 }
 
 permission::require_permission -object_id [ad_conn package_id] -privilege chat_room_edit
@@ -22,9 +22,6 @@ set four_hours [expr {60 * 60 * 4}]
 
 ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] -has_edit 1 -form {
     {room_id:key}
-    {moderated_p:boolean(hidden)
-        {value "f"}
-    }
     {pretty_name:text(text)
         {label "#chat.Room_name#" }
     }
@@ -67,27 +64,35 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         {value "f"}
         {help_text "[_ chat.LogoutMessagesHelp]"}
     }
-    {messages_time_window:integer
+    {messages_time_window:integer(number)
         {label "#chat.MessagesTimeWindow#" }
         {help_text "[_ chat.MessagesTimeWindowHelp]"}
         {value "$four_hours"}
+        {html {min 0 max 2147483647}}
     }
-
+    {avatar_p:boolean(radio)
+        {label "#chat.ShowAvatar#" }
+        {options {{"#acs-kernel.common_Yes#" t} {"#acs-kernel.common_no#" f}}}
+        {value "t"}
+        {help_text "[_ chat.ShowAvatarHelp]"}
+    }
 } -new_data {
     if {[catch {
-        set room_id [chat_room_new \
-            -moderated_p          $moderated_p \
-            -description          $description \
-            -active_p             $active_p \
-            -archive_p            $archive_p \
-            -auto_flush_p         $auto_flush_p \
-            -auto_transcript_p    $auto_transcript_p \
-            -login_messages_p     $login_messages_p \
-            -logout_messages_p    $logout_messages_p \
-            -messages_time_window $messages_time_window \
-            -context_id           [ad_conn package_id] \
-            -creation_user        [ad_conn user_id] \
-            -creation_ip          [ad_conn peeraddr] $pretty_name]
+        set r [::xo::db::chat_room new \
+                   -description          $description \
+                   -active_p             $active_p \
+                   -archive_p            $archive_p \
+                   -auto_flush_p         $auto_flush_p \
+                   -auto_transcript_p    $auto_transcript_p \
+                   -login_messages_p     $login_messages_p \
+                   -logout_messages_p    $logout_messages_p \
+                   -messages_time_window $messages_time_window \
+                   -avatar_p             $avatar_p \
+                   -package_id           [ad_conn package_id] \
+                   -creation_user        [ad_conn user_id] \
+                   -creation_ip          [ad_conn peeraddr] \
+                   -pretty_name          $pretty_name]
+        set room_id [$r save_new]
     } errmsg]} {
         ad_return_complaint 1 "[_ chat.Create_new_room_failed]: $errmsg"
         ad_script_abort
@@ -97,46 +102,49 @@ ad_form -name "edit-room" -edit_buttons [list [list [_ chat.Update_room] next]] 
         set comm_id [dotlrn_community::get_community_id]
     }
     if {$comm_id ne ""} {
-        chat_user_grant $room_id $comm_id
+        $r grant_user -party_id $comm_id
     } else {
         #-2 Registered Users
         #chat_user_grant $room_id -2
         #0 Unregistered Visitor
         #chat_user_grant $room_id 0
         #-1 The Public
-        chat_user_grant $room_id -2
+        $r grant_user -party_id -2
     }
 } -edit_request {
-    if {[catch {
-        chat_room_get -room_id $room_id -array r
-        set pretty_name          $r(pretty_name)
-        set description          $r(description)
-        set moderated_p          $r(moderated_p)
-        set archive_p            $r(archive_p)
-        set auto_flush_p         $r(auto_flush_p)
-        set auto_transcript_p    $r(auto_transcript_p)
-        set login_messages_p     $r(login_messages_p)
-        set logout_messages_p    $r(logout_messages_p)
-        set messages_time_window $r(messages_time_window)
-    } errmsg]} {
+    if {[::xo::db::Class exists_in_db -id $room_id]} {
+        set r [::xo::db::Class get_instance_from_db -id $room_id]
+        set pretty_name          [$r set pretty_name]
+        set description          [$r set description]
+        set active_p             [$r set active_p]
+        set archive_p            [$r set archive_p]
+        set auto_flush_p         [$r set auto_flush_p]
+        set auto_transcript_p    [$r set auto_transcript_p]
+        set login_messages_p     [$r set login_messages_p]
+        set logout_messages_p    [$r set logout_messages_p]
+        set messages_time_window [$r set messages_time_window]
+        set avatar_p             [$r set avatar_p]
+    } else {
         ad_return_complaint 1 "[_ chat.Room_not_found]."
         ad_script_abort
     }
 } -edit_data {
-    if {[catch {
-        chat_room_edit \
-            $room_id \
-            $pretty_name \
-            $description \
-            $moderated_p \
-            $active_p \
-            $archive_p \
-            $auto_flush_p \
-            $auto_transcript_p \
-            $login_messages_p \
-            $logout_messages_p \
-            $messages_time_window
-    } errmsg]} {
+    set r [::xo::db::Class get_instance_from_db -id $room_id]
+    foreach var {
+        pretty_name
+        description
+        active_p
+        archive_p
+        auto_flush_p
+        auto_transcript_p
+        login_messages_p
+        logout_messages_p
+        messages_time_window
+        avatar_p
+    } {
+        $r set $var [set $var]
+    }
+    if {[catch {$r save} errmsg]} {
         ad_return_complaint 1 "[_ chat.Could_not_update_room]: $errmsg"
         ad_script_abort
     }
